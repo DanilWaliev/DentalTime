@@ -1,0 +1,25 @@
+.section {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  gap:20px;
+  border-color: var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.services-title {
+  width: 100%;
+}
+
+.services-card {
+  width: calc(50% - 10px);
+}
+
+.services-button {
+  width: 100%;
+  background-color: var(--color-primary);
+  border-color: var(--color-border);
+  color: var(--color-background);
+  border-radius: 10px;
+}
