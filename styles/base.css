@@ -1,12 +1,69 @@
+/* base.css */
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --color-background: #ffffff;
-  --color-surface: #f4fbfb;
+  --color-surface: #f1f7f5;          /* Очень светлый изумрудный оттенок для фона секций */
 
-  --color-primary: #2aa7a1;
-  --color-primary-hover: #218983;
+  /* Основной акцент (Emerald) */
+  --color-primary: #68B2A0;          /* Твой выбранный цвет */
+  --color-primary-hover: #519383;    /* Более глубокий изумрудный для наведения */
+  --color-text-on-primary: #ffffff;  /* Белый текст — идеальный контраст для этого оттенка */
 
-  --color-text: #1f2d2d;
-  --color-text-muted: #6b7a7a;
+  /* Текст */
+  --color-text: #1a2b27;             /* Темный графит с легким зеленым подтоном */
+  --color-text-muted: #536e68;       /* Приглушенный серо-зеленый */
+  --color-text-muted-on-primary: rgba(255, 255, 255, 0.8);
 
-  --color-border: #d7e7e7;
+  /* Границы */
+  --color-border: #c7dad5;           /* Мягкая граница в тон основному цвету */
+
+  /* Второстепенная кнопка (Secondary) */
+  --color-secondary: #d8ebe6;        /* Светлый изумруд */
+  --color-on-secondary: #4a8a7a;     /* Темный изумруд для текста на светлом фоне */
+  --color-secondary-hover: #c4ded6;
+
+  --font-main: 'Roboto', sans-serif;
+
+  --radius-sm: 4px;   
+  --radius-md: 8px;   
+  --radius-lg: 16px;  
+  --radius-full: 9999px;
+
+  --space-xs: 8px;   
+  --space-sm: 16px;  
+  --space-md: 24px;  
+  --space-lg: 40px;  
+
+  --fs-xs: 12px;   
+  --fs-sm: 14px;   
+  --fs-base: 16px; 
+  --fs-md: 20px;   
+  --fs-lg: 24px;   
+  --fs-xl: 32px;   
+
+  --fw-normal: 400;
+  --fw-semibold: 600;
+}
+
+body {
+  font-family: var(--font-main);
 }

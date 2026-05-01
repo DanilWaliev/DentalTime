@@ -1,25 +1,147 @@
+/* appointment.css */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  margin: 0;
+  min-height: 100vh;
+
+  position: relative;
+  background-color: var(--color-background);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image: url('../../images/bg_dental.png');
+  background-size: cover;
+  background-position: center;
+
+  filter: blur(15px);
+  transform: scale(1.1);
+
+  box-shadow: inset 0 0 0 2000px rgba(255, 255, 255, 0.7);
+
+  z-index: -1;
+}
+
+nav {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8));
+  background-color: rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* СЮДА НАПИСАТЬ СЕЛЕКТОРЫ ДЛЯ ХИРО */
+
+.top-menu-button {
+  position: relative;
+  padding: var(--space-md);
+  color: var(--color-text);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+
+  border: none;
+  border-bottom: 3px solid transparent; 
+  background-color: transparent;
+  cursor: pointer;
+
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.top-menu-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%; /* Стартует ровно из центра */
+  transform: translateX(-50%); /* Центрируем */
+  width: 0; /* Изначально ее нет */
+  height: 3px; /* Толщина линии */
+  background-color: var(--color-primary); /* Цвет выезжающей линии */
+  transition: width 0.3s ease; /* Плавность анимации */
+}
+
+.top-menu-button:hover::after {
+  width: 100%;
+}
+
 .section {
-  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  width: 100%;
+  position: relative;
+
+
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
-  gap:20px;
-  border-color: var(--color-border);
-  background-color: var(--color-surface);
+  justify-content: right;
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  gap:var(--space-sm);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  color: var(--color-text);
 }
 
 .services-title {
   width: 100%;
+  color: var(--color-text);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
 }
 
 .services-card {
-  width: calc(50% - 10px);
+  width: calc(50% - 8px);
+
+  padding: var(--space-sm);
+
+  background-color: #ffffff;
+
+  box-shadow: 0 20px 40px -10px rgba(26, 43, 39, 0.06);
+  
+  transition: all 0.3s ease;
+
+  color: var(--color-text);
+  
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  font-size: var(--fs-md);
+}
+
+.services-card:hover {
+  transform: translateY(-4px); /* Карточка чуть приподнимается */
+  box-shadow: 0 30px 50px -15px rgba(26, 43, 39, 0.1); /* Тень становится больше и чуть темнее */
+}
+
+.services-card-title {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.services-card-description {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
 }
 
 .services-button {
-  width: 100%;
-  background-color: var(--color-primary);
-  border-color: var(--color-border);
-  color: var(--color-background);
-  border-radius: 10px;
+  width: 40%;
+  padding: var(--space-xs);
+  background-color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-on-secondary);
+  border-radius: var(--radius-full);
+}
+
+.services-button:hover {
+  background-color: var(--color-secondary-hover);
 }
