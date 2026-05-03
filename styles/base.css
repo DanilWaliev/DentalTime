@@ -52,6 +52,7 @@
   --space-sm: 16px;  
   --space-md: 24px;  
   --space-lg: 40px;  
+  --space-xl: 64px;
 
   --fs-xs: 12px;   
   --fs-sm: 14px;   
@@ -62,6 +63,8 @@
 
   --fw-normal: 400;
   --fw-semibold: 600;
+
+  --header-height: 60px;
 }
 
 body {
