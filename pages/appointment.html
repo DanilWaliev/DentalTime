@@ -29,20 +29,23 @@
         </nav>
     </header>
     
-    <section id="hero" class="hero-section">
-        <div class="hero-content">
+    <!-- <section id="hero" class="hero-section">
+        
+    </section> -->
+    <div class="hero-container">
+        <div id="hero" class="step-wrapper hero-content">
             <div class="hero-card">
                 <h1 class="hero-title">Твоя идеальная улыбка — наша забота</h1>
                 <p class="hero-subtitle">Современные технологии и безболезненное лечение для здоровья ваших зубов.</p>
                 <a class="hero-button" href="#services">Выбрать услугу</a>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- ШАГ 1: ВЫБОР УСЛУГИ -->
     <div class="row step-wrapper" id="services">
         <section class="offset-2 col-8 section">
-            <div class="step-counter">Шаг 1 из 2</div>
+            <div class="step-counter">Шаг 1 из 3</div>
             <div class="services-title">
                 Выберите услугу
             </div>
@@ -88,7 +91,7 @@
     <!-- ШАГ 2: ВЫБОР ВРАЧА -->
     <div class="row step-wrapper" id="step-2">
       <section class="offset-2 col-8 section">
-          <div class="step-counter">Шаг 2 из 2</div>
+          <div class="step-counter">Шаг 2 из 3</div>
           <div class="doctor-title">
               Выберите врача
           </div>
@@ -167,15 +170,99 @@
                 <!-- Колонка календаря -->
                 <div class="datetime-card">
                     <div class="datetime-card-title">Календарь</div>
-                    <!-- Заглушка. Сюда интегрируется логика календаря -->
-                    <div class="datetime-placeholder">Контент календаря</div>
+
+                    <!-- Визуальный компонент календаря -->
+                    <div class="calendar-widget">
+                        <!-- Шапка: Месяц и навигация -->
+                        <div class="calendar-header">
+                            <button class="calendar-nav-btn"><</button>
+                            <div class="calendar-month">Май 2026</div>
+                            <button class="calendar-nav-btn">></button>
+                        </div>
+
+                        <!-- Дни недели -->
+                        <div class="calendar-weekdays">
+                            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                        </div>
+
+                        <!-- Сетка дат (7 колонок) -->
+                        <div class="calendar-grid">
+                            <!-- Прошлый месяц (неактивные) -->
+                            <button class="calendar-day disabled">27</button>
+                            <button class="calendar-day disabled">28</button>
+                            <button class="calendar-day disabled">29</button>
+                            <button class="calendar-day disabled">30</button>
+
+                            <!-- Текущий месяц -->
+                            <button class="calendar-day">1</button>
+                            <button class="calendar-day">2</button>
+                            <button class="calendar-day">3</button>
+                            <button class="calendar-day">4</button>
+                            <button class="calendar-day">5</button>
+                            <button class="calendar-day">6</button>
+                            <button class="calendar-day">7</button>
+                            <button class="calendar-day">8</button>
+                            <button class="calendar-day">9</button>
+                            <button class="calendar-day">10</button>
+                            <button class="calendar-day">11</button>
+                            <button class="calendar-day">12</button>
+                            <button class="calendar-day">13</button>
+                            <button class="calendar-day">14</button>
+                            <!-- Выбранный день -->
+                            <button class="calendar-day active">15</button>
+                            <button class="calendar-day">16</button>
+                            <button class="calendar-day">17</button>
+                            <button class="calendar-day">18</button>
+                            <button class="calendar-day">19</button>
+                            <button class="calendar-day">20</button>
+                            <button class="calendar-day">21</button>
+                            <button class="calendar-day">22</button>
+                            <button class="calendar-day">23</button>
+                            <button class="calendar-day">24</button>
+                            <button class="calendar-day">25</button>
+                            <button class="calendar-day">26</button>
+                            <button class="calendar-day">27</button>
+                            <button class="calendar-day">28</button>
+                            <button class="calendar-day">29</button>
+                            <button class="calendar-day">30</button>
+                            <button class="calendar-day">31</button>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <!-- Колонка времени -->
                 <div class="datetime-card">
                     <div class="datetime-card-title">Время</div>
-                    <!-- Заглушка. Сюда интегрируются слоты времени -->
-                    <div class="datetime-placeholder">Слоты времени</div>
+
+                    <!-- Визуальный компонент времени -->
+                    <div class="time-widget">
+                        <div class="time-group">
+                            <div class="time-group-label">Утро</div>
+                            <div class="time-slots">
+                                <button class="time-slot disabled">09:00</button>
+                                <button class="time-slot disabled">09:30</button>
+                                <button class="time-slot">10:00</button>
+                                <button class="time-slot">10:30</button>
+                                <button class="time-slot">11:00</button>
+                                <button class="time-slot">11:30</button>
+                            </div>
+                        </div>
+
+                        <div class="time-group">
+                            <div class="time-group-label">День</div>
+                            <div class="time-slots">
+                                <button class="time-slot">12:00</button>
+                                <button class="time-slot">12:30</button>
+                                <button class="time-slot">13:00</button>
+                                <button class="time-slot disabled">13:30</button>
+                                <!-- Выбранное время -->
+                                <button class="time-slot active">14:00</button>
+                                <button class="time-slot">14:30</button>
+                                <button class="time-slot">15:00</button>
+                                <button class="time-slot">15:30</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
