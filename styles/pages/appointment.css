@@ -3,13 +3,15 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
+  
+  /* Включаем магнитный скролл по вертикали */
+  scroll-snap-type: y mandatory; 
 }
 
 body {
   font-family: var(--font-main);
   margin: 0;
   min-height: 100vh;
-
   position: relative;
   background-color: var(--color-background);
 }
@@ -40,7 +42,7 @@ header {
   left: 0;
   position: fixed;
   z-index: 100;
-  width:100%;
+  width: 100%;
   padding-top: var(--space-sm);
   padding-bottom: var(--space-sm);
 }
@@ -75,12 +77,12 @@ nav {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 50%; /* Стартует ровно из центра */
-  transform: translateX(-50%); /* Центрируем */
-  width: 0; /* Изначально ее нет */
-  height: 3px; /* Толщина линии */
-  background-color: var(--color-primary); /* Цвет выезжающей линии */
-  transition: width 0.3s ease; /* Плавность анимации */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
 }
 
 .top-menu-button:hover::after {
@@ -91,8 +93,10 @@ nav {
   margin-top: var(--header-height);
   width: 100%;
   height: calc(100vh - var(--header-height));
-
   padding: var(--space-md);
+  
+  /* Примагничиваем Hero-секцию к началу экрана */
+  scroll-snap-align: start; 
 }
 
 .hero-content {
@@ -139,19 +143,37 @@ nav {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* =========================================
+   ИЗОЛЯЦИЯ ШАГОВ (МАГНИТНЫЙ СКРОЛЛ)
+   ========================================= */
+.step-wrapper {
+  margin-bottom: 40vh; /* Отталкиваем следующий блок глубоко вниз */
+  scroll-snap-align: center; /* Центрируем блок при скролле */
+}
+
+/* Счетчик прогресса ("Шаг 1 из 2") */
+.step-counter {
+  width: 100%;
+  font-size: var(--fs-sm);
+  color: var(--color-primary);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--space-xs);
+}
+
 section {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(16px);
   width: 100%;
   position: relative;
 
-
   display: flex;
   flex-wrap: wrap;
   justify-content: right;
   margin-top: var(--space-lg);
   padding: var(--space-md);
-  gap:var(--space-sm);
+  gap: var(--space-sm);
 
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -159,6 +181,9 @@ section {
   color: var(--color-text);
 }
 
+/* =========================================
+   СЕКЦИЯ УСЛУГ
+   ========================================= */
 .services-title {
   width: 100%;
   color: var(--color-text);
@@ -168,26 +193,19 @@ section {
 
 .services-card {
   width: calc(50% - 8px);
-
   padding: var(--space-sm);
-
   background-color: #ffffff;
-
   box-shadow: 0 20px 40px -10px rgba(26, 43, 39, 0.06);
-  
   transition: all 0.3s ease;
-
   color: var(--color-text);
-  
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-
   font-size: var(--fs-md);
 }
 
 .services-card:hover {
-  transform: translateY(-4px); /* Карточка чуть приподнимается */
-  box-shadow: 0 30px 50px -15px rgba(26, 43, 39, 0.1); /* Тень становится больше и чуть темнее */
+  transform: translateY(-4px);
+  box-shadow: 0 30px 50px -15px rgba(26, 43, 39, 0.1);
 }
 
 .services-card-title {
@@ -213,6 +231,9 @@ section {
   background-color: var(--color-secondary-hover);
 }
 
+/* =========================================
+   СЕКЦИЯ ВРАЧЕЙ
+   ========================================= */
 .doctor-title {
   width: 100%;
   color: var(--color-text);
@@ -222,7 +243,7 @@ section {
 }
 
 .doctor-card {
-  width: calc(50% - 8px); /* Половина ширины с учетом gap */
+  width: calc(50% - 8px);
   padding: var(--space-sm);
   
   background-color: #ffffff;
@@ -232,23 +253,20 @@ section {
   
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm); /* Отступ между верхней частью и блоком услуг */
+  gap: var(--space-sm);
 }
 
-/* Верхняя часть карточки (Фото + ФИО/Спец) */
 .doctor-card-top {
   display: flex;
   gap: var(--space-sm);
-  align-items: stretch; /* Выравнивает высоту соседних колонок */
+  align-items: stretch;
 }
 
-/* Блок фото */
 .doctor-photo {
-  flex: 0 0 120px; /* Фиксированная ширина фото */
+  flex: 0 0 120px;
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   
-  /* Центрирование текста-заглушки */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,23 +274,19 @@ section {
   font-size: var(--fs-sm);
 }
 
-/* Колонка для ФИО и Специализации */
 .doctor-info-basic {
-  flex: 1; /* Занимает всю оставшуюся ширину */
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
 }
 
-/* Внутренние блоки с текстом */
 .doctor-name,
 .doctor-specialty {
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   padding: var(--space-sm);
   color: var(--color-text);
-  
-  /* Для центрирования текста по вертикали, если блоки растянутся */
   display: flex;
   align-items: center;
 }
@@ -280,49 +294,200 @@ section {
 .doctor-name {
   font-size: var(--fs-md);
   font-weight: var(--fw-semibold);
-  flex: 1; /* Равномерное распределение высоты */
+  flex: 1;
 }
 
 .doctor-specialty {
   font-size: var(--fs-sm);
-  flex: 1; /* Равномерное распределение высоты */
+  flex: 1;
 }
 
-/* Нижний блок услуг */
+/* Теги и регалии врача */
+.doctor-badges {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.badge {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  background-color: var(--color-background);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
 .doctor-services {
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   padding: var(--space-sm);
   color: var(--color-text);
   font-size: var(--fs-sm);
-  min-height: 140px; /* Задает минимальную высоту большого блока снизу */
+  min-height: 120px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Распределяет теги и расписание */
+}
+
+/* Таблетки-теги услуг */
+.pills-container {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-sm);
+}
+
+.pill {
+  font-size: var(--fs-xs);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* Блок расписания */
+.schedule-container {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.schedule-title {
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+
+.schedule-slot {
+  background-color: var(--color-secondary);
+  color: var(--color-on-secondary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
 }
 
 .doctor-actions {
-  margin-top: auto; /* Важно: отталкивает блок вниз */
+  margin-top: auto;
   padding-top: var(--space-sm);
   display: flex;
-  justify-content: flex-end; /* Выравниваем кнопку по правому краю */
+  justify-content: flex-end;
 }
 
-/* Стили самой кнопки (наследуют логику services-button) */
 .doctor-button {
   padding: var(--space-xs) var(--space-md);
   background-color: var(--color-primary);
   border: 1px solid var(--color-border);
-  color: #ffffff; /* Белый текст на изумрудном фоне */
+  color: #ffffff;
   border-radius: var(--radius-full);
   font-family: inherit;
   font-weight: var(--fw-semibold);
   font-size: var(--fs-sm);
   cursor: pointer;
   transition: all 0.2s ease;
-  
-  /* Легкая тень для объема */
   box-shadow: 0 4px 10px rgba(104, 178, 160, 0.2); 
 }
 
 .doctor-button:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(104, 178, 160, 0.3);
+}
+
+.datetime-title {
+  width: 100%;
+  color: var(--color-text);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  margin-bottom: var(--space-md);
+}
+
+/* Флекс-контейнер для разделения на две колонки */
+.datetime-layout {
+  display: flex;
+  width: 100%;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+/* Стили карточек Календаря и Времени */
+.datetime-card {
+  flex: 1; /* Позволяет карточкам делить ширину 50/50 */
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  min-height: 320px; /* Минимальная высота для сохранения пропорций пустых блоков */
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.datetime-card-title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+  text-align: center;
+}
+
+/* Временная заглушка для контента */
+.datetime-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-background);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+/* Контейнер кнопок (отмена / подтверждение) */
+.datetime-actions {
+  display: flex;
+  width: 100%;
+  gap: var(--space-md);
+}
+
+/* Второстепенная кнопка */
+.datetime-button-secondary {
+  flex: 1; /* Занимает 50% ширины */
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius-lg);
+  font-family: inherit;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.datetime-button-secondary:hover {
+  background-color: var(--color-surface);
+}
+
+.datetime-button-primary {
+  flex: 1; /* Занимает 50% ширины */
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  font-family: inherit;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(104, 178, 160, 0.2);
+}
+
+.datetime-button-primary:hover {
   background-color: var(--color-primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(104, 178, 160, 0.3);

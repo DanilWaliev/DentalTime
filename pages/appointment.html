@@ -28,6 +28,7 @@
             </button>
         </nav>
     </header>
+    
     <section id="hero" class="hero-section">
         <div class="hero-content">
             <div class="hero-card">
@@ -37,8 +38,11 @@
             </div>
         </div>
     </section>
-    <div class="row" id="services" class="services-section">
+
+    <!-- ШАГ 1: ВЫБОР УСЛУГИ -->
+    <div class="row step-wrapper" id="services">
         <section class="offset-2 col-8 section">
+            <div class="step-counter">Шаг 1 из 2</div>
             <div class="services-title">
                 Выберите услугу
             </div>
@@ -74,14 +78,17 @@
                     Качественная обработка и пломбирование каналов для сохранения здоровья зуба.
                 </div>
             </div>
-            <button class="services-button">
+            
+            <a href="#step-2" class="services-button" style="text-decoration: none; text-align: center; display: inline-block;">
                 Выбрать услугу потом, перейти к выбору врача
-            </button>
+            </a>
         </section>
     </div>
 
-    <div class="row">
+    <!-- ШАГ 2: ВЫБОР ВРАЧА -->
+    <div class="row step-wrapper" id="step-2">
       <section class="offset-2 col-8 section">
+          <div class="step-counter">Шаг 2 из 2</div>
           <div class="doctor-title">
               Выберите врача
           </div>
@@ -91,12 +98,24 @@
               <div class="doctor-card-top">
                   <div class="doctor-photo">Фото</div>
                   <div class="doctor-info-basic">
-                      <div class="doctor-name">ФИО</div>
-                      <div class="doctor-specialty">Специализация</div>
+                      <div class="doctor-name">Константин Иванов</div>
+                      <div class="doctor-specialty">Стоматолог-ортопед</div>
+                      <div class="doctor-badges">
+                          <span class="badge">Стаж: 15 лет</span>
+                      </div>
                   </div>
               </div>
               <div class="doctor-services">
-                  Услуги
+                  <div class="pills-container">
+                      <span class="pill">Протезирование</span>
+                      <span class="pill">Виниры</span>
+                      <span class="pill">Коронки</span>
+                  </div>
+                  <div class="schedule-container">
+                      <span class="schedule-title">Ближайшая запись:</span>
+                      <span class="schedule-slot">Завтра, 14:00</span>
+                      <span class="schedule-slot">Ср, 10:30</span>
+                  </div>
               </div>
               <div class="doctor-actions">
                 <button class="doctor-button">Выбрать врача</button>
@@ -108,12 +127,24 @@
               <div class="doctor-card-top">
                   <div class="doctor-photo">Фото</div>
                   <div class="doctor-info-basic">
-                      <div class="doctor-name">ФИО</div>
-                      <div class="doctor-specialty">Специализация</div>
+                      <div class="doctor-name">Анна Смирнова</div>
+                      <div class="doctor-specialty">Стоматолог-терапевт</div>
+                      <div class="doctor-badges">
+                          <span class="badge">Стаж: 8 лет</span>
+                      </div>
                   </div>
               </div>
               <div class="doctor-services">
-                  Услуги
+                  <div class="pills-container">
+                      <span class="pill">Лечение кариеса</span>
+                      <span class="pill">Пульпит</span>
+                      <span class="pill">Чистка</span>
+                  </div>
+                  <div class="schedule-container">
+                      <span class="schedule-title">Ближайшая запись:</span>
+                      <span class="schedule-slot">Сегодня, 18:00</span>
+                      <span class="schedule-slot">Завтра, 09:00</span>
+                  </div>
               </div>
               <div class="doctor-actions">
                 <button class="doctor-button">Выбрать врача</button>
@@ -122,6 +153,40 @@
 
       </section>
     </div>
+
+    <!-- ШАГ 3: ВЫБОР ДАТЫ И ВРЕМЕНИ -->
+    <div class="row step-wrapper" id="step-3">
+        <section class="offset-2 col-8 section">
+            <div class="step-counter">Шаг 3 из 3</div>
+            <div class="datetime-title">
+                Выберите дату и время
+            </div>
+
+            <!-- Контейнер для двух колонок -->
+            <div class="datetime-layout">
+                <!-- Колонка календаря -->
+                <div class="datetime-card">
+                    <div class="datetime-card-title">Календарь</div>
+                    <!-- Заглушка. Сюда интегрируется логика календаря -->
+                    <div class="datetime-placeholder">Контент календаря</div>
+                </div>
+                
+                <!-- Колонка времени -->
+                <div class="datetime-card">
+                    <div class="datetime-card-title">Время</div>
+                    <!-- Заглушка. Сюда интегрируются слоты времени -->
+                    <div class="datetime-placeholder">Слоты времени</div>
+                </div>
+            </div>
+
+            <!-- Блок с кнопками -->
+            <div class="datetime-actions">
+                <button class="datetime-button-secondary">Отменить выбор</button>
+                <button class="datetime-button-primary">Подтвердить</button>
+            </div>
+        </section>
+    </div>
+    
     <footer>
         <!-- информация -->
     </footer>
