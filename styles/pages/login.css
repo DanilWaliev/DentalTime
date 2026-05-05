@@ -1,0 +1,109 @@
+.page-container {
+  padding-top: calc(var(--header-height) + var(--space-lg));
+  padding-bottom: var(--space-xl);
+  min-height: 100vh;
+  /* Центрируем карточку по вертикали с помощью выравнивания в сетке */
+  align-items: center; 
+}
+
+.login-card {
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: -10vh; /* Визуально приподнимаем карточку чуть выше центра, так смотрится лучше */
+}
+
+.login-title {
+  color: var(--color-text);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  margin: 0;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--fw-semibold);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: #a0b5af;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  /* Легкое изумрудное свечение при фокусе на поле */
+  box-shadow: 0 0 0 3px rgba(104, 178, 160, 0.15); 
+}
+
+.form-actions {
+  margin-top: var(--space-xs);
+}
+
+/* =========================================
+   АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ЭКРАНОВ
+   ========================================= */
+
+@media (max-width: 1024px) {
+  /* На планшетах делаем карточку чуть шире */
+  .offset-4 {
+    grid-column-start: 3;
+  }
+  .col-4 {
+    grid-column-end: span 8;
+  }
+}
+
+@media (max-width: 768px) {
+  /* На телефонах карточка на всю ширину экрана */
+  .offset-4 {
+    grid-column-start: 1;
+  }
+
+  .col-4 {
+    grid-column-end: span 12;
+  }
+
+  .page-container {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+    align-items: flex-start; /* Отменяем центрирование по вертикали, чтобы не перекрывала клавиатура */
+  }
+
+  .login-card {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .login-title {
+    font-size: calc(var(--fs-xl) * 0.9);
+  }
+}
