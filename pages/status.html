@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статус записи - DentalTime</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/status.css">
+</head>
+
+<body>
+    <header class="row">
+        <nav class="offset-1 col-10 nav-container">
+            <div class="logo">DentalTime</div>
+
+            <div class="desktop-menu">
+                <button class="top-menu-button">Онлайн-запись</button>
+                <button class="top-menu-button">Команда</button>
+                <button class="top-menu-button">Услуги</button>
+                <button class="top-menu-button">Статус заявки</button>
+                <button class="top-menu-button">Сотрудникам</button>
+            </div>
+
+            <button class="burger-menu-btn" aria-label="Открыть меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="row page-container">
+        <!-- Карточки занимают 6 колонок по центру (сдвиг на 3 колонки) -->
+        <div class="offset-3 col-6 status-list">
+            
+            <h1 class="page-title">Мои записи</h1>
+
+            <!-- Карточка записи 1 -->
+            <div class="card status-card">
+                <div class="status-header">
+                    <span class="status-id">Запись №123</span>
+                    <span class="badge badge-primary">Подтверждена</span>
+                </div>
+                
+                <div class="status-body">
+                    <div class="status-row">
+                        <span class="status-label">Услуга</span>
+                        <span class="status-value">Профессиональная гигиена</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Врач</span>
+                        <span class="status-value">Анна Смирнова</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Дата и время</span>
+                        <span class="status-value">15 мая 2026, 14:00</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Длительность</span>
+                        <span class="status-value">60 мин</span>
+                    </div>
+                </div>
+
+                <div class="status-actions">
+                    <button class="btn btn-secondary btn-md">Перенести</button>
+                    <button class="btn btn-outline btn-md">Отменить</button>
+                </div>
+            </div>
+
+            <!-- Карточка записи 2 -->
+            <div class="card status-card">
+                <div class="status-header">
+                    <span class="status-id">Запись №124</span>
+                    <span class="badge badge-outline">На рассмотрении</span>
+                </div>
+                
+                <div class="status-body">
+                    <div class="status-row">
+                        <span class="status-label">Услуга</span>
+                        <span class="status-value">Лечение кариеса</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Врач</span>
+                        <span class="status-value">Константин Иванов</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Дата и время</span>
+                        <span class="status-value">18 мая 2026, 10:30</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Длительность</span>
+                        <span class="status-value">45 мин</span>
+                    </div>
+                </div>
+
+                <div class="status-actions">
+                    <button class="btn btn-secondary btn-md">Перенести</button>
+                    <button class="btn btn-outline btn-md">Отменить</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

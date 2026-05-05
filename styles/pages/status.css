@@ -1,0 +1,102 @@
+.page-container {
+  padding-top: calc(var(--header-height) + var(--space-lg));
+  padding-bottom: var(--space-xl);
+  min-height: 100vh;
+}
+
+.page-title {
+  color: var(--color-text);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+  text-align: center;
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.status-card {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-sm);
+}
+
+.status-id {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+
+.status-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-label {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.status-value {
+  color: var(--color-text);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-base);
+  text-align: right;
+}
+
+.status-actions {
+  display: flex;
+  gap: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-md);
+}
+
+/* Кнопки занимают равное пространство */
+.status-actions .btn {
+  flex: 1; 
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+  .offset-3 {
+    grid-column-start: 1;
+  }
+
+  .col-6 {
+    grid-column-end: span 12;
+  }
+
+  .page-container {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+
+  .page-title {
+    font-size: calc(var(--fs-xl) * 0.8);
+  }
+
+  /* На мобильных телефонах кнопки удобнее ставить друг под друга, чтобы не промахнуться пальцем */
+  .status-actions {
+    flex-direction: column;
+  }
+}
