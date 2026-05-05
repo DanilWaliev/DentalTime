@@ -11,27 +11,14 @@
 <body>
     <header class="row">
         <nav class="offset-1 col-10">
-            <button class="top-menu-button">
-              Онлайн-запись
-            </button>
-            <button class="top-menu-button">
-              Команда
-            </button>
-            <button class="top-menu-button">
-              Услуги
-            </button>
-            <button class="top-menu-button">
-              Статус заявки
-            </button>
-            <button class="top-menu-button">
-              Сотрудникам
-            </button>
+            <button class="top-menu-button">Онлайн-запись</button>
+            <button class="top-menu-button">Команда</button>
+            <button class="top-menu-button">Услуги</button>
+            <button class="top-menu-button">Статус заявки</button>
+            <button class="top-menu-button">Сотрудникам</button>
         </nav>
     </header>
     
-    <!-- <section id="hero" class="hero-section">
-        
-    </section> -->
     <div class="hero-container">
         <div id="hero" class="step-wrapper hero-content">
             <div class="hero-card">
@@ -46,44 +33,110 @@
     <div class="row step-wrapper" id="services">
         <section class="offset-2 col-8 section">
             <div class="step-counter">Шаг 1 из 3</div>
-            <div class="services-title">
-                Выберите услугу
-            </div>
-            <div class="services-card">
-                <div class="services-card-title">
-                    Первичная консультация
-                </div>
-                <div class="services-card-description">
-                    Осмотр, детальная диагностика и составление индивидуального плана лечения.
+            
+            <!-- Шапка с кнопками -->
+            <div class="section-header">
+                <div class="services-title">Выберите услугу</div>
+                <div class="slider-controls">
+                    <button class="slider-btn">&lt;</button>
+                    <button class="slider-btn">&gt;</button>
                 </div>
             </div>
-            <div class="services-card">
-                <div class="services-card-title">
-                    Лечение кариеса
+
+            <div class="slider-container">
+                <!-- Услуга 1 -->
+                <div class="services-card">
+                    <div class="service-card-content">
+                        <div class="services-card-title">Первичная консультация</div>
+                        <div class="services-card-description">Осмотр, детальная диагностика и составление индивидуального плана лечения.</div>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-details">
+                            <span class="service-duration">45 мин</span>
+                            <span class="service-price">1 500 ₽</span>
+                        </div>
+                        <button class="service-action-btn">Выбрать</button>
+                    </div>
                 </div>
-                <div class="services-card-description">
-                    Бережное удаление пораженных тканей и установка эстетичной световой пломбы.
+
+                <!-- Услуга 2 -->
+                <div class="services-card">
+                    <div class="service-card-content">
+                        <div class="services-card-title">Лечение кариеса</div>
+                        <div class="services-card-description">Бережное удаление пораженных тканей и установка эстетичной световой пломбы.</div>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-details">
+                            <span class="service-duration">60 мин</span>
+                            <span class="service-price">от 4 000 ₽</span>
+                        </div>
+                        <button class="service-action-btn">Выбрать</button>
+                    </div>
                 </div>
-            </div>
-            <div class="services-card">
-                <div class="services-card-title">
-                    Профессиональная гигиена
+
+                <!-- Услуга 3 -->
+                <div class="services-card">
+                    <div class="service-card-content">
+                        <div class="services-card-title">Профессиональная гигиена</div>
+                        <div class="services-card-description">Комплексное удаление налета и зубного камня методами AirFlow и ультразвука.</div>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-details">
+                            <span class="service-duration">40 мин</span>
+                            <span class="service-price">5 500 ₽</span>
+                        </div>
+                        <button class="service-action-btn">Выбрать</button>
+                    </div>
                 </div>
-                <div class="services-card-description">
-                    Комплексное удаление налета и зубного камня методами AirFlow и ультразвука.
+
+                <!-- Услуга 4 -->
+                <div class="services-card">
+                    <div class="service-card-content">
+                        <div class="services-card-title">Лечение каналов</div>
+                        <div class="services-card-description">Качественная обработка и пломбирование каналов для сохранения здоровья зуба.</div>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-details">
+                            <span class="service-duration">90 мин</span>
+                            <span class="service-price">от 8 000 ₽</span>
+                        </div>
+                        <button class="service-action-btn">Выбрать</button>
+                    </div>
                 </div>
-            </div>
-            <div class="services-card">
-                <div class="services-card-title">
-                    Лечение каналов
+                
+                <!-- Услуга 5 -->
+                <div class="services-card">
+                    <div class="service-card-content">
+                        <div class="services-card-title">Отбеливание зубов</div>
+                        <div class="services-card-description">Безопасное осветление эмали на несколько тонов с использованием современных систем.</div>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-details">
+                            <span class="service-duration">60 мин</span>
+                            <span class="service-price">12 000 ₽</span>
+                        </div>
+                        <button class="service-action-btn">Выбрать</button>
+                    </div>
                 </div>
-                <div class="services-card-description">
-                    Качественная обработка и пломбирование каналов для сохранения здоровья зуба.
+
+                <!-- Услуга 6 -->
+                <div class="services-card">
+                    <div class="service-card-content">
+                        <div class="services-card-title">Удаление зуба</div>
+                        <div class="services-card-description">Безболезненное удаление зубов любой сложности, включая ретинированные зубы мудрости.</div>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-details">
+                            <span class="service-duration">30 мин</span>
+                            <span class="service-price">от 2 500 ₽</span>
+                        </div>
+                        <button class="service-action-btn">Выбрать</button>
+                    </div>
                 </div>
             </div>
             
-            <a href="#step-2" class="services-button" style="text-decoration: none; text-align: center; display: inline-block;">
-                Выбрать услугу потом, перейти к выбору врача
+            <a href="#step-2" class="services-skip-link">
+                Выбрать услугу потом, перейти к выбору врача →
             </a>
         </section>
     </div>
@@ -92,68 +145,74 @@
     <div class="row step-wrapper" id="step-2">
       <section class="offset-2 col-8 section">
           <div class="step-counter">Шаг 2 из 3</div>
-          <div class="doctor-title">
-              Выберите врача
+          
+          <div class="section-header">
+              <div class="doctor-title">Выберите врача</div>
+              <div class="slider-controls">
+                  <button class="slider-btn">&lt;</button>
+                  <button class="slider-btn">&gt;</button>
+              </div>
           </div>
 
-          <!-- Карточка врача 1 -->
-          <div class="doctor-card">
-              <div class="doctor-card-top">
-                  <div class="doctor-photo">Фото</div>
-                  <div class="doctor-info-basic">
-                      <div class="doctor-name">Константин Иванов</div>
-                      <div class="doctor-specialty">Стоматолог-ортопед</div>
-                      <div class="doctor-badges">
-                          <span class="badge">Стаж: 15 лет</span>
+          <div class="slider-container">
+              <!-- Карточка врача 1 -->
+              <div class="doctor-card">
+                  <div class="doctor-card-top">
+                      <div class="doctor-photo">Фото</div>
+                      <div class="doctor-info-basic">
+                          <div class="doctor-name">Константин Иванов</div>
+                          <div class="doctor-specialty">Стоматолог-ортопед</div>
+                          <div class="doctor-badges">
+                              <span class="badge">Стаж: 15 лет</span>
+                          </div>
                       </div>
                   </div>
-              </div>
-              <div class="doctor-services">
-                  <div class="pills-container">
-                      <span class="pill">Протезирование</span>
-                      <span class="pill">Виниры</span>
-                      <span class="pill">Коронки</span>
-                  </div>
-                  <div class="schedule-container">
-                      <span class="schedule-title">Ближайшая запись:</span>
-                      <span class="schedule-slot">Завтра, 14:00</span>
-                      <span class="schedule-slot">Ср, 10:30</span>
-                  </div>
-              </div>
-              <div class="doctor-actions">
-                <button class="doctor-button">Выбрать врача</button>
-              </div>  
-          </div>
-
-          <!-- Карточка врача 2 -->
-          <div class="doctor-card">
-              <div class="doctor-card-top">
-                  <div class="doctor-photo">Фото</div>
-                  <div class="doctor-info-basic">
-                      <div class="doctor-name">Анна Смирнова</div>
-                      <div class="doctor-specialty">Стоматолог-терапевт</div>
-                      <div class="doctor-badges">
-                          <span class="badge">Стаж: 8 лет</span>
+                  <div class="doctor-services">
+                      <div class="pills-container">
+                          <span class="pill">Протезирование</span>
+                          <span class="pill">Виниры</span>
+                          <span class="pill">Коронки</span>
+                      </div>
+                      <div class="schedule-container">
+                          <span class="schedule-title">Ближайшая запись:</span>
+                          <span class="schedule-slot">Завтра, 14:00</span>
+                          <span class="schedule-slot">Ср, 10:30</span>
                       </div>
                   </div>
+                  <div class="doctor-actions">
+                    <a href="#step-3" class="doctor-button" style="text-decoration: none; text-align: center;">Выбрать врача</a>
+                  </div>  
               </div>
-              <div class="doctor-services">
-                  <div class="pills-container">
-                      <span class="pill">Лечение кариеса</span>
-                      <span class="pill">Пульпит</span>
-                      <span class="pill">Чистка</span>
-                  </div>
-                  <div class="schedule-container">
-                      <span class="schedule-title">Ближайшая запись:</span>
-                      <span class="schedule-slot">Сегодня, 18:00</span>
-                      <span class="schedule-slot">Завтра, 09:00</span>
-                  </div>
-              </div>
-              <div class="doctor-actions">
-                <button class="doctor-button">Выбрать врача</button>
-              </div> 
-          </div>
 
+              <!-- Карточка врача 2 -->
+              <div class="doctor-card">
+                  <div class="doctor-card-top">
+                      <div class="doctor-photo">Фото</div>
+                      <div class="doctor-info-basic">
+                          <div class="doctor-name">Анна Смирнова</div>
+                          <div class="doctor-specialty">Стоматолог-терапевт</div>
+                          <div class="doctor-badges">
+                              <span class="badge">Стаж: 8 лет</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="doctor-services">
+                      <div class="pills-container">
+                          <span class="pill">Лечение кариеса</span>
+                          <span class="pill">Пульпит</span>
+                          <span class="pill">Чистка</span>
+                      </div>
+                      <div class="schedule-container">
+                          <span class="schedule-title">Ближайшая запись:</span>
+                          <span class="schedule-slot">Сегодня, 18:00</span>
+                          <span class="schedule-slot">Завтра, 09:00</span>
+                      </div>
+                  </div>
+                  <div class="doctor-actions">
+                    <a href="#step-3" class="doctor-button" style="text-decoration: none; text-align: center;">Выбрать врача</a>
+                  </div> 
+              </div>
+          </div>
       </section>
     </div>
 
@@ -175,9 +234,9 @@
                     <div class="calendar-widget">
                         <!-- Шапка: Месяц и навигация -->
                         <div class="calendar-header">
-                            <button class="calendar-nav-btn"><</button>
+                            <button class="calendar-nav-btn">&lt;</button>
                             <div class="calendar-month">Май 2026</div>
-                            <button class="calendar-nav-btn">></button>
+                            <button class="calendar-nav-btn">&gt;</button>
                         </div>
 
                         <!-- Дни недели -->
@@ -187,13 +246,10 @@
 
                         <!-- Сетка дат (7 колонок) -->
                         <div class="calendar-grid">
-                            <!-- Прошлый месяц (неактивные) -->
                             <button class="calendar-day disabled">27</button>
                             <button class="calendar-day disabled">28</button>
                             <button class="calendar-day disabled">29</button>
                             <button class="calendar-day disabled">30</button>
-
-                            <!-- Текущий месяц -->
                             <button class="calendar-day">1</button>
                             <button class="calendar-day">2</button>
                             <button class="calendar-day">3</button>
@@ -208,7 +264,6 @@
                             <button class="calendar-day">12</button>
                             <button class="calendar-day">13</button>
                             <button class="calendar-day">14</button>
-                            <!-- Выбранный день -->
                             <button class="calendar-day active">15</button>
                             <button class="calendar-day">16</button>
                             <button class="calendar-day">17</button>
@@ -237,7 +292,6 @@
                     <!-- Визуальный компонент времени -->
                     <div class="time-widget">
                         <div class="time-group">
-                            <div class="time-group-label">Утро</div>
                             <div class="time-slots">
                                 <button class="time-slot disabled">09:00</button>
                                 <button class="time-slot disabled">09:30</button>
@@ -245,21 +299,16 @@
                                 <button class="time-slot">10:30</button>
                                 <button class="time-slot">11:00</button>
                                 <button class="time-slot">11:30</button>
-                            </div>
-                        </div>
-
-                        <div class="time-group">
-                            <div class="time-group-label">День</div>
-                            <div class="time-slots">
                                 <button class="time-slot">12:00</button>
                                 <button class="time-slot">12:30</button>
                                 <button class="time-slot">13:00</button>
                                 <button class="time-slot disabled">13:30</button>
-                                <!-- Выбранное время -->
                                 <button class="time-slot active">14:00</button>
                                 <button class="time-slot">14:30</button>
                                 <button class="time-slot">15:00</button>
                                 <button class="time-slot">15:30</button>
+                                <button class="time-slot">16:00</button>
+                                <button class="time-slot">16:30</button>
                             </div>
                         </div>
                     </div>

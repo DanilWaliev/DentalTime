@@ -3,8 +3,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
-  
-  /* Включаем магнитный скролл по вертикали */
   scroll-snap-type: y mandatory; 
 }
 
@@ -23,16 +21,12 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-
   background-image: url('../../images/bg_dental.png');
   background-size: cover;
   background-position: center;
-
   filter: blur(15px);
   transform: scale(1.1);
-
   box-shadow: inset 0 0 0 2000px rgba(255, 255, 255, 0.7);
-
   z-index: -1;
 }
 
@@ -55,21 +49,19 @@ nav {
   background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
-
-  overflow: hidden
+  overflow: hidden;
 }
+
 .top-menu-button {
   position: relative;
   padding: var(--space-sm);
   color: var(--color-text);
   font-size: var(--fs-md);
   font-weight: var(--fw-semibold);
-
   border: none;
   background-color: transparent;
   cursor: pointer;
-
-  transition: color 0.2s ease, transform 0.1s ease;
+  transition: color 0.2s ease;
 }
 
 .top-menu-button::after {
@@ -88,6 +80,10 @@ nav {
   width: 100%;
 }
 
+.top-menu-button:hover {
+  color: var(--color-primary); /* Цвет меняется при наведении */
+}
+
 .hero-container {
   height: 100vh;
   padding: calc(var(--space-sm) + var(--header-height)) var(--space-sm) var(--space-sm) var(--space-sm);
@@ -99,12 +95,9 @@ nav {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   width: 100%;
-
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -114,7 +107,6 @@ nav {
 .hero-card {
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
-
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -123,27 +115,32 @@ nav {
 .hero-button {
   display: inline-block;
   text-decoration: none;
-
   background-color: var(--color-primary);
   padding: var(--space-md);
   color: var(--color-text);
-
   font-family: inherit;
   font-size: var(--fs-md);
   font-weight: var(--fw-semibold);
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.hero-button:hover {
+  background-color: var(--color-primary-hover);
+  color: #ffffff;
+}
+
+.hero-button:active {
+  transform: scale(0.98);
 }
 
 /* Изоляция шагов */
 .step-wrapper {
-  margin-bottom: 40vh; /* Отталкиваем следующий блок глубоко вниз */
-  scroll-snap-align: start; /* Центрируем блок при скролле */
+  margin-bottom: 40vh;
+  scroll-snap-align: start; 
 }
 
-/* Счетчик прогресса */
 .step-counter {
   width: 100%;
   font-size: var(--fs-sm);
@@ -159,48 +156,112 @@ section {
   backdrop-filter: blur(16px);
   width: 100%;
   position: relative;
-
   display: flex;
   flex-wrap: wrap;
-  justify-content: right;
+  justify-content: space-between; /* Распределяем элементы шапки и пропуск */
   margin-top: var(--space-lg);
   padding: var(--space-md);
   gap: var(--space-sm);
-
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-
   color: var(--color-text);
 }
 
-/* Секция услуг */
-.services-title {
+/* Горизонтальный слайдер */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.services-title,
+.doctor-title {
   color: var(--color-text);
   font-size: var(--fs-xl);
   font-weight: var(--fw-semibold);
 }
 
-.services-card {
-  width: calc(50% - 8px);
-  padding: var(--space-sm);
-  background-color: #ffffff;
-  box-shadow: 0 20px 40px -10px rgba(26, 43, 39, 0.06);
-  transition: all 0.3s ease;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  font-size: var(--fs-md);
+.slider-controls {
+  display: flex;
+  gap: var(--space-xs);
 }
 
-.services-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 30px 50px -15px rgba(26, 43, 39, 0.1);
+.slider-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-primary);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.slider-btn:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.slider-btn:active {
+  transform: scale(0.95);
+}
+
+.slider-container {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-sm); 
+  margin-bottom: var(--space-sm);
+  scrollbar-width: none;
+}
+
+.slider-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Секция услуг */
+
+.services-card {
+  scroll-snap-align: start;
+  flex: 0 0 calc(50% - (var(--space-sm) / 2)); 
+  padding: var(--space-md);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease; /* Убрано изменение box-shadow */
+  
+  display: flex;
+  flex-direction: column;
+  min-height: 280px; /* Высота как у карточек врачей */
+}
+
+/* Подсветка карточки при наведении */
+.services-card:hover,
+.doctor-card:hover {
+  border-color: var(--color-primary);
+}
+
+.service-card-content {
+  flex: 1; /* Расталкивает подвал вниз */
 }
 
 .services-card-title {
+  color: var(--color-text);
   font-size: var(--fs-lg);
-  margin-bottom: var(--space-sm);
+  font-weight: var(--fw-semibold);
+  margin-bottom: var(--space-xs);
 }
 
 .services-card-description {
@@ -208,37 +269,80 @@ section {
   color: var(--color-text-muted);
 }
 
-.services-button {
-  width: 40%;
-  padding: var(--space-xs);
-  background-color: var(--color-secondary);
-  border: 1px solid var(--color-border);
-  color: var(--color-on-secondary);
-  border-radius: var(--radius-full);
+.service-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: auto;
 }
 
-.services-button:hover {
-  background-color: var(--color-secondary-hover);
+.service-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border); /* горизонтальный разделитель */
+  padding-top: var(--space-sm);
+}
+
+.service-duration {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.service-price {
+  font-size: var(--fs-md);
+  color: var(--color-text);
+  font-weight: var(--fw-semibold);
+}
+
+.service-action-btn {
+  width: 100%;
+  padding: var(--space-sm);
+  background-color: var(--color-secondary);
+  border: 1px solid transparent;
+  color: var(--color-on-secondary);
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.service-action-btn:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.service-action-btn:active {
+  transform: scale(0.98);
+}
+
+.services-skip-link {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  font-weight: var(--fw-semibold);
+  transition: color 0.2s ease;
+  width: 100%;
+  text-align: right;
+  padding-right: var(--space-sm);
+}
+
+.services-skip-link:hover {
+  color: var(--color-primary);
 }
 
 /* Секция врачей */
-.doctor-title {
-  width: 100%;
-  color: var(--color-text);
-  font-size: var(--fs-xl);
-  font-weight: var(--fw-semibold);
-  margin-bottom: var(--space-sm);
-}
 
 .doctor-card {
-  width: calc(50% - 8px);
-  padding: var(--space-sm);
-  
+  scroll-snap-align: start;
+  flex: 0 0 calc(50% - (var(--space-sm) / 2));
+  padding: var(--space-md);
   background-color: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 40px -10px rgba(26, 43, 39, 0.06);
-  
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -254,7 +358,6 @@ section {
   flex: 0 0 120px;
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,13 +416,11 @@ section {
   color: var(--color-text);
   font-size: var(--fs-sm);
   min-height: 120px;
-  
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Распределяет теги и расписание */
+  justify-content: space-between;
 }
 
-/* Таблетки-теги услуг */
 .pills-container {
   display: flex;
   gap: var(--space-xs);
@@ -335,13 +436,14 @@ section {
   border-radius: var(--radius-full);
 }
 
-/* Блок расписания */
 .schedule-container {
   display: flex;
   gap: var(--space-xs);
   align-items: center;
   font-size: var(--fs-xs);
   color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-sm);
 }
 
 .schedule-title {
@@ -360,28 +462,33 @@ section {
   margin-top: auto;
   padding-top: var(--space-sm);
   display: flex;
-  justify-content: flex-end;
 }
 
+/* Кнопка врача без теней и прыжков */
 .doctor-button {
-  padding: var(--space-xs) var(--space-md);
-  background-color: var(--color-primary);
-  border: 1px solid var(--color-border);
-  color: #ffffff;
+  width: 100%;
+  padding: var(--space-sm);
+  background-color: var(--color-secondary);
+  border: 1px solid transparent;
+  color: var(--color-on-secondary);
   border-radius: var(--radius-full);
   font-family: inherit;
   font-weight: var(--fw-semibold);
   font-size: var(--fs-sm);
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(104, 178, 160, 0.2); 
 }
 
 .doctor-button:hover {
-  background-color: var(--color-primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(104, 178, 160, 0.3);
+  background-color: var(--color-primary);
+  color: #ffffff;
 }
+
+.doctor-button:active {
+  transform: scale(0.98);
+}
+
+/* Секция выбора даты и времени */
 
 .datetime-title {
   width: 100%;
@@ -391,23 +498,19 @@ section {
   margin-bottom: var(--space-md);
 }
 
-/* Флекс-контейнер для разделения на две колонки */
 .datetime-layout {
   display: flex;
   width: 100%;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
+  gap: var(--space-sm); 
+  margin-bottom: var(--space-md); 
 }
 
-/* Стили карточек Календаря и Времени */
 .datetime-card {
-  flex: 1; /* Позволяет карточкам делить ширину 50/50 */
+  flex: 1;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  min-height: 320px; /* Минимальная высота для сохранения пропорций пустых блоков */
-  
+  padding: var(--space-sm); 
   display: flex;
   flex-direction: column;
 }
@@ -420,29 +523,14 @@ section {
   text-align: center;
 }
 
-/* Временная заглушка для контента */
-.datetime-placeholder {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-background);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  font-size: var(--fs-sm);
-}
-
-/* Контейнер кнопок (отмена / подтверждение) */
 .datetime-actions {
   display: flex;
   width: 100%;
   gap: var(--space-md);
 }
 
-/* Второстепенная кнопка */
 .datetime-button-secondary {
-  flex: 1; /* Занимает 50% ширины */
+  flex: 1;
   padding: var(--space-sm) var(--space-md);
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
@@ -451,6 +539,7 @@ section {
   font-family: inherit;
   font-weight: var(--fw-semibold);
   font-size: var(--fs-md);
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
@@ -458,34 +547,40 @@ section {
   background-color: var(--color-surface);
 }
 
+.datetime-button-secondary:active {
+  transform: scale(0.98);
+}
+
 .datetime-button-primary {
-  flex: 1; /* Занимает 50% ширины */
+  flex: 1;
   padding: var(--space-sm) var(--space-md);
   background-color: var(--color-primary);
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   color: #ffffff;
   border-radius: var(--radius-lg);
   font-family: inherit;
   font-weight: var(--fw-semibold);
   font-size: var(--fs-md);
+  cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(104, 178, 160, 0.2);
 }
 
 .datetime-button-primary:hover {
   background-color: var(--color-primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(104, 178, 160, 0.3);
 }
 
+.datetime-button-primary:active {
+  transform: scale(0.98);
+}
+
+/* Компоненты календаря */
 .calendar-widget {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs); 
 }
 
-/* Шапка с месяцем */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -505,6 +600,7 @@ section {
   font-size: var(--fs-lg);
   color: var(--color-primary);
   padding: 0 var(--space-xs);
+  cursor: pointer;
   transition: color 0.2s;
 }
 
@@ -512,7 +608,6 @@ section {
   color: var(--color-primary-hover);
 }
 
-/* Сетка дней недели */
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -520,19 +615,17 @@ section {
   font-size: var(--fs-xs);
   color: var(--color-text-muted);
   font-weight: var(--fw-semibold);
-  margin-bottom: var(--space-xs);
+  margin-bottom: 4px;
 }
 
-/* Сетка чисел месяца */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
 }
 
-/* Кнопка отдельного дня */
 .calendar-day {
-  aspect-ratio: 1 / 1;  /* Чтобы дата была в ровном квадрате */
+  height: 32px; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -546,17 +639,15 @@ section {
   transition: all 0.2s ease;
 }
 
-/* Состояния дня */
 .calendar-day:hover:not(.disabled):not(.active) {
   background-color: var(--color-secondary);
-  border-color: var(--color-secondary-hover);
+  color: var(--color-primary);
 }
 
 .calendar-day.active {
   background-color: var(--color-primary);
   color: #ffffff;
   font-weight: var(--fw-semibold);
-  box-shadow: 0 2px 8px rgba(104, 178, 160, 0.4);
 }
 
 .calendar-day.disabled {
@@ -565,11 +656,12 @@ section {
   background-color: transparent;
 }
 
+/* Компоненты слотов времени */
 .time-widget {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .time-group {
@@ -578,22 +670,15 @@ section {
   gap: var(--space-xs);
 }
 
-.time-group-label {
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
-  font-weight: var(--fw-semibold);
-}
-
 .time-slots {
   display: flex;
-  flex-wrap: wrap; /* Кнопки переносятся на новую строку, если не влезают */
+  flex-wrap: wrap;
   gap: var(--space-xs);
 }
 
-/* Кнопка слота времени */
 .time-slot {
-  flex: 0 0 calc(33.333% - (var(--space-xs) * 2 / 3)); /* Строго по 3 в ряд */
-  padding: var(--space-xs) 0;
+  flex: 0 0 calc(33.333% - (var(--space-xs) * 2 / 3)); 
+  padding: 6px 0; 
   background-color: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -601,27 +686,26 @@ section {
   font-size: var(--fs-sm);
   font-family: inherit;
   text-align: center;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* Состояния времени */
 .time-slot:hover:not(.disabled):not(.active) {
-  cursor: pointer;
   border-color: var(--color-primary);
   color: var(--color-primary);
+  background-color: var(--color-surface);
 }
 
 .time-slot.active {
-  cursor: pointer;
   background-color: var(--color-primary);
   border-color: var(--color-primary);
   color: #ffffff;
   font-weight: var(--fw-semibold);
-  box-shadow: 0 2px 8px rgba(104, 178, 160, 0.4);
 }
 
 .time-slot.disabled {
   background-color: var(--color-surface);
   color: var(--color-border);
   text-decoration: line-through;
+  cursor: default;
 }
