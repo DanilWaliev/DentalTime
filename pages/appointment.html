@@ -10,12 +10,25 @@
 
 <body>
     <header class="row">
-        <nav class="offset-1 col-10">
-            <button class="top-menu-button">Онлайн-запись</button>
-            <button class="top-menu-button">Команда</button>
-            <button class="top-menu-button">Услуги</button>
-            <button class="top-menu-button">Статус заявки</button>
-            <button class="top-menu-button">Сотрудникам</button>
+        <nav class="offset-1 col-10 nav-container">
+            <!-- Логотип -->
+            <div class="logo">DentalTime</div>
+
+            <!-- Десктопное меню -->
+            <div class="desktop-menu">
+                <button class="top-menu-button">Онлайн-запись</button>
+                <button class="top-menu-button">Команда</button>
+                <button class="top-menu-button">Услуги</button>
+                <button class="top-menu-button">Статус заявки</button>
+                <button class="top-menu-button">Сотрудникам</button>
+            </div>
+
+            <!-- Кнопка Бургер (видна только на мобильных) -->
+            <button class="burger-menu-btn" aria-label="Открыть меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
     </header>
     
@@ -34,7 +47,6 @@
         <section class="offset-2 col-8 section">
             <div class="step-counter">Шаг 1 из 3</div>
             
-            <!-- Шапка с кнопками -->
             <div class="section-header">
                 <div class="services-title">Выберите услугу</div>
                 <div class="slider-controls">
@@ -44,7 +56,6 @@
             </div>
 
             <div class="slider-container">
-                <!-- Услуга 1 -->
                 <div class="services-card">
                     <div class="service-card-content">
                         <div class="services-card-title">Первичная консультация</div>
@@ -59,7 +70,6 @@
                     </div>
                 </div>
 
-                <!-- Услуга 2 -->
                 <div class="services-card">
                     <div class="service-card-content">
                         <div class="services-card-title">Лечение кариеса</div>
@@ -74,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- Услуга 3 -->
                 <div class="services-card">
                     <div class="service-card-content">
                         <div class="services-card-title">Профессиональная гигиена</div>
@@ -89,7 +98,6 @@
                     </div>
                 </div>
 
-                <!-- Услуга 4 -->
                 <div class="services-card">
                     <div class="service-card-content">
                         <div class="services-card-title">Лечение каналов</div>
@@ -104,7 +112,6 @@
                     </div>
                 </div>
                 
-                <!-- Услуга 5 -->
                 <div class="services-card">
                     <div class="service-card-content">
                         <div class="services-card-title">Отбеливание зубов</div>
@@ -119,7 +126,6 @@
                     </div>
                 </div>
 
-                <!-- Услуга 6 -->
                 <div class="services-card">
                     <div class="service-card-content">
                         <div class="services-card-title">Удаление зуба</div>
@@ -155,7 +161,6 @@
           </div>
 
           <div class="slider-container">
-              <!-- Карточка врача 1 -->
               <div class="doctor-card">
                   <div class="doctor-card-top">
                       <div class="doctor-photo">Фото</div>
@@ -184,7 +189,6 @@
                   </div>  
               </div>
 
-              <!-- Карточка врача 2 -->
               <div class="doctor-card">
                   <div class="doctor-card-top">
                       <div class="doctor-photo">Фото</div>
@@ -224,27 +228,24 @@
                 Выберите дату и время
             </div>
 
-            <!-- Контейнер для двух колонок -->
             <div class="datetime-layout">
-                <!-- Колонка календаря -->
                 <div class="datetime-card">
                     <div class="datetime-card-title">Календарь</div>
-
-                    <!-- Визуальный компонент календаря -->
                     <div class="calendar-widget">
-                        <!-- Шапка: Месяц и навигация -->
                         <div class="calendar-header">
                             <button class="calendar-nav-btn">&lt;</button>
                             <div class="calendar-month">Май 2026</div>
                             <button class="calendar-nav-btn">&gt;</button>
                         </div>
-
-                        <!-- Дни недели -->
                         <div class="calendar-weekdays">
-                            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                            <span>Пн</span>
+                            <span>Вт</span>
+                            <span>Ср</span>
+                            <span>Чт</span>
+                            <span>Пт</span>
+                            <span>Сб</span>
+                            <span>Вс</span>
                         </div>
-
-                        <!-- Сетка дат (7 колонок) -->
                         <div class="calendar-grid">
                             <button class="calendar-day disabled">27</button>
                             <button class="calendar-day disabled">28</button>
@@ -285,11 +286,8 @@
                     </div>
                 </div>
 
-                <!-- Колонка времени -->
                 <div class="datetime-card">
                     <div class="datetime-card-title">Время</div>
-
-                    <!-- Визуальный компонент времени -->
                     <div class="time-widget">
                         <div class="time-group">
                             <div class="time-slots">
@@ -315,7 +313,6 @@
                 </div>
             </div>
 
-            <!-- Блок с кнопками -->
             <div class="datetime-actions">
                 <button class="datetime-button-secondary">Отменить выбор</button>
                 <button class="datetime-button-primary">Подтвердить</button>

@@ -1,5 +1,9 @@
 /* appointment.css */
 
+/* =========================================
+   БАЗОВЫЕ СТИЛИ
+   ========================================= */
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
@@ -30,6 +34,10 @@ body::before {
   z-index: -1;
 }
 
+/* =========================================
+   НАВИГАЦИЯ (HEADER)
+   ========================================= */
+
 header {
   height: var(--header-height);
   top: 0;
@@ -41,7 +49,7 @@ header {
   padding-bottom: var(--space-sm);
 }
 
-nav {
+.nav-container {
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -50,6 +58,18 @@ nav {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
   overflow: hidden;
+  padding: 0 var(--space-md);
+}
+
+.logo {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  color: var(--color-primary);
+}
+
+.desktop-menu {
+  display: flex;
+  gap: var(--space-sm);
 }
 
 .top-menu-button {
@@ -81,8 +101,29 @@ nav {
 }
 
 .top-menu-button:hover {
-  color: var(--color-primary); /* Цвет меняется при наведении */
+  color: var(--color-primary); 
 }
+
+.burger-menu-btn {
+  display: none; 
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.burger-menu-btn span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
+}
+
+/* =========================================
+   ГЛАВНЫЙ ЭКРАН (HERO)
+   ========================================= */
 
 .hero-container {
   height: 100vh;
@@ -135,7 +176,10 @@ nav {
   transform: scale(0.98);
 }
 
-/* Изоляция шагов */
+/* =========================================
+   ОБЩИЕ СТИЛИ ДЛЯ СЕКЦИЙ (ШАГИ)
+   ========================================= */
+
 .step-wrapper {
   margin-bottom: 40vh;
   scroll-snap-align: start; 
@@ -158,7 +202,7 @@ section {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; /* Распределяем элементы шапки и пропуск */
+  justify-content: space-between; 
   margin-top: var(--space-lg);
   padding: var(--space-md);
   gap: var(--space-sm);
@@ -166,8 +210,6 @@ section {
   border-radius: var(--radius-lg);
   color: var(--color-text);
 }
-
-/* Горизонтальный слайдер */
 
 .section-header {
   display: flex;
@@ -231,34 +273,41 @@ section {
   display: none;
 }
 
-/* Секция услуг */
+/* =========================================
+   КАРТОЧКИ УСЛУГ И ВРАЧЕЙ
+   ========================================= */
 
-.services-card {
+.services-card,
+.doctor-card {
   scroll-snap-align: start;
   flex: 0 0 calc(50% - (var(--space-sm) / 2)); 
   padding: var(--space-md);
   background-color: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  transition: all 0.2s ease; /* Убрано изменение box-shadow */
-  
+  transition: all 0.2s ease; 
   display: flex;
   flex-direction: column;
-  min-height: 280px; /* Высота как у карточек врачей */
 }
 
-/* Подсветка карточки при наведении */
+.services-card {
+  min-height: 280px;
+}
+
+.doctor-card {
+  gap: var(--space-sm);
+}
+
 .services-card:hover,
 .doctor-card:hover {
   border-color: var(--color-primary);
 }
 
 .service-card-content {
-  flex: 1; /* Расталкивает подвал вниз */
+  flex: 1;
 }
 
 .services-card-title {
-  color: var(--color-text);
   font-size: var(--fs-lg);
   font-weight: var(--fw-semibold);
   margin-bottom: var(--space-xs);
@@ -280,7 +329,7 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--color-border); /* горизонтальный разделитель */
+  border-top: 1px solid var(--color-border);
   padding-top: var(--space-sm);
 }
 
@@ -291,11 +340,11 @@ section {
 
 .service-price {
   font-size: var(--fs-md);
-  color: var(--color-text);
   font-weight: var(--fw-semibold);
 }
 
-.service-action-btn {
+.service-action-btn,
+.doctor-button {
   width: 100%;
   padding: var(--space-sm);
   background-color: var(--color-secondary);
@@ -309,12 +358,14 @@ section {
   transition: all 0.2s ease;
 }
 
-.service-action-btn:hover {
+.service-action-btn:hover,
+.doctor-button:hover {
   background-color: var(--color-primary);
   color: #ffffff;
 }
 
-.service-action-btn:active {
+.service-action-btn:active,
+.doctor-button:active {
   transform: scale(0.98);
 }
 
@@ -331,21 +382,6 @@ section {
 
 .services-skip-link:hover {
   color: var(--color-primary);
-}
-
-/* Секция врачей */
-
-.doctor-card {
-  scroll-snap-align: start;
-  flex: 0 0 calc(50% - (var(--space-sm) / 2));
-  padding: var(--space-md);
-  background-color: #ffffff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
 }
 
 .doctor-card-top {
@@ -377,7 +413,6 @@ section {
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   padding: var(--space-sm);
-  color: var(--color-text);
   display: flex;
   align-items: center;
 }
@@ -413,7 +448,6 @@ section {
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   padding: var(--space-sm);
-  color: var(--color-text);
   font-size: var(--fs-sm);
   min-height: 120px;
   display: flex;
@@ -464,45 +498,22 @@ section {
   display: flex;
 }
 
-/* Кнопка врача без теней и прыжков */
-.doctor-button {
-  width: 100%;
-  padding: var(--space-sm);
-  background-color: var(--color-secondary);
-  border: 1px solid transparent;
-  color: var(--color-on-secondary);
-  border-radius: var(--radius-full);
-  font-family: inherit;
-  font-weight: var(--fw-semibold);
-  font-size: var(--fs-sm);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.doctor-button:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
-}
-
-.doctor-button:active {
-  transform: scale(0.98);
-}
-
-/* Секция выбора даты и времени */
+/* =========================================
+   КАЛЕНДАРЬ И ВРЕМЯ
+   ========================================= */
 
 .datetime-title {
-  width: 100%;
-  color: var(--color-text);
   font-size: var(--fs-xl);
   font-weight: var(--fw-semibold);
   margin-bottom: var(--space-md);
+  width: 100%;
 }
 
 .datetime-layout {
   display: flex;
   width: 100%;
-  gap: var(--space-sm); 
-  margin-bottom: var(--space-md); 
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
 }
 
 .datetime-card {
@@ -510,7 +521,7 @@ section {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-sm); 
+  padding: var(--space-sm);
   display: flex;
   flex-direction: column;
 }
@@ -518,67 +529,15 @@ section {
 .datetime-card-title {
   font-size: var(--fs-lg);
   font-weight: var(--fw-semibold);
-  color: var(--color-text);
   margin-bottom: var(--space-sm);
   text-align: center;
 }
 
-.datetime-actions {
-  display: flex;
-  width: 100%;
-  gap: var(--space-md);
-}
-
-.datetime-button-secondary {
-  flex: 1;
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  border-radius: var(--radius-lg);
-  font-family: inherit;
-  font-weight: var(--fw-semibold);
-  font-size: var(--fs-md);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.datetime-button-secondary:hover {
-  background-color: var(--color-surface);
-}
-
-.datetime-button-secondary:active {
-  transform: scale(0.98);
-}
-
-.datetime-button-primary {
-  flex: 1;
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--color-primary);
-  border: 1px solid transparent;
-  color: #ffffff;
-  border-radius: var(--radius-lg);
-  font-family: inherit;
-  font-weight: var(--fw-semibold);
-  font-size: var(--fs-md);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.datetime-button-primary:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.datetime-button-primary:active {
-  transform: scale(0.98);
-}
-
-/* Компоненты календаря */
 .calendar-widget {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs); 
+  gap: var(--space-xs);
 }
 
 .calendar-header {
@@ -591,7 +550,6 @@ section {
 .calendar-month {
   font-weight: var(--fw-semibold);
   font-size: var(--fs-md);
-  color: var(--color-text);
 }
 
 .calendar-nav-btn {
@@ -625,14 +583,13 @@ section {
 }
 
 .calendar-day {
-  height: 32px; 
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  color: var(--color-text);
   font-size: var(--fs-sm);
   font-family: inherit;
   cursor: pointer;
@@ -653,10 +610,8 @@ section {
 .calendar-day.disabled {
   color: var(--color-border);
   cursor: default;
-  background-color: transparent;
 }
 
-/* Компоненты слотов времени */
 .time-widget {
   width: 100%;
   display: flex;
@@ -677,12 +632,11 @@ section {
 }
 
 .time-slot {
-  flex: 0 0 calc(33.333% - (var(--space-xs) * 2 / 3)); 
-  padding: 6px 0; 
+  flex: 0 0 calc(33.333% - (var(--space-xs) * 2 / 3));
+  padding: 6px 0;
   background-color: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  color: var(--color-text);
   font-size: var(--fs-sm);
   font-family: inherit;
   text-align: center;
@@ -708,4 +662,167 @@ section {
   color: var(--color-border);
   text-decoration: line-through;
   cursor: default;
+}
+
+.datetime-actions {
+  display: flex;
+  width: 100%;
+  gap: var(--space-md);
+}
+
+.datetime-button-secondary,
+.datetime-button-primary {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  font-family: inherit;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.datetime-button-secondary {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.datetime-button-secondary:hover {
+  background-color: var(--color-surface);
+}
+
+.datetime-button-secondary:active {
+  transform: scale(0.98);
+}
+
+.datetime-button-primary {
+  background-color: var(--color-primary);
+  border: 1px solid transparent;
+  color: #ffffff;
+}
+
+.datetime-button-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.datetime-button-primary:active {
+  transform: scale(0.98);
+}
+
+/* Адаптация для мобильных устройств */
+
+@media (max-width: 768px) {
+  .offset-2,
+  .offset-1 {
+    grid-column-start: 1;
+  }
+  
+  .col-8,
+  .col-10 {
+    grid-column-end: span 12;
+  }
+  
+  .row {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+
+  /* Уменьшаем шрифты главных заголовков */
+  .hero-title {
+    font-size: calc(var(--fs-xl) * 0.9);
+  }
+
+  .services-title,
+  .doctor-title,
+  .datetime-title {
+    font-size: calc(var(--fs-xl) * 0.8);
+  }
+
+  .desktop-menu {
+    display: none;
+  }
+  
+  .burger-menu-btn {
+    display: flex;
+  }
+  
+  .nav-container {
+    padding: 0 var(--space-sm);
+  }
+
+  .hero-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .hero-content {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+    text-align: center;
+    justify-content: center;
+  }
+  
+  section {
+    padding: var(--space-sm);
+  }
+
+  .services-card, 
+  .doctor-card {
+    flex: 0 0 85%;
+  }
+
+  .doctor-card-top {
+    flex-direction: column;
+  }
+  
+  .doctor-photo {
+    height: 160px;
+  }
+
+  .datetime-layout {
+    flex-direction: column;
+  }
+  
+  .time-slot {
+    flex: 0 0 calc(25% - (var(--space-xs) * 3 / 4));
+  }
+
+  .datetime-actions {
+    flex-direction: column;
+  }
+}
+
+/* Адаптация для больших экранов */
+
+@media (min-width: 1920px) {
+  
+  /* Пропорционально увеличиваем шрифты, чтобы не мельчили */
+  .hero-title {
+    font-size: calc(var(--fs-xl) * 1.5);
+  }
+
+  .services-title,
+  .doctor-title,
+  .datetime-title {
+    font-size: calc(var(--fs-xl) * 1.3);
+  }
+
+  .services-card-title,
+  .datetime-card-title {
+    font-size: calc(var(--fs-lg) * 1.2);
+  }
+
+  /* Вместо 2 карточек на широком экране показываем 3 в ряд */
+  .services-card, 
+  .doctor-card {
+    flex: 0 0 calc(33.333% - (var(--space-sm) * 2 / 3));
+  }
+
+  /* Увеличиваем кликабельные области в календаре для масштаба */
+  .calendar-day,
+  .time-slot {
+    height: 48px;
+    font-size: var(--fs-md);
+  }
 }
