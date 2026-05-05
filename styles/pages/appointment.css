@@ -63,6 +63,7 @@ header {
 }
 
 .top-menu-button {
+  text-decoration: none;
   position: relative;
   padding: var(--space-sm);
   color: var(--color-text);
