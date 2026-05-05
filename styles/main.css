@@ -9,4 +9,5 @@
 @import url('./pages/team.css');
 @import url('./pages/status.css');
 @import url('./pages/login.css');
-@import url('./pages/schedule.css');
+@import url('./pages/manager_schedule.css');
+@import url('./pages/manager_team.css');
