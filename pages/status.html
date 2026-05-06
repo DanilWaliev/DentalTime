@@ -30,12 +30,18 @@
     </header>
 
     <main class="row page-container">
-        <!-- Карточки занимают 6 колонок по центру (сдвиг на 3 колонки) -->
-        <div class="offset-3 col-6 status-list">
+        <!-- центрирование контента -->
+        <div class="offset-3 col-6 status-container">
             
-            <h1 class="page-title">Мои записи</h1>
+            <h1 class="page-title">Узнать статус записи</h1>
 
-            <!-- Карточка записи 1 -->
+            <!-- блок поиска записи -->
+            <div class="status-search-box">
+                <input type="text" class="form-input search-input" placeholder="Введите номер записи (например: 123)">
+                <button class="btn btn-primary btn-md">Проверить</button>
+            </div>
+
+            <!-- карточка найденной записи -->
             <div class="card status-card">
                 <div class="status-header">
                     <span class="status-id">Запись №123</span>
@@ -58,38 +64,6 @@
                     <div class="status-row">
                         <span class="status-label">Длительность</span>
                         <span class="status-value">60 мин</span>
-                    </div>
-                </div>
-
-                <div class="status-actions">
-                    <button class="btn btn-secondary btn-md">Перенести</button>
-                    <button class="btn btn-outline btn-md">Отменить</button>
-                </div>
-            </div>
-
-            <!-- Карточка записи 2 -->
-            <div class="card status-card">
-                <div class="status-header">
-                    <span class="status-id">Запись №124</span>
-                    <span class="badge badge-outline">На рассмотрении</span>
-                </div>
-                
-                <div class="status-body">
-                    <div class="status-row">
-                        <span class="status-label">Услуга</span>
-                        <span class="status-value">Лечение кариеса</span>
-                    </div>
-                    <div class="status-row">
-                        <span class="status-label">Врач</span>
-                        <span class="status-value">Константин Иванов</span>
-                    </div>
-                    <div class="status-row">
-                        <span class="status-label">Дата и время</span>
-                        <span class="status-value">18 мая 2026, 10:30</span>
-                    </div>
-                    <div class="status-row">
-                        <span class="status-label">Длительность</span>
-                        <span class="status-value">45 мин</span>
                     </div>
                 </div>
 
