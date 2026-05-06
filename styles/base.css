@@ -21,24 +21,23 @@
 
 :root {
   --color-background: #ffffff;
-  --color-surface: #f1f7f5;          /* Очень светлый изумрудный оттенок для фона секций */
+  --color-surface: #f1f7f5;          
 
   /* Основной акцент (Emerald) */
-  --color-primary: #68B2A0;          /* Твой выбранный цвет */
-  --color-primary-hover: #519383;    /* Более глубокий изумрудный для наведения */
-  --color-text-on-primary: #ffffff;  /* Белый текст — идеальный контраст для этого оттенка */
+  --color-primary: #68B2A0;          
+  --color-primary-hover: #519383;    
+  --color-text-on-primary: #ffffff;  
 
   /* Текст */
-  --color-text: #1a2b27;             /* Темный графит с легким зеленым подтоном */
-  --color-text-muted: #536e68;       /* Приглушенный серо-зеленый */
+  --color-text: #1a2b27;             
+  --color-text-muted: #536e68;       
   --color-text-muted-on-primary: rgba(255, 255, 255, 0.8);
 
   /* Границы */
-  --color-border: #c7dad5;           /* Мягкая граница в тон основному цвету */
+  --color-border: #c7dad5;        
 
-  /* Второстепенная кнопка (Secondary) */
-  --color-secondary: #d8ebe6;        /* Светлый изумруд */
-  --color-on-secondary: #4a8a7a;     /* Темный изумруд для текста на светлом фоне */
+  --color-secondary: #d8ebe6;        
+  --color-on-secondary: #4a8a7a;     
   --color-secondary-hover: #c4ded6;
 
   --font-main: 'Roboto', sans-serif;
