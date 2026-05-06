@@ -532,6 +532,10 @@ section {
     font-size: calc(var(--fs-xl) * 0.9);
   }
 
+  .hero-subtitle {
+    font-size: calc(var(--fs-sm) * 0.9)''
+  }
+
   .section-title {
     font-size: calc(var(--fs-xl) * 0.8);
   }
@@ -592,6 +596,10 @@ section {
 @media (min-width: 1920px) {
   .hero-title {
     font-size: calc(var(--fs-xl) * 1.5);
+  }
+
+  .hero-subtitle {
+    font-size: calc(var(--fs-sm) * 1.5)
   }
 
   .section-title {

@@ -29,3 +29,15 @@
 .offset-9 { grid-column-start: 10; }
 .offset-10 { grid-column-start: 11; }
 .offset-11 { grid-column-start: 12; }
+
+@media (min-width: 1920px) {
+  .row {
+    gap: 30px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .row {
+    gap: 40px;
+  }
+}

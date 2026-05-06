@@ -70,3 +70,51 @@
 body {
   font-family: var(--font-main);
 }
+
+/* масштаб x1.5 для больших мониторов (2K) */
+@media (min-width: 1920px) {
+  :root {
+    --space-xs: 12px;   
+    --space-sm: 24px;  
+    --space-md: 36px;  
+    --space-lg: 60px;  
+    --space-xl: 96px;
+
+    --fs-xs: 18px;   
+    --fs-sm: 21px;   
+    --fs-base: 24px; 
+    --fs-md: 30px;   
+    --fs-lg: 36px;   
+    --fs-xl: 48px;   
+
+    --radius-sm: 6px;   
+    --radius-md: 12px;   
+    --radius-lg: 24px; 
+
+    --header-height: 135px;
+  }
+}
+
+/* масштаб x2 для огромных телевизоров (4K) */
+@media (min-width: 2560px) {
+  :root {
+    --space-xs: 16px;   
+    --space-sm: 32px;  
+    --space-md: 48px;  
+    --space-lg: 80px;  
+    --space-xl: 128px;
+
+    --fs-xs: 24px;   
+    --fs-sm: 28px;   
+    --fs-base: 32px; 
+    --fs-md: 40px;   
+    --fs-lg: 48px;   
+    --fs-xl: 64px;   
+
+    --radius-sm: 8px;   
+    --radius-md: 16px;   
+    --radius-lg: 32px; 
+
+    --header-height: 180px;
+  }
+}
