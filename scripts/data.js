@@ -1,13 +1,13 @@
 
-function GetDoctors() {
+export function GetDoctors() {
   return mockDoctors
 }
 
-function GetServices() {
+export function GetServices() {
   return mockServices
 }
 
-function GetAppointments() {
+export function GetAppointments() {
   return mockAppointments
 }
 
@@ -16,7 +16,7 @@ const mockDoctors = [
     id: 1, 
     fullName: "Константин Иванов", 
     spec: "Стоматолог-ортопед", 
-    experience: 15, 
+    experience: 16, 
     services: ["Протезирование", "Виниры", "Коронки"], 
     nearest: ["Сегодня 14:00", "Завтра 16:00"]
   },
