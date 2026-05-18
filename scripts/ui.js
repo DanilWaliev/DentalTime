@@ -38,6 +38,225 @@ function generateDoctorCard(doctor) {
            </div>`;
 }
 
-function formatDate(date) {
+export function renderServices(services, servicesContainer) {
+  if (!servicesContainer) return;
 
+  servicesContainer.innerHTML = '';
+
+  services.forEach(service => {
+    const cardElement = document.createElement('div');
+    cardElement.className = "card services-card";
+    cardElement.innerHTML = generateServiceCard(service);
+
+    servicesContainer.appendChild(cardElement);
+  });
+}
+
+function generateServiceCard(service) {
+  return `
+    <div class="service-card-content">
+        <div class="services-card-title">${service.title}</div>
+        <div class="services-card-description">${service.subtitle}</div>
+    </div>
+    <div class="service-card-footer">
+        <div class="service-details">
+            <span class="service-duration">${service.duration} мин</span>
+            <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
+        </div>
+        <a href="appointment.html#services" class="btn btn-primary btn-sm btn-full">Записаться</a>
+    </div>
+  `;
+}
+
+export function renderAppointments(appointments, appointmentsContainer) {
+  if (!appointmentsContainer) return;
+
+  appointmentsContainer.innerHTML = '';
+
+  appointments.forEach(appointment => {
+    const cardElement = document.createElement('div');
+    cardElement.className = "card record-card";
+    cardElement.innerHTML = generateAppointmentCard(appointment);
+
+    appointmentsContainer.appendChild(cardElement);
+  });
+}
+
+function generateAppointmentCard(appointment) {
+  const statusClass = appointment.status === 'Подтверждена' ? 'badge-primary' : 'badge-outline';
+  
+  return `
+    <div class="record-header">
+        <span class="record-id">Запись №${appointment.num}</span>
+        <span class="badge ${statusClass}">${appointment.status}</span>
+    </div>
+    
+    <div class="record-body">
+        <div class="record-row">
+            <span class="record-label">Пациент</span>
+            <span class="record-value">${appointment.patientName}</span>
+        </div>
+        <div class="record-row">
+            <span class="record-label">Услуга</span>
+            <span class="record-value">${appointment.service.title}</span>
+        </div>
+        <div class="record-row">
+            <span class="record-label">Врач</span>
+            <span class="record-value">${appointment.doctor.fullName}</span>
+        </div>
+        <div class="record-row">
+            <span class="record-label">Дата и время</span>
+            <span class="record-value">${formatDate(appointment.date)}</span>
+        </div>
+    </div>
+    
+    <div class="record-actions">
+        <button class="btn btn-primary btn-sm">Изменить</button>
+        ${appointment.status === 'Ожидает' ? '<button class="btn btn-primary btn-sm">Подтвердить</button>' : ''}
+        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+    </div>
+  `;
+}
+
+export function renderManagerDoctors(doctors, doctorsContainer) {
+  if (!doctorsContainer) return;
+
+  doctorsContainer.innerHTML = '';
+
+  doctors.forEach(doctor => {
+    const cardElement = document.createElement('div');
+    cardElement.className = "card doctor-edit-card";
+    cardElement.innerHTML = generateManagerDoctorCard(doctor);
+
+    doctorsContainer.appendChild(cardElement);
+  });
+}
+
+function generateManagerDoctorCard(doctor) {
+  return `
+    <div class="doctor-edit-top">
+        <button class="photo-upload">
+            <span>Заменить</span>
+        </button>
+        
+        <div class="doctor-inputs">
+            <div class="form-group">
+                <label class="form-label">ФИО</label>
+                <input type="text" class="form-input" value="${doctor.fullName}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Специальность</label>
+                <input type="text" class="form-input" value="${doctor.spec}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Стаж работы</label>
+                <input type="text" class="form-input" value="${doctor.experience} лет">
+            </div>
+        </div>
+    </div>
+    
+    <div class="doctor-inputs-bottom">
+        <div class="form-group">
+            <label class="form-label">Оказываемые услуги (через запятую)</label>
+            <input type="text" class="form-input" value="${doctor.services.join(', ')}">
+        </div>
+    </div>
+    
+    <div class="doctor-actions">
+        <button class="btn btn-primary btn-sm">Сохранить</button>
+        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+    </div>
+  `;
+}
+
+export function renderManagerServices(services, servicesContainer) {
+  if (!servicesContainer) return;
+
+  servicesContainer.innerHTML = '';
+
+  services.forEach(service => {
+    const cardElement = document.createElement('div');
+    cardElement.className = "card service-edit-card";
+    cardElement.innerHTML = generateManagerServiceCard(service);
+
+    servicesContainer.appendChild(cardElement);
+  });
+}
+
+function generateManagerServiceCard(service) {
+  return `
+    <div class="form-group">
+        <label class="form-label">Название услуги</label>
+        <input type="text" class="form-input" value="${service.title}">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea class="form-input" rows="3">${service.subtitle}</textarea>
+    </div>
+    
+    <div class="service-inputs-row">
+        <div class="form-group">
+            <label class="form-label">Длительность</label>
+            <input type="text" class="form-input" value="${service.duration} мин">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Стоимость</label>
+            <input type="text" class="form-input" value="${service.price.toLocaleString('ru-RU')} ₽">
+        </div>
+    </div>
+    
+    <div class="service-actions">
+        <button class="btn btn-primary btn-sm">Сохранить</button>
+        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+    </div>
+  `;
+}
+
+export function renderAppointmentStatus(appointment, container) {
+  if (!container) return;
+
+  const statusClass = appointment.status === 'Подтверждена' ? 'badge-primary' : 'badge-outline';
+  
+  container.innerHTML = `
+    <div class="status-header">
+        <span class="status-id">Запись №${appointment.num}</span>
+        <span class="badge ${statusClass}">${appointment.status}</span>
+    </div>
+    
+    <div class="status-body">
+        <div class="status-row">
+            <span class="status-label">Услуга</span>
+            <span class="status-value">${appointment.service.title}</span>
+        </div>
+        <div class="status-row">
+            <span class="status-label">Врач</span>
+            <span class="status-value">${appointment.doctor.fullName}</span>
+        </div>
+        <div class="status-row">
+            <span class="status-label">Дата и время</span>
+            <span class="status-value">${formatDate(appointment.date)}</span>
+        </div>
+        <div class="status-row">
+            <span class="status-label">Длительность</span>
+            <span class="status-value">${appointment.duration} мин</span>
+        </div>
+    </div>
+
+    <div class="status-actions">
+        <button class="btn btn-secondary btn-md">Перенести</button>
+        <button class="btn btn-outline btn-md">Отменить</button>
+    </div>
+  `;
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit' };
+  return date.toLocaleDateString('ru-RU', options);
 }

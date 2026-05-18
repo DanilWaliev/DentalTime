@@ -1,4 +1,3 @@
-
 export function GetDoctors() {
   return mockDoctors
 }
@@ -74,6 +73,7 @@ const mockAppointments = [
     id: 1,
     num: 123,
     status: "Подтверждена",
+    patientName: "Алексей Михайлов",
     service: {
       id: 3,
       title: "Профессиональная гигиена",
@@ -89,6 +89,7 @@ const mockAppointments = [
     id: 2,
     num: 124,
     status: "Ожидает",
+    patientName: "Елена Смирнова",
     service: {
       id: 1,
       title: "Первичная консультация",
@@ -102,8 +103,9 @@ const mockAppointments = [
   },
   {
     id: 3,
-    num: 125,
+    num: 126,
     status: "Отменена",
+    patientName: "Дмитрий Волков",
     service: {
       id: 4,
       title: "Сложное удаление зуба",
