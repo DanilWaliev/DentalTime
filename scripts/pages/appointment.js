@@ -1,8 +1,8 @@
 import { initBurgerMenu } from '../core.js';
 import { bindAction } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
-import { GetServices, GetDoctors } from '../data/data.js';
-import { apply } from 'core-js/fn/reflect';
+import { GetServices, GetDoctors, GetAppointmentCalendar } from '../data/data.js';
+import { renderAppointmentCalendar } from '../components/calendar.js';
 
 let AppointmentState = {
   service: null,
@@ -17,8 +17,10 @@ function init() {
   initBurgerMenu();
   const doctorsContainer = document.getElementById('appointment-doctors-container');
   const servicesContainer = document.getElementById('appointment-services-container');
+  const calendarDaysContainer = document.getElementById('calendar-days-container');
   renderAppointmentDoctors(GetDoctors(), doctorsContainer);
   renderAppointmentServices(GetServices(), servicesContainer);
+  renderAppointmentCalendar(GetAppointmentCalendar(), calendarDaysContainer);
   
   bindAction(servicesContainer, 'select', handleSelectService);
   bindAction(doctorsContainer, 'select', handleSelectDoctor);
