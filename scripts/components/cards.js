@@ -1,3 +1,20 @@
+export function bindAction(containerSelector, actionName, onActionCallback) {
+  const container = document.querySelector(containerSelector);
+
+  if (!container) return;
+
+  container.addEventListener('click', (event) => {
+    const tarrgetElement = event.targert.closest('[data-action=${actionName}]');
+
+    if (!targetElement) return;
+
+    event.preventDefault();
+
+    const itemId = targetElement.dataset.id;
+    if (itedId) onActionCallback(itemId);
+  });
+}
+
 export function renderDoctors(doctors, doctorsContainer) {
   if (!doctorsContainer) return;
 
@@ -33,7 +50,7 @@ function generateDoctorCard(doctor) {
                    </div>
                </div>
                <div class="doctor-actions">
-                 <a href="appointment.html#step-3" class="btn btn-secondary btn-sm btn-full">Записаться к врачу</a>
+                 <a href="appointment.html#step-3" class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${doctor.id}">Записаться к врачу</a>
                </div>  
            </div>`;
 }
@@ -63,7 +80,7 @@ function generateServiceCard(service) {
             <span class="service-duration">${service.duration} мин</span>
             <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
         </div>
-        <a href="appointment.html#services" class="btn btn-primary btn-sm btn-full">Записаться</a>
+        <a href="appointment.html#services" class="btn btn-primary btn-sm btn-full" data-action="select" data-id="${service.id}">Записаться</a>
     </div>
   `;
 }
@@ -111,9 +128,9 @@ function generateAppointmentCard(appointment) {
     </div>
     
     <div class="record-actions">
-        <button class="btn btn-primary btn-sm">Изменить</button>
-        ${appointment.status === 'Ожидает' ? '<button class="btn btn-primary btn-sm">Подтвердить</button>' : ''}
-        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+        <button class="btn btn-primary btn-sm" data-action="edit" data-id="${appointment.id}">Изменить</button>
+        ${appointment.status === 'Ожидает' ? `<button class="btn btn-primary btn-sm" data-action="confirm" data-id="${appointment.id}">Подтвердить</button>` : ''}
+        <button class="btn btn-outline btn-sm text-danger" data-action="delete" data-id="${appointment.id}">Удалить</button>
     </div>
   `;
 }
@@ -163,8 +180,8 @@ function generateManagerDoctorCard(doctor) {
     </div>
     
     <div class="doctor-actions">
-        <button class="btn btn-primary btn-sm">Сохранить</button>
-        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+        <button class="btn btn-primary btn-sm" data-action="save" data-id="${doctor.id}">Сохранить</button>
+        <button class="btn btn-outline btn-sm text-danger" data-action="delete" data-id="${doctor.id}">Удалить</button>
     </div>
   `;
 }
@@ -207,8 +224,8 @@ function generateManagerServiceCard(service) {
     </div>
     
     <div class="service-actions">
-        <button class="btn btn-primary btn-sm">Сохранить</button>
-        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+        <button class="btn btn-primary btn-sm" data-action="save" data-id="${service.id}">Сохранить</button>
+        <button class="btn btn-outline btn-sm text-danger" data-action="delete" data-id="${service.id}">Удалить</button>
     </div>
   `;
 }
@@ -224,7 +241,7 @@ function generateAppointmentServicesCard(service) {
               <span class="service-duration">${service.duration} мин</span>
               <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
           </div>
-          <button class="btn btn-secondary btn-sm btn-full">Выбрать</button>
+          <button class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${service.id}">Выбрать</button>
       </div>
     `;
 }
@@ -262,7 +279,7 @@ function generateAppointmentDoctorsCard(doctor) {
           </div>
       </div>
       <div class="doctor-actions">
-        <a href="#step-3" class="btn btn-secondary btn-sm btn-full">Выбрать врача</a>
+        <a href="#step-3" class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${doctor.id}">Выбрать врача</a>
       </div>
     `;
 }
@@ -309,8 +326,8 @@ export function renderAppointmentStatus(appointment, container) {
     </div>
 
     <div class="status-actions">
-        <button class="btn btn-secondary btn-md">Перенести</button>
-        <button class="btn btn-outline btn-md">Отменить</button>
+        <button class="btn btn-secondary btn-md" data-action="reschedule" data-id="${appointment.id}">Перенести</button>
+        <button class="btn btn-outline btn-md" data-action="cancel" data-id="${appointment.id}">Отменить</button>
     </div>
   `;
 }
@@ -326,8 +343,8 @@ function generateSchedule(app) {
                 <span class="event-id text-muted">№${app.num}</span>
             </div>
             <div class="event-actions">
-                <button class="event-action-btn">Изменить</button>
-                <button class="event-action-btn text-danger">Удалить</button>
+                <button class="event-action-btn" data-action="edit" data-id="${app.id}">Изменить</button>
+                <button class="event-action-btn text-danger" data-action="delete" data-id="${app.id}">Удалить</button>
             </div>
         </div>
         <div class="event-doctor">${app.doctor.fullName}</div>
