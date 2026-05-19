@@ -213,6 +213,71 @@ function generateManagerServiceCard(service) {
   `;
 }
 
+function generateAppointmentServicesCard(service) {
+  return `
+      <div class="service-card-content">
+          <div class="services-card-title">${service.title}</div>
+          <div class="services-card-description">${service.subtitle}</div>
+      </div>
+      <div class="service-card-footer">
+          <div class="service-details">
+              <span class="service-duration">${service.duration} мин</span>
+              <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
+          </div>
+          <button class="btn btn-secondary btn-sm btn-full">Выбрать</button>
+      </div>
+    `;
+}
+
+export function renderAppointmentServices(services, container) {
+  if (!container) return;
+  container.innerHTML = '';
+  services.forEach(service => {
+    const cardElement = document.createElement('div');
+    cardElement.className = "card slider-card services-card";
+    cardElement.innerHTML = generateAppointmentServicesCard(service);
+    container.appendChild(cardElement);
+  });
+}
+
+function generateAppointmentDoctorsCard(doctor) {
+  return `
+      <div class="doctor-card-top">
+          <div class="doctor-photo">Фото</div>
+          <div class="doctor-info-basic">
+              <div class="doctor-name">${doctor.fullName}</div>
+              <div class="doctor-specialty">${doctor.spec}</div>
+              <div class="doctor-badges">
+                  <span class="badge badge-outline">Стаж: ${doctor.experience} лет</span>
+              </div>
+          </div>
+      </div>
+      <div class="doctor-services">
+          <div class="pills-container">
+              ${doctor.services.map(service => `<span class="badge badge-primary">${service}</span>`).join('')}
+          </div>
+          <div class="schedule-container">
+              <span class="schedule-title">Ближайшая запись:</span>
+              ${doctor.nearest.map(slot => `<span class="badge badge-secondary">${slot}</span>`).join('')}
+          </div>
+      </div>
+      <div class="doctor-actions">
+        <a href="#step-3" class="btn btn-secondary btn-sm btn-full">Выбрать врача</a>
+      </div>
+    `;
+}
+
+export function renderAppointmentDoctors(doctors, container) {
+  if (!container) return;
+  container.innerHTML = '';
+  doctors.forEach(doctor => {
+    const cardElement = document.createElement('div');
+    cardElement.className = "card slider-card doctor-card";
+    cardElement.innerHTML = generateAppointmentDoctorsCard(doctor);
+    container.appendChild(cardElement);
+  });
+}
+
 export function renderAppointmentStatus(appointment, container) {
   if (!container) return;
 
