@@ -118,3 +118,181 @@ const mockAppointments = [
     duration: 90,
   }
 ];
+
+const mockCalendar = [
+  {
+    date: "2026-04-27",
+    status: "disabled",
+    text: "27",
+  },
+  {
+    date: "2026-04-28",
+    status: "disabled",
+    text: "28",
+  },
+  {
+    date: "2026-04-29",
+    status: "disabled",
+    text: "29",
+  },
+  {
+    date: "2026-04-30",
+    status: "disabled",
+    text: "30",
+  },
+  {
+    date: "2026-05-01",
+    status: "disabled",
+    text: "1",
+  },
+  {
+    date: "2026-05-02",
+    status: "disabled",
+    text: "2",
+  },
+  {
+    date: "2026-05-03",
+    status: "disabled",
+    text: "3",
+  },
+  {
+    date: "2026-05-04",
+    status: "disabled",
+    text: "4",
+  },
+  {
+    date: "2026-05-05",
+    status: "disabled",
+    text: "5",
+  },
+  {
+    date: "2026-05-06",
+    status: "disabled",
+    text: "6",
+  },
+  {
+    date: "2026-05-07",
+    status: "disabled",
+    text: "7",
+  },
+  {
+    date: "2026-05-08",
+    status: "disabled",
+    text: "8",
+  },
+  {
+    date: "2026-05-09",
+    status: "disabled",
+    text: "9",
+  },
+  {
+    date: "2026-05-10",
+    status: "disabled",
+    text: "10",
+  },
+  {
+    date: "2026-05-11",
+    status: "disabled",
+    text: "11",
+  },
+  {
+    date: "2026-05-12",
+    status: "disabled",
+    text: "12",
+  },
+  {
+    date: "2026-05-13",
+    status: "disabled",
+    text: "13",
+  },
+  {
+    date: "2026-05-14",
+    status: "disabled",
+    text: "14",
+  },
+  {
+    date: "2026-05-15",
+    status: "disabled",
+    text: "15",
+  },
+  {
+    date: "2026-05-16",
+    status: "disabled",
+    text: "16",
+  },
+  {
+    date: "2026-05-17",
+    status: "disabled",
+    text: "17",
+  },
+  {
+    date: "2026-05-18",
+    status: "disabled",
+    text: "18",
+  },
+  {
+    date: "2026-05-19",
+    status: "disabled",
+    text: "19",
+  },
+  {
+    date: "2026-05-20",
+    status: "selected",
+    text: "20",
+  },
+  {
+    date: "2026-05-21",
+    status: "available",
+    text: "21",
+  },
+  {
+    date: "2026-05-22",
+    status: "available",
+    text: "22",
+  },
+  {
+    date: "2026-05-23",
+    status: "available",
+    text: "23",
+  },
+  {
+    date: "2026-05-24",
+    status: "available",
+    text: "24",
+  },
+  {
+    date: "2026-05-25",
+    status: "available",
+    text: "25",
+  },
+  {
+    date: "2026-05-26",
+    status: "available",
+    text: "26",
+  },
+  {
+    date: "2026-05-27",
+    status: "available",
+    text: "27",
+  },
+  {
+    date: "2026-05-28",
+    status: "available",
+    text: "28",
+  },
+  {
+    date: "2026-05-29 ",
+    status: "available",
+    text: "29",
+  },
+  {
+    date: "2026-05-30",
+    status: "available",
+    text: "30",
+  },
+  {
+    date: "2026-05-31",
+    status: "available",
+    text: "31",
+  },
+];
