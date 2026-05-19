@@ -3,6 +3,7 @@ import { bindAction } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
 import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots } from '../data/data.js';
 import { renderAppointmentCalendar, selectDay, renderAppointmentTimeSlots, selectTimeSlot } from '../components/calendar.js';
+import { GetPhoneAndName } from '../components/modal.js';
 
 let AppointmentState = {
   service: null,
@@ -33,12 +34,10 @@ function init() {
 
 function handleSelectService(serviceId) {
   AppointmentState.service = serviceId;
-  alert('Услуга: ' + serviceId);
 }
 
 function handleSelectDoctor(doctorId) {
   AppointmentState.doctor = doctorId;
-  alert('Врач: ' + doctorId);
 }
 
 function handleSelectDate(dayId) {
