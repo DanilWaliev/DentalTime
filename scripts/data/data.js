@@ -1,13 +1,17 @@
 export function GetDoctors() {
-  return mockDoctors
+  return mockDoctors;
 }
 
 export function GetServices() {
-  return mockServices
+  return mockServices;
 }
 
 export function GetAppointments() {
-  return mockAppointments
+  return mockAppointments;
+}
+
+export function GetAppointmentCalendar() {
+  return mockCalendar;
 }
 
 const mockDoctors = [
