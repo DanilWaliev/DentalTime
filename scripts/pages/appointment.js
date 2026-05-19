@@ -2,7 +2,7 @@ import { initBurgerMenu } from '../core.js';
 import { bindAction } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
 import { GetServices, GetDoctors, GetAppointmentCalendar } from '../data/data.js';
-import { renderAppointmentCalendar } from '../components/calendar.js';
+import { renderAppointmentCalendar, selectDay } from '../components/calendar.js';
 
 let AppointmentState = {
   service: null,
@@ -24,6 +24,7 @@ function init() {
   
   bindAction(servicesContainer, 'select', handleSelectService);
   bindAction(doctorsContainer, 'select', handleSelectDoctor);
+  bindAction(calendarDaysContainer, 'select', handleSelectDate);
 }
 
 function handleSelectService(serviceId) {
@@ -36,8 +37,10 @@ function handleSelectDoctor(doctorId) {
   alert(doctorId);
 }
 
-function handleSelectDate() {
-
+function handleSelectDate(dayId) {
+  AppointmentState.date = dayId;
+  const calendarDaysContainer = document.getElementById('calendar-days-container');
+  selectDay({ date: dayId }, calendarDaysContainer);
 }
 
 function handleSelectTime() {
