@@ -45,7 +45,7 @@
 
             <!-- доска с сеткой -->
             <div class="schedule-board card-glass">
-                <div class="schedule-grid">
+                <div class="schedule-grid" id="schedule-grid">
                     
                     <!-- линии сетки и время (шаг 15 мин, 1 час = 4 строки) -->
                     
@@ -66,6 +66,15 @@
 
                     <div class="time-label" style="grid-row: 21;">15:00</div>
                     <div class="grid-line" style="grid-row: 21;"></div>
+
+                    <div class="time-label" style="grid-row: 25;">16:00</div>
+                    <div class="grid-line" style="grid-row: 25;"></div>
+
+                    <div class="time-label" style="grid-row: 29;">17:00</div>
+                    <div class="grid-line" style="grid-row: 29;"></div>
+
+                    <div class="time-label" style="grid-row: 33;">18:00</div>
+                    <div class="grid-line" style="grid-row: 33;"></div>
 
 
                     <!-- события -->
@@ -140,6 +149,7 @@
         </div>
 
     </main>
-<script type="module" src="./../scripts/app.js"></script>
+<script type="module" src="./../scripts/core.js"></script>
+<script type="module" src="./../scripts/pages/manager_schedule.js"></script>
 </body>
 </html>

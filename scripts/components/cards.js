@@ -315,6 +315,59 @@ export function renderAppointmentStatus(appointment, container) {
   `;
 }
 
+function generateSchedule(app) {
+  const date = new Date(app.date);
+  const endTime = new Date(date.getTime() + app.duration * 60000);
+  const timeRange = `${formatTime(date)} - ${formatTime(endTime)}`;
+  return `
+        <div class="event-header">
+            <div class="event-time-wrapper">
+                <span class="event-time">${timeRange}</span>
+                <span class="event-id text-muted">№${app.num}</span>
+            </div>
+            <div class="event-actions">
+                <button class="event-action-btn">Изменить</button>
+                <button class="event-action-btn text-danger">Удалить</button>
+            </div>
+        </div>
+        <div class="event-doctor">${app.doctor.fullName}</div>
+        <div class="event-service">${app.service.title}</div>
+    `;
+}
+
+export function renderSchedule(appointments, container) {
+  if (!container) return;
+
+  // Очистка существующих событий, но оставляем метки времени и линии сетки
+  const existingEvents = container.querySelectorAll('.schedule-event');
+  existingEvents.forEach(el => el.remove());
+
+  appointments.forEach(app => {
+    const date = new Date(app.date);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    
+    // Сетка начинается с 10:00 (первая строка), каждая строчка по 15 минут (4 строчки в час)
+    const rowStart = (hours - 10) * 4 + (minutes / 15) + 1;
+    const rowSpan = app.duration / 15;
+    // Сопоставление ID доктора к ID столбца
+    const column = app.doctor.id + 1;
+
+    const eventElement = document.createElement('div');
+    eventElement.className = "card schedule-event";
+    eventElement.style.gridRow = `${rowStart} / span ${rowSpan}`;
+    eventElement.style.gridColumn = column;
+
+    eventElement.innerHTML = generateSchedule(app);
+    
+    container.appendChild(eventElement);
+  });
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+}
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   const options = { 
