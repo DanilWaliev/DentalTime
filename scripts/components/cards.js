@@ -1,17 +1,15 @@
-export function bindAction(containerSelector, actionName, onActionCallback) {
-  const container = document.querySelector(containerSelector);
-
+export function bindAction(container, actionName, onActionCallback) {
   if (!container) return;
 
   container.addEventListener('click', (event) => {
-    const tarrgetElement = event.targert.closest('[data-action=${actionName}]');
+    const targetElement = event.target.closest(`[data-action=${actionName}]`);
 
     if (!targetElement) return;
 
     event.preventDefault();
 
     const itemId = targetElement.dataset.id;
-    if (itedId) onActionCallback(itemId);
+    if (itemId) onActionCallback(itemId);
   });
 }
 
