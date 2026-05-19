@@ -41,3 +41,91 @@
     gap: 40px;
   }
 }
+
+/* --- Мобильная версия (до 768px) --- */
+@media (max-width: 768px) {
+    /* Навигация: убираем обрезку контента */
+    header .nav-container {
+        overflow: visible !important;
+        position: relative;
+    }
+
+    /* Полноэкранное меню с прямыми углами */
+    header .nav-container .desktop-menu {
+        display: none; 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #ffffff;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: var(--space-lg);
+        gap: var(--space-md);
+        z-index: 999;
+        border-radius: 0; /* Прямые углы */
+        border: none;
+    }
+
+    header .nav-container .desktop-menu.is-open {
+        display: flex !important;
+    }
+
+    /* Ссылки в меню */
+    .top-menu-button {
+        display: block;
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--fs-lg);
+        text-align: center;
+        border: none !important;
+    }
+
+    .top-menu-button::after {
+        display: none;
+    }
+
+    /* Кнопка бургера поверх всего */
+    .burger-menu-btn {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 1000;
+        position: relative;
+    }
+
+    .burger-menu-btn span {
+        display: block;
+        width: 28px;
+        height: 2px;
+        background-color: var(--color-text);
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Анимация крестика */
+    .burger-menu-btn.is-active span:nth-child(1) { 
+        transform: translateY(8px) rotate(45deg); 
+        background-color: var(--color-primary);
+    }
+    .burger-menu-btn.is-active span:nth-child(2) { 
+        opacity: 0; 
+    }
+    .burger-menu-btn.is-active span:nth-child(3) { 
+        transform: translateY(-8px) rotate(-45deg); 
+        background-color: var(--color-primary);
+    }
+}
+
+/* Скрытие кнопки на десктопе */
+@media (min-width: 769px) {
+    .burger-menu-btn {
+        display: none !important;
+    }
+}
