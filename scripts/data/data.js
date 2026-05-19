@@ -14,6 +14,29 @@ export function GetAppointmentCalendar() {
   return mockCalendar;
 }
 
+export function GetAppointmentTimeSlots() {
+  return mockTimeSlots;
+}
+
+const mockTimeSlots = [
+  { time: "09:00", status: "disabled" },
+  { time: "09:30", status: "disabled" },
+  { time: "10:00", status: "available" },
+  { time: "10:30", status: "available" },
+  { time: "11:00", status: "available" },
+  { time: "11:30", status: "available" },
+  { time: "12:00", status: "available" },
+  { time: "12:30", status: "available" },
+  { time: "13:00", status: "available" },
+  { time: "13:30", status: "disabled" },
+  { time: "14:00", status: "selected" },
+  { time: "14:30", status: "available" },
+  { time: "15:00", status: "available" },
+  { time: "15:30", status: "available" },
+  { time: "16:00", status: "available" },
+  { time: "16:30", status: "available" },
+];
+
 const mockDoctors = [
   { 
     id: 1, 

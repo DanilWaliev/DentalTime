@@ -39,3 +39,42 @@ export function selectDay(day, container) {
     newSelected.classList.add('active');
   }
 }
+
+export function renderAppointmentTimeSlots(slots, container) {
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  slots.forEach(slot => {
+    let slotButton = document.createElement('button');
+    slotButton.classList.add('time-slot');
+    slotButton.setAttribute('data-id', slot.time);
+    slotButton.setAttribute('data-action', 'select-time');
+    
+    switch (slot.status) {
+      case 'disabled':
+        slotButton.classList.add('disabled');
+        break;
+      case 'selected':
+        slotButton.classList.add('active');
+        break;
+    }
+
+    slotButton.textContent = slot.time;
+    container.appendChild(slotButton);
+  });
+}
+
+export function selectTimeSlot(slotData, container) {
+  if (!container) return;
+
+  const prevSelected = container.querySelector('.time-slot.active');
+  if (prevSelected) {
+    prevSelected.classList.remove('active');
+  }
+
+  const newSelected = container.querySelector(`[data-id="${slotData.time}"]`);
+  if (newSelected && !newSelected.classList.contains('disabled')) {
+    newSelected.classList.add('active');
+  }
+}

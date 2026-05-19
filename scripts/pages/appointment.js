@@ -1,8 +1,8 @@
 import { initBurgerMenu } from '../core.js';
 import { bindAction } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
-import { GetServices, GetDoctors, GetAppointmentCalendar } from '../data/data.js';
-import { renderAppointmentCalendar, selectDay } from '../components/calendar.js';
+import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots } from '../data/data.js';
+import { renderAppointmentCalendar, selectDay, renderAppointmentTimeSlots, selectTimeSlot } from '../components/calendar.js';
 
 let AppointmentState = {
   service: null,
@@ -18,23 +18,27 @@ function init() {
   const doctorsContainer = document.getElementById('appointment-doctors-container');
   const servicesContainer = document.getElementById('appointment-services-container');
   const calendarDaysContainer = document.getElementById('calendar-days-container');
+  const timeSlotsContainer = document.getElementById('appointment-time-slots-container');
+  
   renderAppointmentDoctors(GetDoctors(), doctorsContainer);
   renderAppointmentServices(GetServices(), servicesContainer);
   renderAppointmentCalendar(GetAppointmentCalendar(), calendarDaysContainer);
+  renderAppointmentTimeSlots(GetAppointmentTimeSlots(), timeSlotsContainer);
   
   bindAction(servicesContainer, 'select', handleSelectService);
   bindAction(doctorsContainer, 'select', handleSelectDoctor);
   bindAction(calendarDaysContainer, 'select', handleSelectDate);
+  bindAction(timeSlotsContainer, 'select-time', handleSelectTime);
 }
 
 function handleSelectService(serviceId) {
   AppointmentState.service = serviceId;
-  alert(serviceId);
+  alert('Услуга: ' + serviceId);
 }
 
 function handleSelectDoctor(doctorId) {
   AppointmentState.doctor = doctorId;
-  alert(doctorId);
+  alert('Врач: ' + doctorId);
 }
 
 function handleSelectDate(dayId) {
@@ -43,8 +47,10 @@ function handleSelectDate(dayId) {
   selectDay({ date: dayId }, calendarDaysContainer);
 }
 
-function handleSelectTime() {
-
+function handleSelectTime(timeId) {
+  AppointmentState.time = timeId;
+  const timeSlotsContainer = document.getElementById('appointment-time-slots-container');
+  selectTimeSlot({ time: timeId }, timeSlotsContainer);
 }
 
 function handleSubmit() {
