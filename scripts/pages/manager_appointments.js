@@ -1,10 +1,10 @@
 import { initBurgerMenu } from '../core.js';
 import { GetAppointments } from './../data/data.js';
-import { renderAppointmentStatus } from './../components/cards.js';
+import { renderAppointments } from './../components/cards.js';
 
 function init() {
     initBurgerMenu();
-    renderAppointmentStatus(GetAppointments()[0], document.getElementById('status-card'));
+    renderAppointments(GetAppointments(), document.getElementById('appointments-container'));
 }
 
 document.addEventListener('DOMContentLoaded', init);

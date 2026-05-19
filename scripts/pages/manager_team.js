@@ -1,6 +1,10 @@
-// Скрипты для странциы врачей в роли менеджера
-
+import { initBurgerMenu } from '../core.js';
 import { GetDoctors } from './../data/data.js';
-import { renderManagerDoctors} from './../components/cards.js';
+import { renderManagerDoctors } from './../components/cards.js';
 
-renderManagerDoctors(GetDoctors(), document.getElementById('manager-doctors-container'));
+function init() {
+    initBurgerMenu();
+    renderManagerDoctors(GetDoctors(), document.getElementById('manager-doctors-container'));
+}
+
+document.addEventListener('DOMContentLoaded', init);

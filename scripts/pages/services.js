@@ -1,6 +1,10 @@
-// Скрипты для странциы услуг
-
+import { initBurgerMenu } from '../core.js';
 import { GetServices } from './../data/data.js';
 import { renderServices } from './../components/cards.js';
 
-renderServices(GetServices(), document.getElementById('services-container'));
+function init() {
+    initBurgerMenu();
+    renderServices(GetServices(), document.getElementById('services-container'));
+}
+
+document.addEventListener('DOMContentLoaded', init);

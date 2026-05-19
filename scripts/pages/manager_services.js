@@ -1,6 +1,10 @@
-// Скрипты для странциы сервисов в роли менеджера
-
+import { initBurgerMenu } from '../core.js';
 import { GetServices } from './../data/data.js';
 import { renderManagerServices } from './../components/cards.js';
 
-renderManagerServices(GetServices(), document.getElementById('manager-services-container'));
+function init() {
+    initBurgerMenu();
+    renderManagerServices(GetServices(), document.getElementById('manager-services-container'));
+}
+
+document.addEventListener('DOMContentLoaded', init);
