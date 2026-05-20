@@ -250,6 +250,7 @@ export function renderAppointmentServices(services, container) {
   services.forEach(service => {
     const cardElement = document.createElement('div');
     cardElement.className = "card slider-card services-card";
+    cardElement.setAttribute('data-id', service.id);
     cardElement.innerHTML = generateAppointmentServicesCard(service);
     container.appendChild(cardElement);
   });
@@ -288,9 +289,24 @@ export function renderAppointmentDoctors(doctors, container) {
   doctors.forEach(doctor => {
     const cardElement = document.createElement('div');
     cardElement.className = "card slider-card doctor-card";
+    cardElement.setAttribute('data-id', doctor.id);
     cardElement.innerHTML = generateAppointmentDoctorsCard(doctor);
     container.appendChild(cardElement);
   });
+}
+
+export function selectCard(id, container) {
+  if (!container) return;
+  
+  const prevSelected = container.querySelector('.card.active');
+  if (prevSelected) {
+    prevSelected.classList.remove('active');
+  }
+
+  const newSelected = container.querySelector(`.card[data-id="${id}"]`);
+  if (newSelected) {
+    newSelected.classList.add('active');
+  }
 }
 
 export function renderAppointmentStatus(appointment, container) {

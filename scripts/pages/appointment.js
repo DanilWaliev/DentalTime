@@ -1,5 +1,5 @@
 import { initBurgerMenu } from '../core.js';
-import { bindAction } from '../components/cards.js';
+import { bindAction, selectCard } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
 import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots } from '../data/data.js';
 import { renderAppointmentCalendar, selectDay, renderAppointmentTimeSlots, selectTimeSlot } from '../components/calendar.js';
@@ -38,10 +38,14 @@ function init() {
 
 function handleSelectService(serviceId) {
   AppointmentState.service = serviceId;
+  const servicesContainer = document.getElementById('appointment-services-container');
+  selectCard(serviceId, servicesContainer);
 }
 
 function handleSelectDoctor(doctorId) {
   AppointmentState.doctor = doctorId;
+  const doctorsContainer = document.getElementById('appointment-doctors-container');
+  selectCard(doctorId, doctorsContainer);
 }
 
 function handleSelectDate(dayId) {

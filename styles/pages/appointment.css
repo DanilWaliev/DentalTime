@@ -127,6 +127,11 @@ section {
   border-color: var(--color-primary);
 }
 
+.slider-card.active {
+  border-color: var(--color-primary);
+  border-width: 3px;
+}
+
 .services-card {
   min-height: 280px;
 }
