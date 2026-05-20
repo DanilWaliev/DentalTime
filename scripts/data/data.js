@@ -44,6 +44,44 @@ export function ApiAddManagerAppointment(appointment) {
   console.log("API POST /appointments (Manager):", appointment);
 }
 
+export function ApiUpdateAppointment(appointmentId, updatedData) {
+  console.log(`API PUT /appointments/${appointmentId}:`, updatedData);
+}
+
+export function ApiDeleteAppointment(appointmentId) {
+  console.log(`API DELETE /appointments/${appointmentId}`);
+}
+
+/**
+ * Имитация API для врачей
+ */
+export function ApiAddDoctor(doctor) {
+  console.log("API POST /doctors:", doctor);
+}
+
+export function ApiUpdateDoctor(doctorId, updatedData) {
+  console.log(`API PUT /doctors/${doctorId}:`, updatedData);
+}
+
+export function ApiDeleteDoctor(doctorId) {
+  console.log(`API DELETE /doctors/${doctorId}`);
+}
+
+/**
+ * Имитация API для услуг
+ */
+export function ApiAddService(service) {
+  console.log("API POST /services:", service);
+}
+
+export function ApiUpdateService(serviceId, updatedData) {
+  console.log(`API PUT /services/${serviceId}:`, updatedData);
+}
+
+export function ApiDeleteService(serviceId) {
+  console.log(`API DELETE /services/${serviceId}`);
+}
+
 const mockTimeSlots = [
   { time: "09:00", status: "disabled" },
   { time: "09:30", status: "disabled" },
