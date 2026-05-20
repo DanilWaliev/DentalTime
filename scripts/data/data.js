@@ -18,6 +18,37 @@ export function GetAppointmentTimeSlots() {
   return mockTimeSlots;
 }
 
+export function AddDoctor(doctor) {
+  mockDoctors.push(doctor);
+}
+
+export function AddService(service) {
+  mockServices.push(service);
+}
+
+export function AddAppointment(appointment) {
+  mockAppointments.push(appointment);
+}
+
+/**
+ * Имитация API запросов
+ */
+export function ApiCreateAppointment(appointment) {
+  console.log("API POST /appointments (Client):", appointment);
+}
+
+export function ApiLogin(credentials) {
+  console.log("API POST /login:", credentials);
+}
+
+export function ApiAddManagerAppointment(appointment) {
+  console.log("API POST /appointments (Manager):", appointment);
+}
+
+export function ApiUpdateAppointment(appointmentId, updatedData) {
+  console.log(`API PUT /appointments/${appointmentId}:`, updatedData);
+}
+
 const mockTimeSlots = [
   { time: "09:00", status: "disabled" },
   { time: "09:30", status: "disabled" },

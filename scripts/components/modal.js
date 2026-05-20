@@ -147,9 +147,15 @@ export function GetPhoneAndName(title, onConfirm, onCancel = null) {
     dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(onCancel); });
 }
 
-export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
+export function showAddAppointmentModal(title, onConfirm, onCancel = null, existingData = null) {
     const dialog = document.createElement('dialog');
     dialog.className = 'app-modal modal-form';
+
+    let formattedDate = '';
+    if (existingData && existingData.date) {
+        // Ожидаем формат ISO: "2026-05-15T14:00:00+03:00", берем только "2026-05-15T14:00"
+        formattedDate = existingData.date.substring(0, 16);
+    }
 
     dialog.innerHTML = `
         <div class="modal-inner">
@@ -157,24 +163,24 @@ export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">ФИО Пациента</label>
-                    <input type="text" class="form-input" id="new-patient-name" placeholder="Иванов Иван">
+                    <input type="text" class="form-input" id="new-patient-name" placeholder="Иванов Иван" value="${existingData ? existingData.patientName : ''}">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Услуга</label>
-                    <input type="text" class="form-input" id="new-service-title" placeholder="Лечение кариеса">
+                    <input type="text" class="form-input" id="new-service-title" placeholder="Лечение кариеса" value="${existingData && existingData.service ? existingData.service.title : ''}">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Врач</label>
-                    <input type="text" class="form-input" id="new-doctor-name" placeholder="Смирнова А. В.">
+                    <input type="text" class="form-input" id="new-doctor-name" placeholder="Смирнова А. В." value="${existingData && existingData.doctor ? existingData.doctor.fullName : ''}">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Дата и время</label>
-                    <input type="datetime-local" class="form-input" id="new-appointment-date">
+                    <input type="datetime-local" class="form-input" id="new-appointment-date" value="${formattedDate}">
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline btn-sm" data-action="cancel">Отмена</button>
-                <button class="btn btn-primary btn-sm" data-action="submit">Создать запись</button>
+                <button class="btn btn-primary btn-sm" data-action="submit">${existingData ? 'Сохранить изменения' : 'Создать запись'}</button>
             </div>
         </div>
     `;
