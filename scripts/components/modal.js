@@ -114,8 +114,31 @@ export function GetPhoneAndName(title, onConfirm, onCancel = null) {
 
     dialog.querySelector('[data-action="cancel"]').addEventListener('click', () => closeModal(onCancel));
     dialog.querySelector('[data-action="submit"]').addEventListener('click', () => {
-        const name = dialog.querySelector('#modal-name').value;
-        const phone = dialog.querySelector('#modal-phone').value;
+        const nameInput = dialog.querySelector('#modal-name');
+        const phoneInput = dialog.querySelector('#modal-phone');
+        
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+
+        // Сбрасываем предыдущие ошибки
+        nameInput.style.borderColor = '';
+        phoneInput.style.borderColor = '';
+
+        let hasError = false;
+
+        if (!name) {
+            nameInput.style.borderColor = 'var(--color-error, #ff4d4d)';
+            hasError = true;
+        }
+        
+        // Проверка: номер должен содержать минимум 11 цифр
+        const digitsOnly = phone.replace(/\D/g, ''); 
+        if (digitsOnly.length < 11) {
+            phoneInput.style.borderColor = 'var(--color-error, #ff4d4d)';
+            hasError = true;
+        }
+
+        if (hasError) return;
         
         if (onConfirm) onConfirm({ name, phone });
         closeModal();

@@ -4,7 +4,7 @@ import { renderAppointmentServices, renderAppointmentDoctors } from '../componen
 import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots } from '../data/data.js';
 import { renderAppointmentCalendar, selectDay, renderAppointmentTimeSlots, selectTimeSlot } from '../components/calendar.js';
 import { initSlider } from '../components/slider.js';
-import { GetPhoneAndName } from '../components/modal.js';
+import { GetPhoneAndName, showInfo } from '../components/modal.js';
 
 let AppointmentState = {
   service: null,
@@ -63,6 +63,17 @@ function handleSelectTime(timeId) {
 }
 
 function handleSubmit() {
+  const missing = [];
+  if (!AppointmentState.service) missing.push("услугу");
+  if (!AppointmentState.doctor) missing.push("врача");
+  if (!AppointmentState.date) missing.push("дату");
+  if (!AppointmentState.time) missing.push("время");
+
+  if (missing.length > 0) {
+    showInfo("Недостаточно данных", `Пожалуйста, выберите: ${missing.join(", ")}.`);
+    return;
+  }
+
   GetPhoneAndName("Оставьте контакты для связи", (userData) => {
     AppointmentState.patientName = userData.name;
     AppointmentState.patientNumber = userData.phone;
