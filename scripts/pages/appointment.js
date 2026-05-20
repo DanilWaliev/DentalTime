@@ -63,8 +63,12 @@ function handleSelectTime(timeId) {
 }
 
 function handleSubmit() {
-  console.log(AppointmentState);
-  GetPhoneAndName("Оставьте контакты для связи");
+  GetPhoneAndName("Оставьте контакты для связи", (userData) => {
+    AppointmentState.patientName = userData.name;
+    AppointmentState.patientNumber = userData.phone;
+    
+    console.log("Запись сформирована:", AppointmentState);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);
