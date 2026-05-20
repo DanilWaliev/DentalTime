@@ -1,4 +1,5 @@
 import { initBurgerMenu } from '../core.js';
+import { ApiLogin } from '../data/data.js';
 
 let LoginState = {
     username: null,
@@ -23,7 +24,7 @@ function handleSubmit(event) {
     LoginState.username = usernameInput ? usernameInput.value : null;
     LoginState.password = passwordInput ? passwordInput.value : null;
 
-    console.log("Данные для входа:", LoginState);
+    ApiLogin(LoginState);
 }
 
 document.addEventListener('DOMContentLoaded', init);

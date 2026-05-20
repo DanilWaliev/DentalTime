@@ -1,7 +1,7 @@
 import { initBurgerMenu } from '../core.js';
-import { GetAppointments } from './../data/data.js';
+import { GetAppointments, ApiAddManagerAppointment } from './../data/data.js';
 import { renderAppointments } from './../components/cards.js';
-import { showAddAppointmentModal } from '../components/modal.js';
+import { showAddAppointmentModal, showInfo } from '../components/modal.js';
 
 function init() {
     initBurgerMenu();
@@ -15,7 +15,18 @@ function init() {
 
 function handleAddAppointment() {
     showAddAppointmentModal("Добавление новой записи", (newAppointment) => {
-        console.log("Новая запись для добавления:", newAppointment);
+        // Проверка полноты данных перед обработкой
+        const isComplete = newAppointment.patientName && 
+                           newAppointment.service.title && 
+                           newAppointment.doctor.fullName && 
+                           newAppointment.date;
+
+        if (!isComplete) {
+            showInfo("Ошибка", "Данные записи неполные. Пожалуйста, заполните все поля в форме.");
+            return;
+        }
+
+        ApiAddManagerAppointment(newAppointment);
     });
 }
 

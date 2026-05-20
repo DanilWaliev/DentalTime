@@ -1,7 +1,7 @@
 import { initBurgerMenu } from '../core.js';
 import { bindAction, selectCard } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
-import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots } from '../data/data.js';
+import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots, ApiCreateAppointment } from '../data/data.js';
 import { renderAppointmentCalendar, selectDay, renderAppointmentTimeSlots, selectTimeSlot } from '../components/calendar.js';
 import { initSlider } from '../components/slider.js';
 import { GetPhoneAndName, showInfo } from '../components/modal.js';
@@ -78,7 +78,7 @@ function handleSubmit() {
     AppointmentState.patientName = userData.name;
     AppointmentState.patientNumber = userData.phone;
     
-    console.log("Запись сформирована:", AppointmentState);
+    ApiCreateAppointment(AppointmentState);
   });
 }
 

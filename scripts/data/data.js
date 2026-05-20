@@ -18,6 +18,32 @@ export function GetAppointmentTimeSlots() {
   return mockTimeSlots;
 }
 
+export function AddDoctor(doctor) {
+  mockDoctors.push(doctor);
+}
+
+export function AddService(service) {
+  mockServices.push(service);
+}
+
+export function AddAppointment(appointment) {
+  mockAppointments.push(appointment);
+}
+
+// Имитация API запросов
+
+export function ApiCreateAppointment(appointment) {
+  console.log("API POST /appointments (Client):", appointment);
+}
+
+export function ApiLogin(credentials) {
+  console.log("API POST /login:", credentials);
+}
+
+export function ApiAddManagerAppointment(appointment) {
+  console.log("API POST /appointments (Manager):", appointment);
+}
+
 const mockTimeSlots = [
   { time: "09:00", status: "disabled" },
   { time: "09:30", status: "disabled" },
@@ -61,15 +87,7 @@ const mockDoctors = [
     experience: 12, 
     services: ["Удаление зубов", "Имплантация", "Пластика десны"], 
     nearest: ["Сегодня 18:00", "Пятница 11:00"]
-  },
-  { 
-    id: 3, 
-    fullName: "Сергей Дорохов", 
-    spec: "Стоматолог-хирург", 
-    experience: 12, 
-    services: ["Удаление зубов", "Имплантация", "Пластика десны"], 
-    nearest: ["Сегодня 18:00", "Пятница 11:00"]
-  },
+  }
 ];
 
 const mockServices = [
@@ -93,13 +111,6 @@ const mockServices = [
     subtitle: "Ультразвуковая чистка, Air Flow, полировка пастой и фторирование",
     duration: 60,
     price: 4000 
-  },
-  {
-    id: 4,
-    title: "Сложное удаление зуба",
-    subtitle: "Безболезненное удаление ретинированных зубов (в т.ч. зубов мудрости)",
-    duration: 90,
-    price: 8000 
   },
   {
     id: 4,
