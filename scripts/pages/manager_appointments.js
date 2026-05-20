@@ -1,7 +1,7 @@
 import { initBurgerMenu } from '../core.js';
-import { GetAppointments, ApiAddManagerAppointment, ApiUpdateAppointment } from './../data/data.js';
+import { GetAppointments, ApiAddManagerAppointment, ApiUpdateAppointment, ApiDeleteAppointment } from './../data/data.js';
 import { renderAppointments, bindAction } from './../components/cards.js';
-import { showAddAppointmentModal, showInfo } from '../components/modal.js';
+import { showAddAppointmentModal, showInfo, showConfirm } from '../components/modal.js';
 
 let currentAppointments = [];
 
@@ -17,6 +17,7 @@ function init() {
     }
 
     bindAction(container, 'edit', handleEditAppointment);
+    bindAction(container, 'delete', handleDeleteAppointment);
 }
 
 function handleAddAppointment() {
@@ -56,6 +57,17 @@ function handleEditAppointment(appointmentId) {
 
         ApiUpdateAppointment(appointmentId, updatedAppointment);
     }, null, appointmentToEdit);
+}
+
+function handleDeleteAppointment(appointmentId) {
+    showConfirm(
+        "Подтверждение удаления", 
+        `Вы уверены, что хотите удалить запись №${appointmentId}? Это действие нельзя будет отменить.`,
+        () => {
+            ApiDeleteAppointment(appointmentId);
+            // Тут обновление UI
+        }
+    );
 }
 
 document.addEventListener('DOMContentLoaded', init);

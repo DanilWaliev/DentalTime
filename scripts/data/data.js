@@ -49,6 +49,10 @@ export function ApiUpdateAppointment(appointmentId, updatedData) {
   console.log(`API PUT /appointments/${appointmentId}:`, updatedData);
 }
 
+export function ApiDeleteAppointment(appointmentId) {
+  console.log(`API DELETE /appointments/${appointmentId}`);
+}
+
 const mockTimeSlots = [
   { time: "09:00", status: "disabled" },
   { time: "09:30", status: "disabled" },
