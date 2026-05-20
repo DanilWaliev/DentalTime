@@ -39,9 +39,15 @@ function init() {
 
   // Проверка URL на наличие выбранного врача (переход со страницы Команда)
   const urlParams = new URLSearchParams(window.location.search);
+  
   const preselectedDoctorId = urlParams.get('doctorId');
   if (preselectedDoctorId) {
     handleSelectDoctor(preselectedDoctorId);
+  }
+
+  const preselectedServiceId = urlParams.get('serviceId');
+  if (preselectedServiceId) {
+    handleSelectService(preselectedServiceId);
   }
 }
 

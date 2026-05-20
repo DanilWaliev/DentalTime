@@ -78,7 +78,7 @@ function generateServiceCard(service) {
             <span class="service-duration">${service.duration} мин</span>
             <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
         </div>
-        <a href="appointment.html#services" class="btn btn-primary btn-sm btn-full" data-action="select" data-id="${service.id}">Записаться</a>
+        <a href="appointment.html?serviceId=${service.id}#step-2" class="btn btn-primary btn-sm btn-full" data-action="select" data-id="${service.id}">Записаться</a>
     </div>
   `;
 }
