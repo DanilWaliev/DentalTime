@@ -48,7 +48,7 @@ function generateDoctorCard(doctor) {
                    </div>
                </div>
                <div class="doctor-actions">
-                 <a href="appointment.html#step-3" class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${doctor.id}">Записаться к врачу</a>
+                 <a href="appointment.html?doctorId=${doctor.id}#step-3" class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${doctor.id}">Записаться к врачу</a>
                </div>  
            </div>`;
 }
@@ -78,7 +78,7 @@ function generateServiceCard(service) {
             <span class="service-duration">${service.duration} мин</span>
             <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
         </div>
-        <a href="appointment.html#services" class="btn btn-primary btn-sm btn-full" data-action="select" data-id="${service.id}">Записаться</a>
+        <a href="appointment.html?serviceId=${service.id}#step-2" class="btn btn-primary btn-sm btn-full" data-action="select" data-id="${service.id}">Записаться</a>
     </div>
   `;
 }

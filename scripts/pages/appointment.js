@@ -36,6 +36,19 @@ function init() {
   bindAction(calendarDaysContainer, 'select', handleSelectDate);
   bindAction(timeSlotsContainer, 'select-time', handleSelectTime);
   submitButton.addEventListener('click', handleSubmit);
+
+  // Проверка URL на наличие выбранного врача (переход со страницы Команда)
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  const preselectedDoctorId = urlParams.get('doctorId');
+  if (preselectedDoctorId) {
+    handleSelectDoctor(preselectedDoctorId);
+  }
+
+  const preselectedServiceId = urlParams.get('serviceId');
+  if (preselectedServiceId) {
+    handleSelectService(preselectedServiceId);
+  }
 }
 
 function handleSelectService(serviceId) {
