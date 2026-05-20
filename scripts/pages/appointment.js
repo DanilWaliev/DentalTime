@@ -21,6 +21,7 @@ function init() {
   const servicesContainer = document.getElementById('appointment-services-container');
   const calendarDaysContainer = document.getElementById('calendar-days-container');
   const timeSlotsContainer = document.getElementById('appointment-time-slots-container');
+  const submitButton = document.getElementById('submit-button');
 
   renderAppointmentDoctors(GetDoctors(), doctorsContainer);
   renderAppointmentServices(GetServices(), servicesContainer);
@@ -34,6 +35,7 @@ function init() {
   bindAction(doctorsContainer, 'select', handleSelectDoctor);
   bindAction(calendarDaysContainer, 'select', handleSelectDate);
   bindAction(timeSlotsContainer, 'select-time', handleSelectTime);
+  submitButton.addEventListener('click', handleSubmit);
 }
 
 function handleSelectService(serviceId) {
@@ -61,7 +63,8 @@ function handleSelectTime(timeId) {
 }
 
 function handleSubmit() {
-
+  console.log(AppointmentState);
+  GetPhoneAndName("Оставьте контакты для связи");
 }
 
 document.addEventListener('DOMContentLoaded', init);
