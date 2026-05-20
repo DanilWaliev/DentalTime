@@ -48,7 +48,7 @@ function generateDoctorCard(doctor) {
                    </div>
                </div>
                <div class="doctor-actions">
-                 <a href="appointment.html#step-3" class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${doctor.id}">Записаться к врачу</a>
+                 <a href="appointment.html?doctorId=${doctor.id}#step-3" class="btn btn-secondary btn-sm btn-full" data-action="select" data-id="${doctor.id}">Записаться к врачу</a>
                </div>  
            </div>`;
 }
