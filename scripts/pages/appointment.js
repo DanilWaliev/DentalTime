@@ -3,6 +3,7 @@ import { bindAction } from '../components/cards.js';
 import { renderAppointmentServices, renderAppointmentDoctors } from '../components/cards.js';
 import { GetServices, GetDoctors, GetAppointmentCalendar, GetAppointmentTimeSlots } from '../data/data.js';
 import { renderAppointmentCalendar, selectDay, renderAppointmentTimeSlots, selectTimeSlot } from '../components/calendar.js';
+import { initSlider } from '../components/slider.js';
 import { GetPhoneAndName } from '../components/modal.js';
 
 let AppointmentState = {
@@ -20,12 +21,15 @@ function init() {
   const servicesContainer = document.getElementById('appointment-services-container');
   const calendarDaysContainer = document.getElementById('calendar-days-container');
   const timeSlotsContainer = document.getElementById('appointment-time-slots-container');
-  
+
   renderAppointmentDoctors(GetDoctors(), doctorsContainer);
   renderAppointmentServices(GetServices(), servicesContainer);
   renderAppointmentCalendar(GetAppointmentCalendar(), calendarDaysContainer);
   renderAppointmentTimeSlots(GetAppointmentTimeSlots(), timeSlotsContainer);
-  
+
+  initSlider(servicesContainer);
+  initSlider(doctorsContainer);
+
   bindAction(servicesContainer, 'select', handleSelectService);
   bindAction(doctorsContainer, 'select', handleSelectDoctor);
   bindAction(calendarDaysContainer, 'select', handleSelectDate);
