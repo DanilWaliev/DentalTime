@@ -52,9 +52,7 @@ export function ApiDeleteAppointment(appointmentId) {
   console.log(`API DELETE /appointments/${appointmentId}`);
 }
 
-/**
- * Имитация API для врачей
- */
+//Имитация API для врачей
 export function ApiAddDoctor(doctor) {
   console.log("API POST /doctors:", doctor);
 }
@@ -67,9 +65,7 @@ export function ApiDeleteDoctor(doctorId) {
   console.log(`API DELETE /doctors/${doctorId}`);
 }
 
-/**
- * Имитация API для услуг
- */
+//Имитация API для услуг
 export function ApiAddService(service) {
   console.log("API POST /services:", service);
 }
@@ -80,6 +76,15 @@ export function ApiUpdateService(serviceId, updatedData) {
 
 export function ApiDeleteService(serviceId) {
   console.log(`API DELETE /services/${serviceId}`);
+}
+
+// Имитация API для управления записью (пациент)
+export function ApiCancelAppointment(appointmentId) {
+  console.log(`API POST /appointments/${appointmentId}/cancel`);
+}
+
+export function ApiRescheduleAppointment(appointmentId, newDate) {
+  console.log(`API POST /appointments/${appointmentId}/reschedule:`, { newDate });
 }
 
 const mockTimeSlots = [
