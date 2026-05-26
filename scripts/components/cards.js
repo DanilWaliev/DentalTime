@@ -147,7 +147,7 @@ export function renderManagerDoctors(doctors, doctorsContainer) {
   });
 }
 
-function generateManagerDoctorCard(doctor) {
+function generateManagerDoctorCardOld(doctor) {
   return `
     <div class="doctor-edit-top">
         <button class="photo-upload">
@@ -178,7 +178,40 @@ function generateManagerDoctorCard(doctor) {
     </div>
     
     <div class="doctor-actions">
-        <button class="btn btn-primary btn-sm" data-action="save" data-id="${doctor.id}">Сохранить</button>
+        <button class="btn btn-primary btn-sm" data-action="edit" data-id="${doctor.id}">Изменить</button>
+        <button class="btn btn-outline btn-sm text-danger" data-action="delete" data-id="${doctor.id}">Удалить</button>
+    </div>
+  `;
+}
+
+function generateManagerDoctorCard(doctor) {
+  const photoContent = doctor.photo?.url
+    ? `<img class="doctor-photo-image" src="${doctor.photo.url}" alt="${doctor.fullName}">`
+    : 'Фото';
+
+  return `
+    <div class="doctor-edit-top">
+        <div class="photo-upload doctor-photo-view">
+            ${photoContent}
+        </div>
+
+        <div class="doctor-inputs">
+            <div class="doctor-name">${doctor.fullName}</div>
+            <div class="doctor-specialty">${doctor.spec}</div>
+            <div class="doctor-badges">
+                <span class="badge badge-outline">Стаж: ${doctor.experience} лет</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="doctor-services">
+        <div class="pills-container">
+            ${doctor.services.map(service => `<span class="badge badge-primary">${service}</span>`).join('')}
+        </div>
+    </div>
+
+    <div class="doctor-actions">
+        <button class="btn btn-primary btn-sm" data-action="edit" data-id="${doctor.id}">Изменить</button>
         <button class="btn btn-outline btn-sm text-danger" data-action="delete" data-id="${doctor.id}">Удалить</button>
     </div>
   `;

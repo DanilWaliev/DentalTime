@@ -1,54 +1,86 @@
 import { initBurgerMenu } from '../core.js';
-import { GetDoctors, ApiUpdateDoctor, ApiDeleteDoctor, ApiAddDoctor } from './../data/data.js';
+import { GetDoctors, AddDoctor, ApiUpdateDoctor, ApiDeleteDoctor, ApiAddDoctor } from './../data/data.js';
 import { renderManagerDoctors, bindAction } from './../components/cards.js';
-import { showConfirm, showInfo } from '../components/modal.js';
+import { showConfirm, showDoctorModal, showInfo } from '../components/modal.js';
+
+let doctorsContainer = null;
 
 function init() {
     initBurgerMenu();
-    const container = document.getElementById('manager-doctors-container');
-    renderManagerDoctors(GetDoctors(), container);
 
-    // Биндим кнопки внутри карточек
-    bindAction(container, 'save', handleSaveDoctor);
-    bindAction(container, 'delete', handleDeleteDoctor);
+    doctorsContainer = document.getElementById('manager-doctors-container');
+    renderDoctorsList();
 
-    // Биндим кнопку добавления (если добавим ID в HTML)
+    bindAction(doctorsContainer, 'edit', handleEditDoctor);
+    bindAction(doctorsContainer, 'delete', handleDeleteDoctor);
+
     const addBtn = document.getElementById('add-doctor-btn');
     if (addBtn) {
         addBtn.addEventListener('click', handleAddDoctor);
     }
 }
 
-function handleSaveDoctor(doctorId) {
-    const card = document.querySelector(`.card[data-id="${doctorId}"]`);
-    if (!card) return;
+function renderDoctorsList() {
+    renderManagerDoctors(GetDoctors(), doctorsContainer);
+}
 
-    // Собираем данные из инпутов внутри карточки
-    const inputs = card.querySelectorAll('.form-input');
-    const updatedData = {
-        fullName: inputs[0].value,
-        spec: inputs[1].value,
-        experience: inputs[2].value,
-        services: inputs[3].value.split(',').map(s => s.trim())
-    };
+function handleEditDoctor(doctorId) {
+    const doctor = findDoctor(doctorId);
+    if (!doctor) return;
 
-    ApiUpdateDoctor(doctorId, updatedData);
-    showInfo("Успех", "Данные врача сохранены.");
+    showDoctorModal("Изменение врача", (updatedData) => {
+        Object.assign(doctor, updatedData);
+        ApiUpdateDoctor(doctorId, updatedData);
+        renderDoctorsList();
+        showSuccess("Данные врача сохранены.");
+    }, doctor);
 }
 
 function handleDeleteDoctor(doctorId) {
+    const doctor = findDoctor(doctorId);
+    if (!doctor) return;
+
     showConfirm(
         "Удаление врача",
-        `Вы уверены, что хотите удалить врача с ID ${doctorId}?`,
+        `Вы уверены, что хотите удалить врача ${doctor.fullName}?`,
         () => {
+            const doctors = GetDoctors();
+            const doctorIndex = doctors.findIndex(item => String(item.id) === String(doctorId));
+
+            if (doctorIndex === -1) return;
+
+            doctors.splice(doctorIndex, 1);
             ApiDeleteDoctor(doctorId);
+            renderDoctorsList();
+            showSuccess("Врач удален.");
         }
     );
 }
 
 function handleAddDoctor() {
-    // Здесь могла бы быть модалка showAddDoctorModal
-    console.log("Логика добавления врача");
+    showDoctorModal("Добавление врача", (newDoctorData) => {
+        const newDoctor = {
+            id: getNextDoctorId(),
+            ...newDoctorData
+        };
+
+        AddDoctor(newDoctor);
+        ApiAddDoctor(newDoctor);
+        renderDoctorsList();
+        showSuccess("Врач добавлен.");
+    });
+}
+
+function findDoctor(doctorId) {
+    return GetDoctors().find(doctor => String(doctor.id) === String(doctorId));
+}
+
+function getNextDoctorId() {
+    return GetDoctors().reduce((maxId, doctor) => Math.max(maxId, doctor.id), 0) + 1;
+}
+
+function showSuccess(message) {
+    setTimeout(() => showInfo("Успех", message), 0);
 }
 
 document.addEventListener('DOMContentLoaded', init);

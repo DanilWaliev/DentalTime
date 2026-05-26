@@ -221,3 +221,132 @@ export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
     
     dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(onCancel); });
 }
+
+function splitList(value) {
+    return value.split(',').map(item => item.trim()).filter(Boolean);
+}
+
+// TODO переделать для бэка
+function mockUploadDoctorPhoto(file, dataUrl) {
+    return {
+        id: `mock-photo-${Date.now()}`,
+        name: file.name,
+        url: dataUrl,
+        file,
+        mockUploaded: true
+    };
+}
+
+export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null) {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'app-modal modal-form';
+
+    const doctorData = doctor || {
+        fullName: '',
+        spec: '',
+        experience: '',
+        services: [],
+        nearest: [],
+        photo: null
+    };
+    const photoPreview = doctorData.photo?.url || '';
+    let selectedPhoto = doctorData.photo || null;
+
+    dialog.innerHTML = `
+        <div class="modal-inner">
+            <h3 class="modal-title">${title}</h3>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Фото</label>
+                    <div class="doctor-photo-upload">
+                        <div class="doctor-photo-preview" id="doctor-photo-preview" ${photoPreview ? `style="background-image: url('${photoPreview}')"` : ''}>
+                            ${photoPreview ? '' : 'Фото'}
+                        </div>
+                        <label class="btn btn-outline btn-sm" for="doctor-photo">Выбрать фото</label>
+                        <input type="file" id="doctor-photo" accept="image/*" hidden>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ФИО</label>
+                    <input type="text" class="form-input" id="doctor-full-name" value="${doctorData.fullName}" placeholder="Иван Иванов">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Специальность</label>
+                    <input type="text" class="form-input" id="doctor-spec" value="${doctorData.spec}" placeholder="Стоматолог-терапевт">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Стаж</label>
+                    <input type="number" class="form-input" id="doctor-experience" value="${doctorData.experience}" min="0" placeholder="5">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Оказываемые услуги (через запятую)</label>
+                    <input type="text" class="form-input" id="doctor-services" value="${doctorData.services.join(', ')}" placeholder="Лечение кариеса, Чистка">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-sm" data-action="cancel">Отмена</button>
+                <button class="btn btn-primary btn-sm" data-action="submit">Сохранить</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+    dialog.showModal();
+
+    const photoInput = dialog.querySelector('#doctor-photo');
+    const photoPreviewElement = dialog.querySelector('#doctor-photo-preview');
+
+    photoInput.addEventListener('change', () => {
+        const file = photoInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+            selectedPhoto = mockUploadDoctorPhoto(file, reader.result);
+            photoPreviewElement.textContent = '';
+            photoPreviewElement.style.backgroundImage = `url('${selectedPhoto.url}')`;
+        });
+        reader.readAsDataURL(file);
+    });
+
+    const closeModal = (callback) => {
+        dialog.close();
+        dialog.remove();
+        if (callback && typeof callback === 'function') callback();
+    };
+
+    dialog.querySelector('[data-action="cancel"]').addEventListener('click', () => closeModal(onCancel));
+    dialog.querySelector('[data-action="submit"]').addEventListener('click', () => {
+        const fullNameInput = dialog.querySelector('#doctor-full-name');
+        const specInput = dialog.querySelector('#doctor-spec');
+        const experienceInput = dialog.querySelector('#doctor-experience');
+        const servicesInput = dialog.querySelector('#doctor-services');
+        const fields = [fullNameInput, specInput, experienceInput, servicesInput];
+        let hasError = false;
+
+        fields.forEach(field => {
+            field.style.borderColor = '';
+            if (!field.value.trim()) {
+                field.style.borderColor = 'var(--color-error, #ff4d4d)';
+                hasError = true;
+            }
+        });
+
+        if (hasError) return;
+
+        if (onConfirm) {
+            onConfirm({
+                fullName: fullNameInput.value.trim(),
+                spec: specInput.value.trim(),
+                experience: Number(experienceInput.value),
+                services: splitList(servicesInput.value),
+                nearest: doctorData.nearest || [],
+                photo: selectedPhoto
+            });
+        }
+
+        closeModal();
+    });
+
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(onCancel); });
+}
