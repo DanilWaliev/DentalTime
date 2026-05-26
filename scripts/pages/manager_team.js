@@ -1,5 +1,5 @@
 import { initBurgerMenu } from '../core.js';
-import { GetDoctors, AddDoctor, ApiUpdateDoctor, ApiDeleteDoctor, ApiAddDoctor } from './../data/data.js';
+import { GetDoctors, AddDoctor, ApiUpdateDoctor, ApiDeleteDoctor, ApiAddDoctor, ApiUploadDoctorPhoto } from './../data/data.js';
 import { renderManagerDoctors, bindAction } from './../components/cards.js';
 import { showConfirm, showDoctorModal, showInfo } from '../components/modal.js';
 
@@ -29,8 +29,10 @@ function handleEditDoctor(doctorId) {
     if (!doctor) return;
 
     showDoctorModal("Изменение врача", (updatedData) => {
-        Object.assign(doctor, updatedData);
-        ApiUpdateDoctor(doctorId, updatedData);
+        const doctorData = prepareDoctorData(updatedData);
+
+        Object.assign(doctor, doctorData);
+        ApiUpdateDoctor(doctorId, doctorData);
         renderDoctorsList();
         showSuccess("Данные врача сохранены.");
     }, doctor);
@@ -61,7 +63,7 @@ function handleAddDoctor() {
     showDoctorModal("Добавление врача", (newDoctorData) => {
         const newDoctor = {
             id: getNextDoctorId(),
-            ...newDoctorData
+            ...prepareDoctorData(newDoctorData)
         };
 
         AddDoctor(newDoctor);
@@ -77,6 +79,16 @@ function findDoctor(doctorId) {
 
 function getNextDoctorId() {
     return GetDoctors().reduce((maxId, doctor) => Math.max(maxId, doctor.id), 0) + 1;
+}
+
+function prepareDoctorData(doctorData) {
+    const { photoFile, photoPreviewUrl, ...data } = doctorData;
+
+    if (photoFile && photoPreviewUrl) {
+        data.photo = ApiUploadDoctorPhoto(photoFile, photoPreviewUrl);
+    }
+
+    return data;
 }
 
 function showSuccess(message) {

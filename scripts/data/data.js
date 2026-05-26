@@ -82,6 +82,19 @@ export function ApiAddDoctor(doctor) {
   console.log("API POST /doctors:", doctor);
 }
 
+// TODO переделать для бека
+export function ApiUploadDoctorPhoto(file, previewUrl) {
+  const uploadedPhoto = {
+    id: `mock-photo-${Date.now()}`,
+    name: file.name,
+    url: previewUrl,
+    mockUploaded: true
+  };
+
+  console.log("API POST /doctors/photo:", uploadedPhoto);
+  return uploadedPhoto;
+}
+
 export function ApiUpdateDoctor(doctorId, updatedData) {
   console.log(`API PUT /doctors/${doctorId}:`, updatedData);
 }

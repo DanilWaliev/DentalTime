@@ -226,17 +226,6 @@ function splitList(value) {
     return value.split(',').map(item => item.trim()).filter(Boolean);
 }
 
-// TODO переделать для бэка
-function mockUploadDoctorPhoto(file, dataUrl) {
-    return {
-        id: `mock-photo-${Date.now()}`,
-        name: file.name,
-        url: dataUrl,
-        file,
-        mockUploaded: true
-    };
-}
-
 export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null) {
     const dialog = document.createElement('dialog');
     dialog.className = 'app-modal modal-form';
@@ -250,7 +239,8 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
         photo: null
     };
     const photoPreview = doctorData.photo?.url || '';
-    let selectedPhoto = doctorData.photo || null;
+    let selectedPhotoFile = null;
+    let selectedPhotoPreviewUrl = doctorData.photo?.url || null;
 
     dialog.innerHTML = `
         <div class="modal-inner">
@@ -302,9 +292,10 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
 
         const reader = new FileReader();
         reader.addEventListener('load', () => {
-            selectedPhoto = mockUploadDoctorPhoto(file, reader.result);
+            selectedPhotoFile = file;
+            selectedPhotoPreviewUrl = reader.result;
             photoPreviewElement.textContent = '';
-            photoPreviewElement.style.backgroundImage = `url('${selectedPhoto.url}')`;
+            photoPreviewElement.style.backgroundImage = `url('${selectedPhotoPreviewUrl}')`;
         });
         reader.readAsDataURL(file);
     });
@@ -341,7 +332,9 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
                 experience: Number(experienceInput.value),
                 services: splitList(servicesInput.value),
                 nearest: doctorData.nearest || [],
-                photo: selectedPhoto
+                photo: doctorData.photo || null,
+                photoFile: selectedPhotoFile,
+                photoPreviewUrl: selectedPhotoPreviewUrl
             });
         }
 
