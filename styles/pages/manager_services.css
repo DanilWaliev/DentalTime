@@ -29,9 +29,47 @@
 .service-edit-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   padding: var(--space-md);
   border: 1px solid var(--color-border);
+}
+
+.service-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.services-card-title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+
+.services-card-description {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.service-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-sm);
+  gap: var(--space-sm);
+}
+
+.service-duration {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.service-price {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
 }
 
 .service-inputs-row {
@@ -121,6 +159,11 @@
   }
 
   .service-inputs-row {
+    flex-direction: column;
+  }
+
+  .service-details {
+    align-items: flex-start;
     flex-direction: column;
   }
 }

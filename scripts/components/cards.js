@@ -233,29 +233,18 @@ export function renderManagerServices(services, servicesContainer) {
 
 function generateManagerServiceCard(service) {
   return `
-    <div class="form-group">
-        <label class="form-label">Название услуги</label>
-        <input type="text" class="form-input" value="${service.title}">
+    <div class="service-card-content">
+        <div class="services-card-title">${service.title}</div>
+        <div class="services-card-description">${service.subtitle}</div>
     </div>
-    
-    <div class="form-group">
-        <label class="form-label">Описание</label>
-        <textarea class="form-input" rows="3">${service.subtitle}</textarea>
+
+    <div class="service-details">
+        <span class="service-duration">${service.duration} мин</span>
+        <span class="service-price">${service.price.toLocaleString('ru-RU')} ₽</span>
     </div>
-    
-    <div class="service-inputs-row">
-        <div class="form-group">
-            <label class="form-label">Длительность</label>
-            <input type="text" class="form-input" value="${service.duration} мин">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Стоимость</label>
-            <input type="text" class="form-input" value="${service.price.toLocaleString('ru-RU')} ₽">
-        </div>
-    </div>
-    
+
     <div class="service-actions">
-        <button class="btn btn-primary btn-sm" data-action="save" data-id="${service.id}">Сохранить</button>
+        <button class="btn btn-primary btn-sm" data-action="edit" data-id="${service.id}">Изменить</button>
         <button class="btn btn-outline btn-sm text-danger" data-action="delete" data-id="${service.id}">Удалить</button>
     </div>
   `;

@@ -1,52 +1,86 @@
 import { initBurgerMenu } from '../core.js';
-import { GetServices, ApiUpdateService, ApiDeleteService, ApiAddService } from './../data/data.js';
+import { GetServices, AddService, ApiUpdateService, ApiDeleteService, ApiAddService } from './../data/data.js';
 import { renderManagerServices, bindAction } from './../components/cards.js';
-import { showConfirm, showInfo } from '../components/modal.js';
+import { showConfirm, showInfo, showServiceModal } from '../components/modal.js';
+
+let servicesContainer = null;
 
 function init() {
     initBurgerMenu();
-    const container = document.getElementById('manager-services-container');
-    renderManagerServices(GetServices(), container);
 
-    // Биндим действия внутри карточек
-    bindAction(container, 'save', handleSaveService);
-    bindAction(container, 'delete', handleDeleteService);
+    servicesContainer = document.getElementById('manager-services-container');
+    renderServicesList();
 
-    // Кнопка добавления
+    bindAction(servicesContainer, 'edit', handleEditService);
+    bindAction(servicesContainer, 'delete', handleDeleteService);
+
     const addBtn = document.getElementById('add-service-btn');
     if (addBtn) {
         addBtn.addEventListener('click', handleAddService);
     }
 }
 
-function handleSaveService(serviceId) {
-    const card = document.querySelector(`.card[data-id="${serviceId}"]`);
-    if (!card) return;
+function renderServicesList() {
+    renderManagerServices(GetServices(), servicesContainer);
+}
 
-    const inputs = card.querySelectorAll('.form-input');
-    const updatedData = {
-        title: inputs[0].value,
-        subtitle: inputs[1].value,
-        duration: inputs[2].value,
-        price: inputs[3].value
-    };
+function handleEditService(serviceId) {
+    const service = findService(serviceId);
+    if (!service) return;
 
-    ApiUpdateService(serviceId, updatedData);
-    showInfo("Успех", "Услуга обновлена.");
+    showServiceModal("Изменение услуги", (updatedData) => {
+        Object.assign(service, updatedData);
+        ApiUpdateService(serviceId, updatedData);
+        renderServicesList();
+        showSuccess("Услуга обновлена.");
+    }, service);
 }
 
 function handleDeleteService(serviceId) {
+    const service = findService(serviceId);
+    if (!service) return;
+
     showConfirm(
         "Удаление услуги",
-        `Вы уверены, что хотите удалить услугу с ID ${serviceId}?`,
+        `Вы уверены, что хотите удалить услугу "${service.title}"?`,
         () => {
+            const services = GetServices();
+            const serviceIndex = services.findIndex(item => String(item.id) === String(serviceId));
+
+            if (serviceIndex === -1) return;
+
+            services.splice(serviceIndex, 1);
             ApiDeleteService(serviceId);
+            renderServicesList();
+            showSuccess("Услуга удалена.");
         }
     );
 }
 
 function handleAddService() {
-    console.log("Логика добавления услуги");
+    showServiceModal("Добавление услуги", (newServiceData) => {
+        const newService = {
+            id: getNextServiceId(),
+            ...newServiceData
+        };
+
+        AddService(newService);
+        ApiAddService(newService);
+        renderServicesList();
+        showSuccess("Услуга добавлена.");
+    });
+}
+
+function findService(serviceId) {
+    return GetServices().find(service => String(service.id) === String(serviceId));
+}
+
+function getNextServiceId() {
+    return GetServices().reduce((maxId, service) => Math.max(maxId, service.id), 0) + 1;
+}
+
+function showSuccess(message) {
+    setTimeout(() => showInfo("Успех", message), 0);
 }
 
 document.addEventListener('DOMContentLoaded', init);
