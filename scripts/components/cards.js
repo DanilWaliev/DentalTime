@@ -313,6 +313,15 @@ export function renderAppointmentStatus(appointment, container) {
   if (!container) return;
 
   const statusClass = appointment.status === 'Подтверждена' ? 'badge-primary' : 'badge-outline';
+  const isCanceled = appointment.status === 'Отменена';
+  const actions = isCanceled
+    ? ''
+    : `
+    <div class="status-actions">
+        <button class="btn btn-secondary btn-md" data-action="reschedule" data-id="${appointment.id}">Перенести</button>
+        <button class="btn btn-outline btn-md" data-action="cancel" data-id="${appointment.id}">Отменить</button>
+    </div>
+  `;
   
   container.innerHTML = `
     <div class="status-header">
@@ -339,10 +348,7 @@ export function renderAppointmentStatus(appointment, container) {
         </div>
     </div>
 
-    <div class="status-actions">
-        <button class="btn btn-secondary btn-md" data-action="reschedule" data-id="${appointment.id}">Перенести</button>
-        <button class="btn btn-outline btn-md" data-action="cancel" data-id="${appointment.id}">Отменить</button>
-    </div>
+    ${actions}
   `;
 }
 

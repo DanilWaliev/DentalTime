@@ -10,6 +10,10 @@ export function GetAppointments() {
   return mockAppointments;
 }
 
+export function GetAppointmentByNumber(appointmentNumber) {
+  return mockAppointments.find(appointment => String(appointment.num) === String(appointmentNumber));
+}
+
 export function GetAppointmentCalendar() {
   return mockCalendar;
 }
@@ -28,6 +32,27 @@ export function AddService(service) {
 
 export function AddAppointment(appointment) {
   mockAppointments.push(appointment);
+}
+
+export function CancelAppointment(appointmentId) {
+  const appointment = mockAppointments.find(item => String(item.id) === String(appointmentId));
+  if (!appointment) return null;
+
+  appointment.status = "Отменена";
+  ApiCancelAppointment(appointmentId);
+
+  return appointment;
+}
+
+export function RescheduleAppointment(appointmentId, newDate) {
+  const appointment = mockAppointments.find(item => String(item.id) === String(appointmentId));
+  if (!appointment) return null;
+
+  appointment.date = newDate;
+  appointment.status = "Ожидает";
+  ApiRescheduleAppointment(appointmentId, newDate);
+
+  return appointment;
 }
 
 // Имитация API запросов
