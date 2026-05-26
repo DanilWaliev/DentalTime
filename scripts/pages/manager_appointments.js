@@ -13,6 +13,7 @@ function init() {
 
     bindAction(appointmentsContainer, 'edit', handleEditAppointment);
     bindAction(appointmentsContainer, 'delete', handleDeleteAppointment);
+    bindAction(appointmentsContainer, 'confirm', handleConfirmAppointment);
 
     const addBtn = document.getElementById('add-appointment-btn');
     if (addBtn) {
@@ -45,6 +46,7 @@ function handleEditAppointment(appointmentId) {
     if (!appointment) return;
 
     showAddAppointmentModal("Изменение записи", (updatedData) => {
+        const statusSelect = document.getElementById('edit-appointment-status');
         const updatedAppointment = {
             patientName: updatedData.patientName,
             service: {
@@ -55,7 +57,8 @@ function handleEditAppointment(appointmentId) {
                 ...appointment.doctor,
                 fullName: updatedData.doctor.fullName
             },
-            date: updatedData.date
+            date: updatedData.date,
+            status: statusSelect ? statusSelect.value : appointment.status
         };
 
         Object.assign(appointment, updatedAppointment);
@@ -88,6 +91,20 @@ function handleDeleteAppointment(appointmentId) {
     );
 }
 
+function handleConfirmAppointment(appointmentId) {
+    const appointment = findAppointment(appointmentId);
+    if (!appointment) return;
+
+    const updatedData = {
+        status: "Подтверждена"
+    };
+
+    Object.assign(appointment, updatedData);
+    ApiUpdateAppointment(appointmentId, updatedData);
+    renderAppointmentsList();
+    showSuccess("Запись подтверждена.");
+}
+
 function findAppointment(appointmentId) {
     return GetAppointments().find(appointment => String(appointment.id) === String(appointmentId));
 }
@@ -101,11 +118,27 @@ function fillAppointmentModal(appointment) {
     const doctorNameInput = dialog.querySelector('#new-doctor-name');
     const appointmentDateInput = dialog.querySelector('#new-appointment-date');
     const submitButton = dialog.querySelector('[data-action="submit"]');
+    const modalBody = dialog.querySelector('.modal-body');
 
     patientNameInput.value = appointment.patientName;
     serviceTitleInput.value = appointment.service.title;
     doctorNameInput.value = appointment.doctor.fullName;
     appointmentDateInput.value = formatDateTimeInputValue(appointment.date);
+
+    if (modalBody) {
+        modalBody.insertAdjacentHTML('beforeend', `
+            <div class="form-group">
+                <label class="form-label" for="edit-appointment-status">Статус</label>
+                <select class="form-input" id="edit-appointment-status">
+                    <option value="Ожидает">Ожидает</option>
+                    <option value="Подтверждена">Подтверждена</option>
+                    <option value="Отменена">Отменена</option>
+                </select>
+            </div>
+        `);
+
+        dialog.querySelector('#edit-appointment-status').value = appointment.status;
+    }
 
     if (submitButton) {
         submitButton.textContent = "Сохранить";
