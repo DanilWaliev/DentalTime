@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записи - DentalTime</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/pages/manager_records.css">
+</head>
+
+<body data-page="manager-appointments">
+    <header class="row">
+        <nav class="offset-1 col-10 nav-container">
+            <div class="logo">DentalTime</div>
+
+            <div class="desktop-menu">
+                <a class="top-menu-button" href="manager_schedule.html">Расписание</a>
+                <a class="top-menu-button" href="manager_appointments.html">Записи</a>
+                <a class="top-menu-button" href="manager_team.html">Команда</a>
+                <a class="top-menu-button" href="manager_services.html">Услуги</a>
+                <a class="top-menu-button" href="login.html">Выход</a>
+            </div>
+
+            <button class="burger-menu-btn" aria-label="Открыть меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="row page-container">
+        <div class="offset-2 col-8">
+            
+            <div class="admin-header">
+                <h1 class="page-title">Список записей</h1>
+                <div class="search-container">
+                    <input type="text" class="form-input search-input" placeholder="Номер записи (например: 1234)">
+                    <button class="btn btn-primary btn-md search-btn">Найти</button>
+                </div>
+                <button id="add-appointment-btn" class="btn btn-primary btn-md">+ Добавить запись</button>
+            </div>
+
+            <div class="records-list" id="appointments-container">
+                
+                <div class="card record-card">
+                    <div class="record-header">
+                        <span class="record-id">Запись №4627</span>
+                        <span class="badge badge-primary">Подтверждена</span>
+                    </div>
+                    
+                    <div class="record-body">
+                        <div class="record-row">
+                            <span class="record-label">Пациент</span>
+                            <span class="record-value">Алексей Михайлов</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Услуга</span>
+                            <span class="record-value">Удаление зуба</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Врач</span>
+                            <span class="record-value">Иванов И. И.</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Дата и время</span>
+                            <span class="record-value">25 марта 2026, 10:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="record-actions">
+                        <button class="btn btn-primary btn-sm">Изменить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+                <div class="card record-card">
+                    <div class="record-header">
+                        <span class="record-id">Запись №1225</span>
+                        <span class="badge badge-primary">Подтверждена</span>
+                    </div>
+                    
+                    <div class="record-body">
+                        <div class="record-row">
+                            <span class="record-label">Пациент</span>
+                            <span class="record-value">Елена Смирнова</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Услуга</span>
+                            <span class="record-value">Имплантация</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Врач</span>
+                            <span class="record-value">Иванов И. И.</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Дата и время</span>
+                            <span class="record-value">25 марта 2026, 11:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="record-actions">
+                        <button class="btn btn-primary btn-sm">Изменить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+                <div class="card record-card">
+                    <div class="record-header">
+                        <span class="record-id">Запись №1898</span>
+                        <span class="badge badge-outline">Ожидает подтверждения</span>
+                    </div>
+                    
+                    <div class="record-body">
+                        <div class="record-row">
+                            <span class="record-label">Пациент</span>
+                            <span class="record-value">Дмитрий Волков</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Услуга</span>
+                            <span class="record-value">Лечение кариеса</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Врач</span>
+                            <span class="record-value">Смирнова А. В.</span>
+                        </div>
+                        <div class="record-row">
+                            <span class="record-label">Дата и время</span>
+                            <span class="record-value">25 марта 2026, 10:30</span>
+                        </div>
+                    </div>
+                    
+                    <div class="record-actions">
+                        <button class="btn btn-primary btn-sm">Изменить</button>
+                        <button class="btn btn-primary btn-sm">Подтвердить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+<script type="module" src="./../scripts/pages/manager_appointments.js"></script>
+</body>
+</html>

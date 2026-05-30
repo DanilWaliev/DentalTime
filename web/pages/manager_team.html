@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление командой - DentalTime</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/pages/manager_team.css">
+</head>
+
+<body data-page="manager-team">
+    <header class="row">
+        <nav class="offset-1 col-10 nav-container">
+            <div class="logo">DentalTime</div>
+
+            <div class="desktop-menu">
+                <a class="top-menu-button" href="manager_schedule.html">Расписание</a>
+                <a class="top-menu-button" href="manager_appointments.html">Записи</a>
+                <a class="top-menu-button" href="manager_team.html">Команда</a>
+                <a class="top-menu-button" href="manager_services.html">Услуги</a>
+                <a class="top-menu-button" href="login.html">Выход</a>
+            </div>
+
+            <button class="burger-menu-btn" aria-label="Открыть меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="row page-container">
+        <div class="offset-2 col-8">
+            
+            <!-- шапка страницы -->
+            <div class="admin-header">
+                <h1 class="page-title">Управление врачами</h1>
+                <button class="btn btn-md btn-primary" id="add-doctor-btn">+ Добавить врача</button>
+            </div>
+
+            <!-- сетка карточек редактирования -->
+            <div class="team-grid" id="manager-doctors-container">
+                
+                <!-- карточка врача 1 -->
+                <div class="card doctor-edit-card">
+                    <div class="doctor-edit-top">
+                        <!-- зона фото -->
+                        <button class="photo-upload">
+                            <span>Заменить</span>
+                        </button>
+                        
+                        <!-- основные поля -->
+                        <div class="doctor-inputs">
+                            <div class="form-group">
+                                <label class="form-label">ФИО</label>
+                                <input type="text" class="form-input" value="Константин Иванов">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Специальность</label>
+                                <input type="text" class="form-input" value="Стоматолог-ортопед">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Стаж работы</label>
+                                <input type="text" class="form-input" value="15 лет">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- дополнительные поля -->
+                    <div class="doctor-inputs-bottom">
+                        <div class="form-group">
+                            <label class="form-label">Оказываемые услуги (через запятую)</label>
+                            <input type="text" class="form-input" value="Протезирование, Виниры, Коронки">
+                        </div>
+                    </div>
+                    
+                    <!-- действия -->
+                    <div class="doctor-actions">
+                        <button class="btn btn-primary btn-sm">Сохранить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>  
+                </div>
+
+                <!-- карточка врача 2 -->
+                <div class="card doctor-edit-card">
+                    <div class="doctor-edit-top">
+                        <button class="photo-upload">
+                            <span>Заменить</span>
+                        </button>
+                        
+                        <div class="doctor-inputs">
+                            <div class="form-group">
+                                <label class="form-label">ФИО</label>
+                                <input type="text" class="form-input" value="Анна Смирнова">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Специальность</label>
+                                <input type="text" class="form-input" value="Стоматолог-терапевт">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Стаж работы</label>
+                                <input type="text" class="form-input" value="8 лет">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="doctor-inputs-bottom">
+                        <div class="form-group">
+                            <label class="form-label">Оказываемые услуги (через запятую)</label>
+                            <input type="text" class="form-input" value="Лечение кариеса, Пульпит, Чистка">
+                        </div>
+                    </div>
+                    
+                    <div class="doctor-actions">
+                        <button class="btn btn-primary btn-sm">Сохранить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div> 
+                </div>
+
+            </div>
+        </div>
+    </main>
+<script type="module" src="./../scripts/pages/manager_team.js"></script>
+</body>
+</html>

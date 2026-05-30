@@ -1,0 +1,215 @@
+.page-container {
+  padding-top: calc(var(--header-height) + var(--space-sm));
+  padding-bottom: var(--space-xl);
+  min-height: 100vh;
+}
+
+.schedule-date-wrapper {
+  margin-bottom: var(--space-sm);
+}
+
+.schedule-date {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.date-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-md);
+  color: var(--color-text);
+  font-weight: var(--fw-semibold);
+  padding: 0 var(--space-sm);
+  cursor: pointer;
+}
+
+.date-current:hover {
+  color: var(--color-primary);
+}
+
+.date-btn {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-md);
+  color: var(--color-text);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.date-btn:hover {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* доска расписания */
+.schedule-board {
+  padding: var(--space-md);
+  overflow: auto; /* включает скролл по горизонтали и вертикали */
+  max-height: 100vh;
+}
+
+/* 2d сетка */
+.schedule-grid {
+  display: grid;
+  /* первая колонка со временем = 60px. остальные минимум 250px для событий */
+  grid-template-columns: 60px repeat(auto-fit, minmax(250px, 1fr)); 
+  /* 1 строка = 15 минут. задаем высоту строки 25px (1 час = 100px) */
+  grid-auto-rows: 25px; 
+  gap: 0 var(--space-xs);
+  position: relative;
+  min-width: 800px; /* принудительный горизонтальный скролл на узких экранах */
+}
+
+/* линии и время */
+.grid-line {
+  grid-column: 2 / -1; 
+  border-top: 1px solid var(--color-border);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.time-label {
+  grid-column: 1;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-align: right;
+  padding-right: var(--space-sm);
+  transform: translateY(-8px); 
+  user-select: none;
+}
+
+/* карточка события */
+.schedule-event {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-xs) var(--space-sm);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.event-time-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.event-time {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-primary);
+  background: var(--color-surface);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.event-id {
+  font-size: var(--fs-xs);
+}
+
+.event-doctor {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.event-service {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* кнопки управления на карточке */
+.event-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.event-action-btn {
+  background: none;
+  border: none;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: all 0.2s;
+}
+
+.event-action-btn:hover {
+  color: var(--color-text);
+}
+
+.text-danger:hover {
+  color: #e53e3e; 
+}
+
+/* адаптация */
+@media (max-width: 768px) {
+  .offset-2 { grid-column-start: 1; }
+  .col-8 { grid-column-end: span 12; }
+  
+  .page-container {
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
+  }
+  
+  .schedule-board {
+    padding: var(--space-sm);
+    border-radius: 0; 
+  }
+}
+
+@media (min-width: 1920px) {
+  .offset-2 {
+    grid-column-start: 1;
+  }
+  
+  .col-8 {
+    grid-column-end: span 12;
+  }
+  
+  .schedule-grid {
+    grid-template-columns: 90px repeat(auto-fit, minmax(350px, 1fr)); 
+    grid-auto-rows: 40px; 
+  }
+
+  .time-label {
+    transform: translateY(-12px); 
+  }
+}
+
+@media (min-width: 2560px) {
+  .schedule-grid {
+    grid-template-columns: 120px repeat(auto-fit, minmax(450px, 1fr)); 
+    grid-auto-rows: 50px; 
+  }
+
+  .time-label {
+    transform: translateY(-16px);
+  }
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление услугами - DentalTime</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/pages/manager_services.css">
+</head>
+
+<body data-page="manager-services">
+    <header class="row">
+        <nav class="offset-1 col-10 nav-container">
+            <div class="logo">DentalTime</div>
+
+            <div class="desktop-menu">
+                <a class="top-menu-button" href="manager_schedule.html">Расписание</a>
+                <a class="top-menu-button" href="manager_appointments.html">Записи</a>
+                <a class="top-menu-button" href="manager_team.html">Команда</a>
+                <a class="top-menu-button" href="manager_services.html">Услуги</a>
+                <a class="top-menu-button" href="login.html">Выход</a>
+            </div>
+
+            <button class="burger-menu-btn" aria-label="Открыть меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="row page-container">
+        <div class="offset-2 col-8">
+            
+            <div class="admin-header">
+                <h1 class="page-title">Управление услугами</h1>
+                <button class="btn btn-primary btn-md" id="add-service-btn">Добавить услугу</button>
+            </div>
+
+            <div class="services-admin-grid" id="manager-services-container">
+                
+                <div class="card service-edit-card">
+                    <div class="form-group">
+                        <label class="form-label">Название услуги</label>
+                        <input type="text" class="form-input" value="Первичная консультация">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Описание</label>
+                        <textarea class="form-input" rows="3">Осмотр, детальная диагностика и составление индивидуального плана лечения.</textarea>
+                    </div>
+                    
+                    <div class="service-inputs-row">
+                        <div class="form-group">
+                            <label class="form-label">Длительность</label>
+                            <input type="text" class="form-input" value="45 мин">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Стоимость</label>
+                            <input type="text" class="form-input" value="1 500 ₽">
+                        </div>
+                    </div>
+                    
+                    <div class="service-actions">
+                        <button class="btn btn-primary btn-sm">Сохранить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+                <div class="card service-edit-card">
+                    <div class="form-group">
+                        <label class="form-label">Название услуги</label>
+                        <input type="text" class="form-input" value="Лечение кариеса">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Описание</label>
+                        <textarea class="form-input" rows="3">Бережное удаление пораженных тканей и установка эстетичной световой пломбы.</textarea>
+                    </div>
+                    
+                    <div class="service-inputs-row">
+                        <div class="form-group">
+                            <label class="form-label">Длительность</label>
+                            <input type="text" class="form-input" value="60 мин">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Стоимость</label>
+                            <input type="text" class="form-input" value="от 4 000 ₽">
+                        </div>
+                    </div>
+                    
+                    <div class="service-actions">
+                        <button class="btn btn-primary btn-sm">Сохранить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+                <div class="card service-edit-card">
+                    <div class="form-group">
+                        <label class="form-label">Название услуги</label>
+                        <input type="text" class="form-input" value="Профессиональная гигиена">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Описание</label>
+                        <textarea class="form-input" rows="3">Комплексное удаление налета и зубного камня методами AirFlow и ультразвука.</textarea>
+                    </div>
+                    
+                    <div class="service-inputs-row">
+                        <div class="form-group">
+                            <label class="form-label">Длительность</label>
+                            <input type="text" class="form-input" value="40 мин">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Стоимость</label>
+                            <input type="text" class="form-input" value="5 500 ₽">
+                        </div>
+                    </div>
+                    
+                    <div class="service-actions">
+                        <button class="btn btn-primary btn-sm">Сохранить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+                <div class="card service-edit-card">
+                    <div class="form-group">
+                        <label class="form-label">Название услуги</label>
+                        <input type="text" class="form-input" value="Отбеливание зубов">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Описание</label>
+                        <textarea class="form-input" rows="3">Безопасное осветление эмали на несколько тонов с использованием современных систем.</textarea>
+                    </div>
+                    
+                    <div class="service-inputs-row">
+                        <div class="form-group">
+                            <label class="form-label">Длительность</label>
+                            <input type="text" class="form-input" value="60 мин">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Стоимость</label>
+                            <input type="text" class="form-input" value="12 000 ₽">
+                        </div>
+                    </div>
+                    
+                    <div class="service-actions">
+                        <button class="btn btn-primary btn-sm">Сохранить</button>
+                        <button class="btn btn-outline btn-sm text-danger">Удалить</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+<script type="module" src="./../scripts/pages/manager_services.js"></script>
+</body>
+</html>
