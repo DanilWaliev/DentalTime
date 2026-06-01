@@ -11,6 +11,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+//go:embed migrations/*.sql
 var embedMigrations embed.FS
 
 func RunMigrations(dsn string) error {
