@@ -1,16 +1,18 @@
+name: dentaltime_db
+
 services: 
   db:
     image: postgres:15-alpine
     container_name: dentaltime_db
     restart: always
     environment:
-      - POSTGRES_USER:=${DB_USER}
+      - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
       - ${DB_PORT}:5432
     volumes:
-      - pgdata:/var/lib/posrgresql/data
-      
+      - pgdata:/var/lib/postgresql/data
+
 volumes:
   pgdata:
