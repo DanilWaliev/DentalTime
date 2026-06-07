@@ -46,7 +46,7 @@ func (r UpdateDoctorRequest) ToDomain() domain.Doctor {
 	}
 }
 
-func DoctorResponseFromDomain(doctor domain.Doctor) DoctorResponse {
+func DoctorResponseFromDomain(doctor *domain.Doctor) DoctorResponse {
 	return DoctorResponse{
 		ID:             doctor.ID,
 		FullName:       doctor.FullName,
@@ -60,7 +60,7 @@ func DoctorsResponseFromDomain(doctors []*domain.Doctor) DoctorsResponse {
 	result := make([]DoctorResponse, 0, len(doctors))
 
 	for _, doctor := range doctors {
-		result = append(result, DoctorResponseFromDomain(*doctor))
+		result = append(result, DoctorResponseFromDomain(doctor))
 	}
 
 	return DoctorsResponse{
