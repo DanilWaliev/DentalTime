@@ -63,7 +63,7 @@ func main() {
 	e.GET("api/services", serviceHandler.GetAll)
 	e.POST("api/services", serviceHandler.Create)
 	e.PUT("api/services/:id", serviceHandler.Update)
-	e.DELETE("api/dervices/:id", serviceHandler.Delete)
+	e.DELETE("api/services/:id", serviceHandler.Delete)
 
 	// статический контент
 	e.Static("/static", "web")
