@@ -32,7 +32,7 @@ func (h *DoctorHandler) GetByID(c *echo.Context) error {
 
 	doctor, err := h.doctorService.GetByID(ctx, id)
 	if err != nil {
-		return mapServiceError(err)
+		return mapDoctorServiceError(err)
 	}
 
 	return c.JSON(http.StatusOK, dto.DoctorResponseFromDomain(doctor))
@@ -46,7 +46,7 @@ func (h *DoctorHandler) GetAll(c *echo.Context) error {
 	if specialization != "" {
 		doctors, err := h.doctorService.GetBySpecialization(ctx, specialization)
 		if err != nil {
-			return mapServiceError(err)
+			return mapDoctorServiceError(err)
 		}
 
 		return c.JSON(http.StatusOK, dto.DoctorsResponseFromDomain(doctors))
@@ -55,7 +55,7 @@ func (h *DoctorHandler) GetAll(c *echo.Context) error {
 	// вернуть всех врачей
 	doctors, err := h.doctorService.GetAll(ctx)
 	if err != nil {
-		return mapServiceError(err)
+		return mapDoctorServiceError(err)
 	}
 
 	return c.JSON(http.StatusOK, dto.DoctorsResponseFromDomain(doctors))
@@ -73,7 +73,7 @@ func (h *DoctorHandler) Update(c *echo.Context) error {
 	// обновление данные врача
 	updatedDoctor, err := h.doctorService.Update(ctx, udr.ToDomain())
 	if err != nil {
-		return mapServiceError(err)
+		return mapDoctorServiceError(err)
 	}
 
 	return c.JSON(http.StatusOK, dto.DoctorResponseFromDomain(updatedDoctor))
@@ -88,7 +88,7 @@ func (h *DoctorHandler) Delete(c *echo.Context) error {
 	}
 
 	if err := h.doctorService.Delete(ctx, id); err != nil {
-		return mapServiceError(err)
+		return mapDoctorServiceError(err)
 	}
 
 	return c.NoContent(http.StatusNoContent)
@@ -106,13 +106,13 @@ func (h *DoctorHandler) Create(c *echo.Context) error {
 	// создание врача
 	createdDoctor, err := h.doctorService.Create(ctx, cdr.ToDomain())
 	if err != nil {
-		return mapServiceError(err)
+		return mapDoctorServiceError(err)
 	}
 
 	return c.JSON(http.StatusCreated, dto.DoctorResponseFromDomain(createdDoctor))
 }
 
-func mapServiceError(err error) error {
+func mapDoctorServiceError(err error) error {
 	switch {
 	case errors.Is(err, service.ErrDoctorNotFound):
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())

@@ -43,6 +43,7 @@ func main() {
 	serviceService := service.NewServiceService(serviceRepo)
 
 	doctorHandler := handler.NewDoctorHandler(doctorService)
+	serviceHandler := handler.NewServiceHandler(*serviceService)
 
 	// логгер
 	myLogger := logger.NewLogger()
@@ -57,6 +58,12 @@ func main() {
 	e.POST("api/doctors", doctorHandler.Create)
 	e.PUT("api/doctors/:id", doctorHandler.Update)
 	e.DELETE("api/doctors/:id", doctorHandler.Delete)
+
+	e.GET("api/services/:id", serviceHandler.GetByID)
+	e.GET("api/services", serviceHandler.GetAll)
+	e.POST("api/services", serviceHandler.Create)
+	e.PUT("api/services/:id", serviceHandler.Update)
+	e.DELETE("api/dervices/:id", serviceHandler.Delete)
 
 	// статический контент
 	e.Static("/static", "web")

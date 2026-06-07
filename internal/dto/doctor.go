@@ -10,7 +10,6 @@ type CreateDoctorRequest struct {
 }
 
 type UpdateDoctorRequest struct {
-	ID             int    `json:"doctor_id"`
 	FullName       string `json:"full_name"`
 	Specialization string `json:"specialization"`
 	Experience     int    `json:"experience"`
@@ -40,7 +39,6 @@ func (r CreateDoctorRequest) ToDomain() domain.Doctor {
 
 func (r UpdateDoctorRequest) ToDomain() domain.Doctor {
 	return domain.Doctor{
-		ID:             r.ID,
 		FullName:       r.FullName,
 		Specialization: r.Specialization,
 		Experience:     r.Experience,
