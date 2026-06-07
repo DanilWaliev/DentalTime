@@ -92,10 +92,11 @@ func (h *ServiceHandler) Update(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid service id")
 	}
 
-	usr.ID = id
+	service := usr.ToDomain()
+	service.ID = id
 
 	// обновление данных услуги
-	updatedService, err := h.serviceService.Update(ctx, usr.ToDomain())
+	updatedService, err := h.serviceService.Update(ctx, service)
 	if err != nil {
 		return mapServiceServiceError(err)
 	}

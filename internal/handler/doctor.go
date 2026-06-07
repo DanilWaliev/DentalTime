@@ -75,10 +75,11 @@ func (h *DoctorHandler) Update(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor id")
 	}
 
-	udr.ID = id
+	doctor := udr.ToDomain()
+	doctor.ID = id
 
 	// обновление данные врача
-	updatedDoctor, err := h.doctorService.Update(ctx, udr.ToDomain())
+	updatedDoctor, err := h.doctorService.Update(ctx, doctor)
 	if err != nil {
 		return mapDoctorServiceError(err)
 	}
