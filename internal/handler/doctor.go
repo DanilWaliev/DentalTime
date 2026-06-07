@@ -70,6 +70,13 @@ func (h *DoctorHandler) Update(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor data")
 	}
 
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor id")
+	}
+
+	udr.ID = id
+
 	// обновление данные врача
 	updatedDoctor, err := h.doctorService.Update(ctx, udr.ToDomain())
 	if err != nil {

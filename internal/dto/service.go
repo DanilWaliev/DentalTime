@@ -10,6 +10,7 @@ type CreateServiceRequest struct {
 }
 
 type UpdateServiceRequest struct {
+	ID       int    `json:"service_id"`
 	Title    string `json:"title"`
 	Subtitle string `json:"subtitle"`
 	Duration int    `json:"duration"`

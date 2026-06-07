@@ -10,6 +10,7 @@ type CreateDoctorRequest struct {
 }
 
 type UpdateDoctorRequest struct {
+	ID             int    `json:"doctor_id"`
 	FullName       string `json:"full_name"`
 	Specialization string `json:"specialization"`
 	Experience     int    `json:"experience"`
