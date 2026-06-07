@@ -4,13 +4,16 @@ import (
 	"context"
 	"dental-time/internal/domain"
 	"errors"
+	"strings"
 )
 
-var ErrDoctorNotFound = errors.New("doctor not found")
-var ErrDoctorAlreadyExists = errors.New("doctor already exists")
-var ErrInvalidDoctorData = errors.New("invalid doctor data")
-var ErrInvalidDoctorID = errors.New("invalid doctor id")
-var ErrInvalidDoctorSpecialization = errors.New("invalid doctor specialization")
+var (
+	ErrDoctorNotFound              = errors.New("doctor not found")
+	ErrDoctorAlreadyExists         = errors.New("doctor already exists")
+	ErrInvalidDoctorData           = errors.New("invalid doctor data")
+	ErrInvalidDoctorID             = errors.New("invalid doctor id")
+	ErrInvalidDoctorSpecialization = errors.New("invalid doctor specialization")
+)
 
 type DoctorRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Doctor, error)
@@ -44,6 +47,7 @@ func (s *DoctorService) GetByID(ctx context.Context, id int) (*domain.Doctor, er
 }
 
 func (s *DoctorService) GetBySpecialization(ctx context.Context, spec string) ([]*domain.Doctor, error) {
+	spec = strings.TrimSpace(spec)
 	if spec == "" {
 		return nil, ErrInvalidDoctorSpecialization
 	}
@@ -52,7 +56,9 @@ func (s *DoctorService) GetBySpecialization(ctx context.Context, spec string) ([
 }
 
 func (s *DoctorService) Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
-	if doctor.FullName == "" || doctor.Experience <= 0 || doctor.Specialization == "" {
+	doctor.FullName = strings.TrimSpace(doctor.FullName)
+	doctor.Specialization = strings.TrimSpace(doctor.Specialization)
+	if doctor.FullName == "" || doctor.Experience < 0 || doctor.Specialization == "" {
 		return nil, ErrInvalidDoctorData
 	}
 
@@ -60,9 +66,18 @@ func (s *DoctorService) Create(ctx context.Context, doctor domain.Doctor) (*doma
 }
 
 func (s *DoctorService) Update(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
+	doctor.FullName = strings.TrimSpace(doctor.FullName)
+	doctor.Specialization = strings.TrimSpace(doctor.Specialization)
+	if doctor.ID <= 0 || doctor.FullName == "" || doctor.Experience < 0 || doctor.Specialization == "" {
+		return nil, ErrInvalidDoctorData
+	}
+
 	return s.doctorRepo.Update(ctx, doctor)
 }
 
 func (s *DoctorService) Delete(ctx context.Context, id int) error {
+	if id <= 0 {
+		return ErrInvalidDoctorID
+	}
 	return s.doctorRepo.Delete(ctx, id)
 }
