@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"dental-time/internal/domain"
+	"dental-time/internal/service"
 	"errors"
 	"fmt"
 )
@@ -27,10 +28,6 @@ type DoctorRow struct {
 	experience int
 	photo_url  string
 }
-
-// Кастомные ошибки
-
-var ErrDoctorNotFound error = errors.New("doctor not found")
 
 // Мапперы
 
@@ -67,7 +64,7 @@ func (r *DoctorRepo) GetByID(ctx context.Context, id int) (*domain.Doctor, error
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrDoctorNotFound
+			return nil, service.ErrDoctorNotFound
 		}
 
 		return nil, fmt.Errorf("get doctor by id: %w", err)
@@ -220,7 +217,7 @@ func (r *DoctorRepo) Update(ctx context.Context, doctor domain.Doctor) (*domain.
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrDoctorNotFound
+			return nil, service.ErrDoctorNotFound
 		}
 
 		return nil, fmt.Errorf("update doctor: %w", err)
@@ -246,7 +243,7 @@ func (r *DoctorRepo) Delete(ctx context.Context, id int) error {
 	}
 
 	if rowsAffected == 0 {
-		return ErrDoctorNotFound
+		return service.ErrDoctorNotFound
 	}
 
 	return nil
