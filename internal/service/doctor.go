@@ -3,7 +3,10 @@ package service
 import (
 	"context"
 	"dental-time/internal/domain"
+	"errors"
 )
+
+var ErrDoctorNotFound = errors.New("doctor not found")
 
 type DoctorRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Doctor, error)
