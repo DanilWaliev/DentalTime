@@ -44,6 +44,10 @@ func (s *DoctorService) GetByID(ctx context.Context, id int) (*domain.Doctor, er
 }
 
 func (s *DoctorService) GetBySpecialization(ctx context.Context, spec string) ([]*domain.Doctor, error) {
+	if spec == "" {
+		return nil, ErrInvalidDoctorSpecialization
+	}
+
 	return s.doctorRepo.GetBySpecialization(ctx, spec)
 }
 
