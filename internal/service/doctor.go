@@ -8,6 +8,10 @@ import (
 
 var ErrDoctorNotFound = errors.New("doctor not found")
 
+// TODO: использовать эти ошибки
+var ErrDoctorAlreadyExists = errors.New("doctor already exists")
+var ErrInvalidDoctorData = errors.New("invalid doctor data")
+
 type DoctorRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Doctor, error)
 	GetByID(ctx context.Context, id int) (*domain.Doctor, error)
@@ -19,6 +23,12 @@ type DoctorRepository interface {
 
 type DoctorService struct {
 	doctorRepo DoctorRepository
+}
+
+func NewDoctorService(doctorRepo DoctorRepository) *DoctorService {
+	return &DoctorService{
+		doctorRepo: doctorRepo,
+	}
 }
 
 func (s *DoctorService) GetAll(ctx context.Context) ([]*domain.Doctor, error) {
