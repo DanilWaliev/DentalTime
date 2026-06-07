@@ -101,7 +101,7 @@ func (r *ServiceRepo) GetAll(ctx context.Context) ([]*domain.Service, error) {
 		service_id,
 		title,
 		subtitle,
-		duration
+		duration,
 		price
 	FROM services`
 
@@ -171,10 +171,9 @@ func (r *ServiceRepo) GetByID(ctx context.Context, id int) (*domain.Service, err
 	return &service, nil
 }
 
-func (r *ServiceRepo) GetByTitle(ctx context.Context, title string) ([]*domain.Service, error) {
-	const query = `
-	SELECT
-	service_id,
+func (r *ServiceRepo) GetByTitle(ctx context.Context, title string) (*domain.Service, error) {
+	const query = `SELECT
+		service_id,
 		title,
 		subtitle,
 		duration,
@@ -182,40 +181,29 @@ func (r *ServiceRepo) GetByTitle(ctx context.Context, title string) ([]*domain.S
 	FROM services
 	WHERE title = $1`
 
-	rows, err := r.db.QueryContext(ctx, query, title)
+	var row ServiceRow
+
+	err := r.db.QueryRowContext(ctx, query, title).Scan(
+		&row.service_id,
+		&row.title,
+		&row.subtitle,
+		&row.duration,
+		&row.price,
+	)
+
 	if err != nil {
-		return nil, fmt.Errorf("get service by title: %w", err)
-	}
-	defer rows.Close()
-
-	var services []*domain.Service
-
-	for rows.Next() {
-		var row ServiceRow
-
-		err := rows.Scan(
-			&row.service_id,
-			&row.title,
-			&row.subtitle,
-			&row.duration,
-			&row.price,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("scan services: %w", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, service.ErrServiceNotFound
 		}
 
-		service := row.ToDomain()
-		services = append(services, &service)
+		return nil, fmt.Errorf("get service by title: %w", err)
 	}
 
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("iterate services: %w", err)
-	}
-
-	return services, err
+	service := row.ToDomain()
+	return &service, nil
 }
 
-func (r *ServiceRepo) Update(ctx context.Context, service domain.Service) (*domain.Service, error) {
+func (r *ServiceRepo) Update(ctx context.Context, serviceToUpdate domain.Service) (*domain.Service, error) {
 	const query = `
 	UPDATE services
 	SET title = $1,
@@ -227,11 +215,11 @@ func (r *ServiceRepo) Update(ctx context.Context, service domain.Service) (*doma
 
 	var serviceRow ServiceRow
 	err := r.db.QueryRowContext(ctx, query,
-		service.Title,
-		service.Subtitle,
-		service.Duration,
-		service.Price,
-		service.ID).Scan(
+		serviceToUpdate.Title,
+		serviceToUpdate.Subtitle,
+		serviceToUpdate.Duration,
+		serviceToUpdate.Price,
+		serviceToUpdate.ID).Scan(
 		&serviceRow.service_id,
 		&serviceRow.title,
 		&serviceRow.subtitle,
@@ -240,6 +228,9 @@ func (r *ServiceRepo) Update(ctx context.Context, service domain.Service) (*doma
 	)
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, service.ErrServiceNotFound
+		}
 		return nil, fmt.Errorf("update service: %w", err)
 	}
 

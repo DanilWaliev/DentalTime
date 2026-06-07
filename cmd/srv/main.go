@@ -37,7 +37,11 @@ func main() {
 
 	// прокидывание зависимостей
 	doctorRepo := postgresql.NewDoctorRepo(db)
+	serviceRepo := postgresql.NewServiceRepo(db)
+
 	doctorService := service.NewDoctorService(doctorRepo)
+	serviceService := service.NewServiceService(serviceRepo)
+
 	doctorHandler := handler.NewDoctorHandler(doctorService)
 
 	// логгер
