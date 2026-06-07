@@ -24,11 +24,7 @@ func NewDoctorHandler(doctorService *service.DoctorService) *DoctorHandler {
 func (h *DoctorHandler) GetByID(c *echo.Context) error {
 	// получение и парсинг id
 	id, err := strconv.Atoi(c.Param("id"))
-	// проверка id
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
-	}
-	if id <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
 	}
 

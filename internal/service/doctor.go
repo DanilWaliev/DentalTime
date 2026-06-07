@@ -7,10 +7,10 @@ import (
 )
 
 var ErrDoctorNotFound = errors.New("doctor not found")
-
-// TODO: использовать эти ошибки
 var ErrDoctorAlreadyExists = errors.New("doctor already exists")
 var ErrInvalidDoctorData = errors.New("invalid doctor data")
+var ErrInvalidDoctorID = errors.New("invalid doctor id")
+var ErrInvalidDoctorSpecialization = errors.New("invalid doctor specialization")
 
 type DoctorRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Doctor, error)
@@ -36,6 +36,10 @@ func (s *DoctorService) GetAll(ctx context.Context) ([]*domain.Doctor, error) {
 }
 
 func (s *DoctorService) GetByID(ctx context.Context, id int) (*domain.Doctor, error) {
+	if id <= 0 {
+		return nil, ErrInvalidDoctorID
+	}
+
 	return s.doctorRepo.GetByID(ctx, id)
 }
 
@@ -44,6 +48,10 @@ func (s *DoctorService) GetBySpecialization(ctx context.Context, spec string) ([
 }
 
 func (s *DoctorService) Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
+	if doctor.FullName == "" || doctor.Experience <= 0 || doctor.Specialization == "" {
+		return nil, ErrInvalidDoctorData
+	}
+
 	return s.doctorRepo.Create(ctx, doctor)
 }
 
