@@ -41,6 +41,8 @@ func (r DoctorRow) ToDomain() domain.Doctor {
 	}
 }
 
+//TODO: метод для получения списка врачей по определенной услуге
+
 func (r *DoctorRepo) GetByID(ctx context.Context, id int) (*domain.Doctor, error) {
 	const query = `
 	SELECT 
@@ -130,7 +132,7 @@ func (r *DoctorRepo) GetAll(ctx context.Context) ([]*domain.Doctor, error) {
 
 	rows, err := r.db.QueryContext(ctx, query)
 	if err != nil {
-		return nil, fmt.Errorf("get all: %w", err)
+		return nil, fmt.Errorf("get all doctors: %w", err)
 	}
 	defer rows.Close()
 
@@ -163,8 +165,8 @@ func (r *DoctorRepo) GetAll(ctx context.Context) ([]*domain.Doctor, error) {
 
 func (r *DoctorRepo) Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
 	const query = `
-	INSERT INTO doctors
-		(full_name,
+	INSERT INTO doctors(
+		full_name,
 		spec,
 		experience,
 		photo_url)
