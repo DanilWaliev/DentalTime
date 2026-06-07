@@ -41,6 +41,18 @@ func (h *DoctorHandler) GetByID(c *echo.Context) error {
 func (h *DoctorHandler) GetAll(c *echo.Context) error {
 	ctx := c.Request().Context()
 
+	// получаем query параметры
+	specialization := c.QueryParam("specialization")
+	if specialization != "" {
+		doctors, err := h.doctorService.GetBySpecialization(ctx, specialization)
+		if err != nil {
+			return mapServiceError(err)
+		}
+
+		return c.JSON(http.StatusOK, dto.DoctorsResponseFromDomain(doctors))
+	}
+
+	// вернуть всех врачей
 	doctors, err := h.doctorService.GetAll(ctx)
 	if err != nil {
 		return mapServiceError(err)
@@ -74,6 +86,10 @@ func mapServiceError(err error) error {
 	case errors.Is(err, service.ErrDoctorAlreadyExists):
 		return echo.NewHTTPError(http.StatusConflict, err.Error())
 	case errors.Is(err, service.ErrInvalidDoctorData):
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	case errors.Is(err, service.ErrInvalidDoctorID):
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	case errors.Is(err, service.ErrInvalidDoctorSpecialization):
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	default:
 		return fmt.Errorf("doctor service error: %w", err)
