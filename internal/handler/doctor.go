@@ -61,6 +61,24 @@ func (h *DoctorHandler) GetAll(c *echo.Context) error {
 	return c.JSON(http.StatusOK, dto.DoctorsResponseFromDomain(doctors))
 }
 
+func (h *DoctorHandler) Update(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	// получение данных для обновления врача
+	udr := new(dto.UpdateDoctorRequest)
+	if err := c.Bind(udr); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor data")
+	}
+
+	// обновление данные врача
+	updatedDoctor, err := h.doctorService.Update(ctx, udr.ToDomain())
+	if err != nil {
+		return mapServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.DoctorResponseFromDomain(updatedDoctor))
+}
+
 func (h *DoctorHandler) Create(c *echo.Context) error {
 	ctx := c.Request().Context()
 
