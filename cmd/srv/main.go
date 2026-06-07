@@ -52,6 +52,7 @@ func main() {
 	e.GET("api/doctors", doctorHandler.GetAll)
 	e.POST("api/doctors", doctorHandler.Create)
 	e.PUT("api/doctors/:id", doctorHandler.Update)
+	e.DELETE("api/doctors/:id", doctorHandler.Delete)
 
 	// статический контент
 	e.Static("/static", "web")

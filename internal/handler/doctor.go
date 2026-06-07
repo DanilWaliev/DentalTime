@@ -79,6 +79,21 @@ func (h *DoctorHandler) Update(c *echo.Context) error {
 	return c.JSON(http.StatusOK, dto.DoctorResponseFromDomain(updatedDoctor))
 }
 
+func (h *DoctorHandler) Delete(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
+	}
+
+	if err := h.doctorService.Delete(ctx, id); err != nil {
+		return mapServiceError(err)
+	}
+
+	return c.NoContent(http.StatusNoContent)
+}
+
 func (h *DoctorHandler) Create(c *echo.Context) error {
 	ctx := c.Request().Context()
 
