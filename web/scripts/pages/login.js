@@ -26,10 +26,11 @@ async function handleSubmit(event) {
 
     try {
         await ApiLogin(LoginState);
-        window.location.href = '/static/pages/manager_schedule.html';
+        window.location.href = '/manager/schedule';
     } catch (error) {
         alert('Неверный логин или пароль');
     }
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
