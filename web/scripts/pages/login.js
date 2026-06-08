@@ -15,7 +15,7 @@ function init() {
     }
 }
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
     event.preventDefault();
 
     const usernameInput = document.getElementById('username');
@@ -24,7 +24,12 @@ function handleSubmit(event) {
     LoginState.username = usernameInput ? usernameInput.value : null;
     LoginState.password = passwordInput ? passwordInput.value : null;
 
-    ApiLogin(LoginState);
+    try {
+        await ApiLogin(LoginState);
+        window.location.href = '/static/pages/manager_schedule.html';
+    } catch (error) {
+        alert('Неверный логин или пароль');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);

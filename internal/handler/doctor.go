@@ -5,8 +5,13 @@ import (
 	"dental-time/internal/service"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/labstack/echo/v5"
 )
@@ -201,6 +206,63 @@ func (h *DoctorHandler) DeleteService(c *echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusNoContent)
+}
+
+func (h *DoctorHandler) UploadPhoto(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor id")
+	}
+
+	doctor, err := h.doctorService.GetByID(ctx, id)
+	if err != nil {
+		return mapDoctorServiceError(err)
+	}
+
+	file, err := c.FormFile("photo")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid photo")
+	}
+
+	ext := strings.ToLower(filepath.Ext(file.Filename))
+	if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid photo extension")
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid photo")
+	}
+	defer src.Close()
+
+	dir := filepath.Join("web", "uploads", "doctors")
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("create doctors upload dir: %w", err)
+	}
+
+	filename := fmt.Sprintf("doctor_%d_%d%s", id, time.Now().Unix(), ext)
+	path := filepath.Join(dir, filename)
+
+	dst, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("create doctor photo: %w", err)
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, src); err != nil {
+		return fmt.Errorf("save doctor photo: %w", err)
+	}
+
+	doctor.PhotoURL = "/static/uploads/doctors/" + filename
+
+	updatedDoctor, err := h.doctorService.Update(ctx, *doctor)
+	if err != nil {
+		return mapDoctorServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.DoctorResponseFromDomain(updatedDoctor))
 }
 
 func mapDoctorServiceError(err error) error {

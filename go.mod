@@ -6,6 +6,7 @@ require (
 	github.com/labstack/echo/v5 v5.1.1
 	github.com/lib/pq v1.12.3
 	github.com/pressly/goose/v3 v3.27.1
+	golang.org/x/crypto v0.52.0
 )
 
 require (

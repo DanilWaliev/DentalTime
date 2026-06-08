@@ -14,6 +14,7 @@ type Config struct {
 	DBName     string
 	ServerPort string
 	ServerHost string
+	JWTSecret  string
 }
 
 func Load() (*Config, error) {
@@ -25,6 +26,7 @@ func Load() (*Config, error) {
 		DBName:     os.Getenv("DB_NAME"),
 		ServerPort: os.Getenv("SERVER_PORT"),
 		ServerHost: os.Getenv("SERVER_HOST"),
+		JWTSecret:  os.Getenv("JWT_SECRET"),
 	}
 
 	if c.DBPort == "" || c.DBHost == "" || c.DBUser == "" || c.DBName == "" || c.DBPassword == "" {
@@ -35,7 +37,6 @@ func Load() (*Config, error) {
 }
 
 func (c *Config) DSN() string {
-	// Формат: postgres://user:password@host:port/dbname?sslmode=disable
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		c.DBUser, c.DBPassword, c.DBHost, c.DBPort, c.DBName)
 }

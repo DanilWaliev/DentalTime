@@ -3,6 +3,7 @@ const apiBase = '/api';
 let doctors = [];
 let services = [];
 let appointments = [];
+let managers = [];
 let appointmentCalendar = [];
 let appointmentTimeSlots = [];
 let loadPromise = null;
@@ -47,6 +48,10 @@ export function GetServices() {
 
 export function GetAppointments() {
   return appointments;
+}
+
+export function GetManagers() {
+  return managers;
 }
 
 export function GetAppointmentByNumber(appointmentNumber) {
@@ -150,6 +155,10 @@ export async function ApiAddDoctor(doctor) {
   const created = await apiRequest('POST', `${apiBase}/doctors`, buildDoctorPayload(doctor));
   const doctorId = created.doctor_id || created.id;
 
+  if (doctor.photoFile) {
+    await ApiUploadDoctorPhoto(doctorId, doctor.photoFile);
+  }
+
   await syncDoctorServices(doctorId, doctor.services || []);
   await reloadAppData();
 
@@ -158,6 +167,11 @@ export async function ApiAddDoctor(doctor) {
 
 export async function ApiUpdateDoctor(doctorId, updatedData) {
   await apiRequest('PUT', `${apiBase}/doctors/${doctorId}`, buildDoctorPayload(updatedData));
+
+  if (updatedData.photoFile) {
+    await ApiUploadDoctorPhoto(doctorId, updatedData.photoFile);
+  }
+
   await syncDoctorServices(doctorId, updatedData.services || []);
   await reloadAppData();
 }
@@ -184,17 +198,39 @@ export async function ApiDeleteService(serviceId) {
   await reloadAppData();
 }
 
-export function ApiLogin(credentials) {
-  console.log('API POST /login:', credentials);
+export async function loadManagers() {
+  const response = await apiRequest('GET', `${apiBase}/managers`);
+  managers = mapManagers(response.managers || []);
+  return managers;
 }
 
-export function ApiUploadDoctorPhoto(file, previewUrl) {
-  return {
-    id: `mock-photo-${Date.now()}`,
-    name: file.name,
-    url: previewUrl,
-    mockUploaded: true
-  };
+export async function ApiAddManager(manager) {
+  const created = await apiRequest('POST', `${apiBase}/managers`, {
+    login: manager.login || '',
+    password: manager.password || '',
+  });
+  await loadManagers();
+
+  return created;
+}
+
+export async function ApiDeleteManager(managerId) {
+  await apiRequest('DELETE', `${apiBase}/managers/${managerId}`);
+  await loadManagers();
+}
+
+export async function ApiLogin(credentials) {
+  return apiRequest('POST', `${apiBase}/login`, {
+    login: credentials.login || credentials.username || '',
+    password: credentials.password || '',
+  });
+}
+
+export async function ApiUploadDoctorPhoto(doctorId, file) {
+  const formData = new FormData();
+  formData.append('photo', file);
+
+  return apiRequest('POST', `${apiBase}/doctors/${doctorId}/photo`, formData);
 }
 
 async function syncDoctorServices(doctorId, serviceTitles) {
@@ -411,6 +447,13 @@ function mapAppointments(items) {
   return items.map(mapAppointment);
 }
 
+function mapManagers(items) {
+  return items.map(item => ({
+    id: item.manager_id,
+    login: item.login,
+  }));
+}
+
 function mapAppointment(item) {
   return {
     id: item.id,
@@ -484,11 +527,16 @@ async function apiRequest(method, url, body = null) {
   const options = {
     method,
     headers: {},
+    credentials: 'include',
   };
 
   if (body !== null) {
-    options.headers['Content-Type'] = 'application/json';
-    options.body = JSON.stringify(body);
+    if (body instanceof FormData) {
+      options.body = body;
+    } else {
+      options.headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(body);
+    }
   }
 
   const response = await fetch(url, options);

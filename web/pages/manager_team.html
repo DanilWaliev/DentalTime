@@ -118,6 +118,24 @@
                 </div>
 
             </div>
+
+            <div class="admin-header managers-header">
+                <h1 class="page-title">Менеджеры</h1>
+            </div>
+
+            <div class="card manager-create-card">
+                <div class="form-group">
+                    <label class="form-label">Логин</label>
+                    <input type="text" class="form-input" id="manager-login" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" id="manager-password" autocomplete="new-password">
+                </div>
+                <button class="btn btn-primary btn-md" id="add-manager-btn">Добавить менеджера</button>
+            </div>
+
+            <div class="team-grid managers-grid" id="manager-users-container"></div>
         </div>
     </main>
 <script type="module" src="./../scripts/pages/manager_team.js"></script>

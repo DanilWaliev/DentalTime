@@ -28,6 +28,33 @@
   width: 100%;
 }
 
+.managers-header {
+  margin-top: var(--space-xl);
+}
+
+.manager-create-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--space-sm);
+  align-items: flex-end;
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.manager-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+.manager-login {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+
 /* карточка редактирования врача */
 .doctor-edit-card {
   display: flex;
@@ -244,6 +271,10 @@
 
   .doctor-actions {
     flex-direction: column;
+  }
+
+  .manager-create-card {
+    grid-template-columns: 1fr;
   }
 }
 
