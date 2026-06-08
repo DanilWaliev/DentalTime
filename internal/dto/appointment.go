@@ -47,6 +47,24 @@ type AppointmentsResponse struct {
 	Appointments []AppointmentResponse `json:"appointments"`
 }
 
+type AppointmentCalendarDayResponse struct {
+	Date   string `json:"date"`
+	Status string `json:"status"`
+}
+
+type AppointmentCalendarResponse struct {
+	Days []AppointmentCalendarDayResponse `json:"days"`
+}
+
+type AppointmentSlotResponse struct {
+	Time   string `json:"time"`
+	Status string `json:"status"`
+}
+
+type AppointmentSlotsResponse struct {
+	Slots []AppointmentSlotResponse `json:"slots"`
+}
+
 func (r CreateAppointmentRequest) ToDomain() domain.Appointment {
 	return domain.Appointment{
 		Status:             r.Status,
@@ -99,5 +117,35 @@ func AppointmentsResponseFromDomain(appointments []*domain.Appointment) Appointm
 
 	return AppointmentsResponse{
 		Appointments: result,
+	}
+}
+
+func AppointmentCalendarResponseFromDomain(days []domain.AppointmentCalendarDay) AppointmentCalendarResponse {
+	result := make([]AppointmentCalendarDayResponse, 0, len(days))
+
+	for _, day := range days {
+		result = append(result, AppointmentCalendarDayResponse{
+			Date:   day.Date,
+			Status: day.Status,
+		})
+	}
+
+	return AppointmentCalendarResponse{
+		Days: result,
+	}
+}
+
+func AppointmentSlotsResponseFromDomain(slots []domain.AppointmentSlot) AppointmentSlotsResponse {
+	result := make([]AppointmentSlotResponse, 0, len(slots))
+
+	for _, slot := range slots {
+		result = append(result, AppointmentSlotResponse{
+			Time:   slot.Time,
+			Status: slot.Status,
+		})
+	}
+
+	return AppointmentSlotsResponse{
+		Slots: result,
 	}
 }

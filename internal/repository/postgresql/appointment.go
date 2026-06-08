@@ -7,6 +7,7 @@ import (
 	"dental-time/internal/service"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/lib/pq"
 )
@@ -27,7 +28,7 @@ type AppointmentRow struct {
 	status               sql.NullString
 	patient_first_name   string
 	patient_phone_number string
-	date                 string
+	date                 time.Time
 	service_id           int
 	service_title        string
 	duration             int
@@ -41,7 +42,7 @@ func (r AppointmentRow) ToDomain() domain.Appointment {
 		Number:             r.number,
 		PatientFirstName:   r.patient_first_name,
 		PatientPhoneNumber: r.patient_phone_number,
-		Date:               r.date,
+		Date:               r.date.Format(time.RFC3339),
 		ServiceID:          r.service_id,
 		ServiceTitle:       r.service_title,
 		ServiceDuration:    r.duration,
@@ -66,7 +67,7 @@ func (r *AppointmentRepo) GetAll(ctx context.Context) ([]*domain.Appointment, er
 		a.status,
 		a.patient_first_name,
 		a.patient_phone_number,
-		a.date::text,
+		a.date,
 		a.service_id,
 		s.title,
 		s.duration,
@@ -125,7 +126,7 @@ func (r *AppointmentRepo) GetByID(ctx context.Context, id int) (*domain.Appointm
 		a.status,
 		a.patient_first_name,
 		a.patient_phone_number,
-		a.date::text,
+		a.date,
 		a.service_id,
 		s.title,
 		s.duration,
@@ -172,7 +173,7 @@ func (r *AppointmentRepo) GetByNumber(ctx context.Context, number int) (*domain.
 		a.status,
 		a.patient_first_name,
 		a.patient_phone_number,
-		a.date::text,
+		a.date,
 		a.service_id,
 		s.title,
 		s.duration,
@@ -209,6 +210,66 @@ func (r *AppointmentRepo) GetByNumber(ctx context.Context, number int) (*domain.
 
 	appointment := row.ToDomain()
 	return &appointment, nil
+}
+
+func (r *AppointmentRepo) GetByDoctorID(ctx context.Context, doctorID int) ([]*domain.Appointment, error) {
+	const query = `
+	SELECT
+		a.appointment_id,
+		a.number,
+		a.status,
+		a.patient_first_name,
+		a.patient_phone_number,
+		a.date,
+		a.service_id,
+		s.title,
+		s.duration,
+		a.doctor_id,
+		d.full_name
+	FROM appointments a
+	JOIN doctors_services ds ON a.doctor_id = ds.doctor_id AND a.service_id = ds.service_id
+	JOIN services s ON ds.service_id = s.service_id
+	JOIN doctors d ON ds.doctor_id = d.doctor_id
+	WHERE a.doctor_id = $1
+	ORDER BY a.date;`
+
+	rows, err := r.db.QueryContext(ctx, query, doctorID)
+	if err != nil {
+		return nil, fmt.Errorf("get appointments by doctor id: %w", err)
+	}
+	defer rows.Close()
+
+	var appointments []*domain.Appointment
+
+	for rows.Next() {
+		var row AppointmentRow
+
+		err := rows.Scan(
+			&row.appointment_id,
+			&row.number,
+			&row.status,
+			&row.patient_first_name,
+			&row.patient_phone_number,
+			&row.date,
+			&row.service_id,
+			&row.service_title,
+			&row.duration,
+			&row.doctor_id,
+			&row.doctor_full_name,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scan appointments: %w", err)
+		}
+
+		appointment := row.ToDomain()
+		appointments = append(appointments, &appointment)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate appointments: %w", err)
+	}
+
+	return appointments, nil
 }
 
 func (r *AppointmentRepo) Create(ctx context.Context, appointment domain.Appointment) (*domain.Appointment, error) {

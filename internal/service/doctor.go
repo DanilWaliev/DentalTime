@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 )
 
 var (
@@ -15,6 +16,14 @@ var (
 	ErrInvalidDoctorID             = errors.New("invalid doctor id")
 	ErrInvalidDoctorSpecialization = errors.New("invalid doctor specialization")
 	ErrServiceAlreadyAssigned      = errors.New("service is already assigned")
+	ErrInvalidAppointmentDate      = errors.New("invalid appointment date")
+)
+
+// Запись к врачу доступна с 10:00 до 18:00 с 30-минутными слотами
+const (
+	workStartHour   = 10
+	workEndHour     = 18
+	slotStepMinutes = 30
 )
 
 type DoctorRepository interface {
@@ -32,12 +41,14 @@ type DoctorRepository interface {
 }
 
 type DoctorService struct {
-	doctorRepo DoctorRepository
+	doctorRepo      DoctorRepository
+	appointmentRepo AppointmentRepository
 }
 
-func NewDoctorService(doctorRepo DoctorRepository) *DoctorService {
+func NewDoctorService(doctorRepo DoctorRepository, appointmentRepo AppointmentRepository) *DoctorService {
 	return &DoctorService{
-		doctorRepo: doctorRepo,
+		doctorRepo:      doctorRepo,
+		appointmentRepo: appointmentRepo,
 	}
 }
 
@@ -68,6 +79,67 @@ func (s *DoctorService) GetByServiceID(ctx context.Context, serviceID int) ([]*d
 	}
 
 	return s.doctorRepo.GetByServiceID(ctx, serviceID)
+}
+
+func (s *DoctorService) GetCalendar(ctx context.Context, doctorID int, month string) ([]domain.AppointmentCalendarDay, error) {
+	if doctorID <= 0 {
+		return nil, ErrInvalidDoctorID
+	}
+
+	if month == "" {
+		month = time.Now().Format("2006-01")
+	}
+
+	monthDate, err := time.ParseInLocation("2006-01", month, time.Local)
+	if err != nil {
+		return nil, ErrInvalidAppointmentDate
+	}
+
+	appointments, err := s.appointmentRepo.GetByDoctorID(ctx, doctorID)
+	if err != nil {
+		return nil, fmt.Errorf("get appointments by doctor id: %w", err)
+	}
+
+	daysInMonth := time.Date(monthDate.Year(), monthDate.Month()+1, 0, 0, 0, 0, 0, monthDate.Location()).Day()
+	result := make([]domain.AppointmentCalendarDay, 0, daysInMonth)
+
+	for day := 1; day <= daysInMonth; day++ {
+		date := time.Date(monthDate.Year(), monthDate.Month(), day, 0, 0, 0, 0, monthDate.Location())
+		slots := buildSlots(date, appointments)
+		status := "disabled"
+
+		for _, slot := range slots {
+			if slot.Status == "available" {
+				status = "available"
+				break
+			}
+		}
+
+		result = append(result, domain.AppointmentCalendarDay{
+			Date:   date.Format("2006-01-02"),
+			Status: status,
+		})
+	}
+
+	return result, nil
+}
+
+func (s *DoctorService) GetSlots(ctx context.Context, doctorID int, date string) ([]domain.AppointmentSlot, error) {
+	if doctorID <= 0 {
+		return nil, ErrInvalidDoctorID
+	}
+
+	day, err := time.ParseInLocation("2006-01-02", date, time.Local)
+	if err != nil {
+		return nil, ErrInvalidAppointmentDate
+	}
+
+	appointments, err := s.appointmentRepo.GetByDoctorID(ctx, doctorID)
+	if err != nil {
+		return nil, fmt.Errorf("get appointments by doctor id: %w", err)
+	}
+
+	return buildSlots(day, appointments), nil
 }
 
 func (s *DoctorService) Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
@@ -134,4 +206,39 @@ func (s *DoctorService) DeleteService(ctx context.Context, doctorID, serviceID i
 	}
 
 	return s.doctorRepo.DeleteService(ctx, doctorID, serviceID)
+}
+
+func buildSlots(day time.Time, appointments []*domain.Appointment) []domain.AppointmentSlot {
+	start := time.Date(day.Year(), day.Month(), day.Day(), workStartHour, 0, 0, 0, day.Location())
+	end := time.Date(day.Year(), day.Month(), day.Day(), workEndHour, 0, 0, 0, day.Location())
+	result := make([]domain.AppointmentSlot, 0)
+
+	for slotStart := start; slotStart.Before(end); slotStart = slotStart.Add(slotStepMinutes * time.Minute) {
+		slotEnd := slotStart.Add(slotStepMinutes * time.Minute)
+		status := "available"
+
+		for _, appointment := range appointments {
+			if appointment.Status == "Отменена" {
+				continue
+			}
+
+			appointmentStart, err := time.Parse(time.RFC3339, appointment.Date)
+			if err != nil {
+				continue
+			}
+
+			appointmentEnd := appointmentStart.Add(time.Duration(appointment.ServiceDuration) * time.Minute)
+			if slotStart.Before(appointmentEnd) && slotEnd.After(appointmentStart) {
+				status = "disabled"
+				break
+			}
+		}
+
+		result = append(result, domain.AppointmentSlot{
+			Time:   slotStart.Format("15:04"),
+			Status: status,
+		})
+	}
+
+	return result
 }

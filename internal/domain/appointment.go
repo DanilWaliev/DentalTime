@@ -13,3 +13,13 @@ type Appointment struct {
 	DoctorID           int
 	DoctorFullName     string
 }
+
+type AppointmentCalendarDay struct {
+	Date   string
+	Status string
+}
+
+type AppointmentSlot struct {
+	Time   string
+	Status string
+}

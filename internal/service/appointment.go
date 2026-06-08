@@ -20,6 +20,7 @@ type AppointmentRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Appointment, error)
 	GetByID(ctx context.Context, id int) (*domain.Appointment, error)
 	GetByNumber(ctx context.Context, number int) (*domain.Appointment, error)
+	GetByDoctorID(ctx context.Context, doctorID int) ([]*domain.Appointment, error)
 	Create(ctx context.Context, appointment domain.Appointment) (*domain.Appointment, error)
 	Update(ctx context.Context, appointment domain.Appointment) (*domain.Appointment, error)
 	Delete(ctx context.Context, id int) error

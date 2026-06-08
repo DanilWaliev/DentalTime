@@ -40,7 +40,7 @@ func main() {
 	serviceRepo := postgresql.NewServiceRepo(db)
 	appointmentRepo := postgresql.NewAppointmentRepo(db)
 
-	doctorService := service.NewDoctorService(doctorRepo)
+	doctorService := service.NewDoctorService(doctorRepo, appointmentRepo)
 	serviceService := service.NewServiceService(serviceRepo)
 	appointmentService := service.NewAppointmentService(appointmentRepo)
 
@@ -59,6 +59,8 @@ func main() {
 	e.GET("api/doctors/:id", doctorHandler.GetByID)
 	e.GET("api/doctors", doctorHandler.GetAll)
 	e.GET("api/doctors/:id/services", doctorHandler.GetServices)
+	e.GET("api/doctors/:id/calendar", doctorHandler.GetCalendar)
+	e.GET("api/doctors/:id/slots", doctorHandler.GetSlots)
 	e.POST("api/doctors", doctorHandler.Create)
 	e.PUT("api/doctors/:id", doctorHandler.Update)
 	e.DELETE("api/doctors/:id", doctorHandler.Delete)

@@ -79,6 +79,38 @@ func (h *DoctorHandler) GetServices(c *echo.Context) error {
 	return c.JSON(http.StatusOK, dto.ServicesResponseFromDomain(services))
 }
 
+func (h *DoctorHandler) GetCalendar(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
+	}
+
+	days, err := h.doctorService.GetCalendar(ctx, id, c.QueryParam("month"))
+	if err != nil {
+		return mapDoctorServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.AppointmentCalendarResponseFromDomain(days))
+}
+
+func (h *DoctorHandler) GetSlots(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
+	}
+
+	slots, err := h.doctorService.GetSlots(ctx, id, c.QueryParam("date"))
+	if err != nil {
+		return mapDoctorServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.AppointmentSlotsResponseFromDomain(slots))
+}
+
 func (h *DoctorHandler) Update(c *echo.Context) error {
 	ctx := c.Request().Context()
 
@@ -193,6 +225,8 @@ func mapDoctorServiceError(err error) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	case errors.Is(err, service.ErrServiceAlreadyAssigned):
 		return echo.NewHTTPError(http.StatusConflict, err.Error())
+	case errors.Is(err, service.ErrInvalidAppointmentDate):
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	default:
 		return fmt.Errorf("doctor service error: %w", err)
 	}
