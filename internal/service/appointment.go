@@ -104,6 +104,42 @@ func (s *AppointmentService) Delete(ctx context.Context, id int) error {
 	return s.appointmentRepo.Delete(ctx, id)
 }
 
+func (s *AppointmentService) Cancel(ctx context.Context, id int) (*domain.Appointment, error) {
+	if id <= 0 {
+		return nil, ErrInvalidAppointmentID
+	}
+
+	appointment, err := s.appointmentRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	appointment.Status = "Отменена"
+
+	return s.appointmentRepo.Update(ctx, *appointment)
+}
+
+func (s *AppointmentService) Reschedule(ctx context.Context, id int, date string) (*domain.Appointment, error) {
+	if id <= 0 {
+		return nil, ErrInvalidAppointmentID
+	}
+
+	date = strings.TrimSpace(date)
+	if date == "" {
+		return nil, ErrInvalidAppointmentData
+	}
+
+	appointment, err := s.appointmentRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	appointment.Date = date
+	appointment.Status = "Ожидает"
+
+	return s.appointmentRepo.Update(ctx, *appointment)
+}
+
 func normalizePhoneNumber(phone string) string {
 	var builder strings.Builder
 

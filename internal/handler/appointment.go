@@ -107,6 +107,43 @@ func (h *AppointmentHandler) Update(c *echo.Context) error {
 	return c.JSON(http.StatusOK, dto.AppointmentResponseFromDomain(updatedAppointment))
 }
 
+func (h *AppointmentHandler) Cancel(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid appointment id")
+	}
+
+	appointment, err := h.appointmentService.Cancel(ctx, id)
+	if err != nil {
+		return mapAppointmentServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.AppointmentResponseFromDomain(appointment))
+}
+
+func (h *AppointmentHandler) Reschedule(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid appointment id")
+	}
+
+	rr := new(dto.RescheduleAppointmentRequest)
+	if err := c.Bind(rr); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid appointment data")
+	}
+
+	appointment, err := h.appointmentService.Reschedule(ctx, id, rr.Date)
+	if err != nil {
+		return mapAppointmentServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.AppointmentResponseFromDomain(appointment))
+}
+
 func (h *AppointmentHandler) Delete(c *echo.Context) error {
 	ctx := c.Request().Context()
 

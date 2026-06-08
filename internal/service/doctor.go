@@ -19,7 +19,6 @@ var (
 	ErrInvalidAppointmentDate      = errors.New("invalid appointment date")
 )
 
-// Запись к врачу доступна с 10:00 до 18:00 с 30-минутными слотами
 const (
 	workStartHour   = 10
 	workEndHour     = 18
@@ -100,28 +99,7 @@ func (s *DoctorService) GetCalendar(ctx context.Context, doctorID int, month str
 		return nil, fmt.Errorf("get appointments by doctor id: %w", err)
 	}
 
-	daysInMonth := time.Date(monthDate.Year(), monthDate.Month()+1, 0, 0, 0, 0, 0, monthDate.Location()).Day()
-	result := make([]domain.AppointmentCalendarDay, 0, daysInMonth)
-
-	for day := 1; day <= daysInMonth; day++ {
-		date := time.Date(monthDate.Year(), monthDate.Month(), day, 0, 0, 0, 0, monthDate.Location())
-		slots := buildSlots(date, appointments)
-		status := "disabled"
-
-		for _, slot := range slots {
-			if slot.Status == "available" {
-				status = "available"
-				break
-			}
-		}
-
-		result = append(result, domain.AppointmentCalendarDay{
-			Date:   date.Format("2006-01-02"),
-			Status: status,
-		})
-	}
-
-	return result, nil
+	return buildCalendarDays(monthDate, appointments), nil
 }
 
 func (s *DoctorService) GetSlots(ctx context.Context, doctorID int, date string) ([]domain.AppointmentSlot, error) {
@@ -139,7 +117,7 @@ func (s *DoctorService) GetSlots(ctx context.Context, doctorID int, date string)
 		return nil, fmt.Errorf("get appointments by doctor id: %w", err)
 	}
 
-	return buildSlots(day, appointments), nil
+	return markFirstAvailableSlot(buildSlots(day, appointments)), nil
 }
 
 func (s *DoctorService) Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
@@ -241,4 +219,53 @@ func buildSlots(day time.Time, appointments []*domain.Appointment) []domain.Appo
 	}
 
 	return result
+}
+
+func buildCalendarDays(monthDate time.Time, appointments []*domain.Appointment) []domain.AppointmentCalendarDay {
+	firstDay := time.Date(monthDate.Year(), monthDate.Month(), 1, 0, 0, 0, 0, monthDate.Location())
+	offset := (int(firstDay.Weekday()) + 6) % 7
+	start := firstDay.AddDate(0, 0, -offset)
+	result := make([]domain.AppointmentCalendarDay, 0, 35)
+	selected := false
+
+	for i := 0; i < 35; i++ {
+		day := start.AddDate(0, 0, i)
+		status := "disabled"
+
+		if day.Year() == monthDate.Year() && day.Month() == monthDate.Month() {
+			slots := buildSlots(day, appointments)
+			for _, slot := range slots {
+				if slot.Status == "available" {
+					status = "available"
+					break
+				}
+			}
+		}
+
+		if status == "available" && !selected {
+			status = "selected"
+			selected = true
+		}
+
+		result = append(result, domain.AppointmentCalendarDay{
+			Date:   day.Format("2006-01-02"),
+			Text:   fmt.Sprintf("%d", day.Day()),
+			Status: status,
+		})
+	}
+
+	return result
+}
+
+func markFirstAvailableSlot(slots []domain.AppointmentSlot) []domain.AppointmentSlot {
+	selected := false
+
+	for i := range slots {
+		if slots[i].Status == "available" && !selected {
+			slots[i].Status = "selected"
+			selected = true
+		}
+	}
+
+	return slots
 }

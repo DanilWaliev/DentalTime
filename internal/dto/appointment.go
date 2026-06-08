@@ -49,6 +49,7 @@ type AppointmentsResponse struct {
 
 type AppointmentCalendarDayResponse struct {
 	Date   string `json:"date"`
+	Text   string `json:"text"`
 	Status string `json:"status"`
 }
 
@@ -63,6 +64,10 @@ type AppointmentSlotResponse struct {
 
 type AppointmentSlotsResponse struct {
 	Slots []AppointmentSlotResponse `json:"slots"`
+}
+
+type RescheduleAppointmentRequest struct {
+	Date string `json:"date"`
 }
 
 func (r CreateAppointmentRequest) ToDomain() domain.Appointment {
@@ -126,6 +131,7 @@ func AppointmentCalendarResponseFromDomain(days []domain.AppointmentCalendarDay)
 	for _, day := range days {
 		result = append(result, AppointmentCalendarDayResponse{
 			Date:   day.Date,
+			Text:   day.Text,
 			Status: day.Status,
 		})
 	}

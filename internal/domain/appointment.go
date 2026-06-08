@@ -16,6 +16,7 @@ type Appointment struct {
 
 type AppointmentCalendarDay struct {
 	Date   string
+	Text   string
 	Status string
 }
 

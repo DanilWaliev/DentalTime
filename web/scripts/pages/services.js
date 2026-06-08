@@ -1,10 +1,13 @@
 import { initBurgerMenu } from '../core.js';
-import { GetServices } from './../data/data.js';
+import { GetServices, loadAppData } from './../data/data.js';
 import { renderServices } from './../components/cards.js';
 
-function init() {
-    initBurgerMenu();
-    renderServices(GetServices(), document.getElementById('services-container'));
+async function init() {
+  initBurgerMenu();
+  await loadAppData();
+  renderServices(GetServices(), document.getElementById('services-container'));
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  void init();
+});

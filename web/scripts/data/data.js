@@ -1,432 +1,511 @@
+const apiBase = '/api';
+
+let doctors = [];
+let services = [];
+let appointments = [];
+let appointmentCalendar = [];
+let appointmentTimeSlots = [];
+let loadPromise = null;
+
+export async function loadAppData() {
+  if (!loadPromise) {
+    loadPromise = loadCoreData();
+  }
+
+  return loadPromise;
+}
+
+export async function reloadAppData() {
+  loadPromise = null;
+  return loadAppData();
+}
+
+async function loadCoreData() {
+  try {
+    const [doctorResponse, serviceResponse, appointmentResponse] = await Promise.all([
+      apiRequest('GET', `${apiBase}/doctors`),
+      apiRequest('GET', `${apiBase}/services`),
+      apiRequest('GET', `${apiBase}/appointments`),
+    ]);
+
+    services = mapServices(serviceResponse.services || []);
+    appointments = mapAppointments(appointmentResponse.appointments || []);
+    doctors = await mapDoctors(doctorResponse.doctors || []);
+  } catch (error) {
+    loadPromise = null;
+    throw error;
+  }
+}
+
 export function GetDoctors() {
-  return mockDoctors;
+  return doctors;
 }
 
 export function GetServices() {
-  return mockServices;
+  return services;
 }
 
 export function GetAppointments() {
-  return mockAppointments;
+  return appointments;
 }
 
 export function GetAppointmentByNumber(appointmentNumber) {
-  return mockAppointments.find(appointment => String(appointment.num) === String(appointmentNumber));
+  return appointments.find(appointment => String(appointment.num) === String(appointmentNumber));
 }
 
 export function GetAppointmentCalendar() {
-  return mockCalendar;
+  return appointmentCalendar;
 }
 
 export function GetAppointmentTimeSlots() {
-  return mockTimeSlots;
+  return appointmentTimeSlots;
 }
 
 export function AddDoctor(doctor) {
-  mockDoctors.push(doctor);
+  doctors.push(doctor);
 }
 
 export function AddService(service) {
-  mockServices.push(service);
+  services.push(service);
 }
 
 export function AddAppointment(appointment) {
-  mockAppointments.push(appointment);
+  appointments.push(appointment);
 }
 
-export function CancelAppointment(appointmentId) {
-  const appointment = mockAppointments.find(item => String(item.id) === String(appointmentId));
-  if (!appointment) return null;
+export async function loadDoctorAvailability(doctorId, dateValue = null) {
+  if (!doctorId) {
+    appointmentCalendar = [];
+    appointmentTimeSlots = [];
+    return;
+  }
 
-  appointment.status = "Отменена";
-  ApiCancelAppointment(appointmentId);
+  const dayValue = normalizeDatePart(dateValue || formatCurrentDatePart());
+  const monthValue = dayValue.slice(0, 7);
 
-  return appointment;
+  const [calendarResponse, slotsResponse] = await Promise.all([
+    apiRequest('GET', `${apiBase}/doctors/${doctorId}/calendar?month=${monthValue}`),
+    apiRequest('GET', `${apiBase}/doctors/${doctorId}/slots?date=${dayValue}`),
+  ]);
+
+  appointmentCalendar = mapCalendarDays(calendarResponse.days || []);
+  appointmentTimeSlots = mapTimeSlots(slotsResponse.slots || []);
 }
 
-export function RescheduleAppointment(appointmentId, newDate) {
-  const appointment = mockAppointments.find(item => String(item.id) === String(appointmentId));
-  if (!appointment) return null;
+export async function loadDoctorSlots(doctorId, dateValue) {
+  if (!doctorId || !dateValue) {
+    appointmentTimeSlots = [];
+    return;
+  }
 
-  appointment.date = newDate;
-  appointment.status = "Ожидает";
-  ApiRescheduleAppointment(appointmentId, newDate);
-
-  return appointment;
+  const dayValue = normalizeDatePart(dateValue);
+  const slotsResponse = await apiRequest('GET', `${apiBase}/doctors/${doctorId}/slots?date=${dayValue}`);
+  appointmentTimeSlots = mapTimeSlots(slotsResponse.slots || []);
 }
 
-// Имитация API запросов
+export async function ApiCreateAppointment(appointment) {
+  const payload = buildAppointmentPayload(appointment);
+  const created = await apiRequest('POST', `${apiBase}/appointments`, payload);
+  await reloadAppData();
 
-export function ApiCreateAppointment(appointment) {
-  console.log("API POST /appointments (Client):", appointment);
+  return mapAppointment(created);
+}
+
+export async function ApiAddManagerAppointment(appointment) {
+  return ApiCreateAppointment(appointment);
+}
+
+export async function ApiUpdateAppointment(appointmentId, updatedData) {
+  const current = GetAppointments().find(item => String(item.id) === String(appointmentId));
+  const merged = Object.assign({}, current || {}, updatedData);
+  const payload = buildAppointmentPayload(merged, current);
+  const updated = await apiRequest('PUT', `${apiBase}/appointments/${appointmentId}`, payload);
+  await reloadAppData();
+
+  return mapAppointment(updated);
+}
+
+export async function ApiDeleteAppointment(appointmentId) {
+  await apiRequest('DELETE', `${apiBase}/appointments/${appointmentId}`);
+  await reloadAppData();
+}
+
+export async function CancelAppointment(appointmentId) {
+  const updated = await apiRequest('POST', `${apiBase}/appointments/${appointmentId}/cancel`);
+  await reloadAppData();
+
+  return mapAppointment(updated);
+}
+
+export async function RescheduleAppointment(appointmentId, newDate) {
+  const updated = await apiRequest('POST', `${apiBase}/appointments/${appointmentId}/reschedule`, {
+    date: newDate,
+  });
+  await reloadAppData();
+
+  return mapAppointment(updated);
+}
+
+export async function ApiAddDoctor(doctor) {
+  const created = await apiRequest('POST', `${apiBase}/doctors`, buildDoctorPayload(doctor));
+  const doctorId = created.doctor_id || created.id;
+
+  await syncDoctorServices(doctorId, doctor.services || []);
+  await reloadAppData();
+
+  return created;
+}
+
+export async function ApiUpdateDoctor(doctorId, updatedData) {
+  await apiRequest('PUT', `${apiBase}/doctors/${doctorId}`, buildDoctorPayload(updatedData));
+  await syncDoctorServices(doctorId, updatedData.services || []);
+  await reloadAppData();
+}
+
+export async function ApiDeleteDoctor(doctorId) {
+  await apiRequest('DELETE', `${apiBase}/doctors/${doctorId}`);
+  await reloadAppData();
+}
+
+export async function ApiAddService(service) {
+  const created = await apiRequest('POST', `${apiBase}/services`, buildServicePayload(service));
+  await reloadAppData();
+
+  return created;
+}
+
+export async function ApiUpdateService(serviceId, updatedData) {
+  await apiRequest('PUT', `${apiBase}/services/${serviceId}`, buildServicePayload(updatedData));
+  await reloadAppData();
+}
+
+export async function ApiDeleteService(serviceId) {
+  await apiRequest('DELETE', `${apiBase}/services/${serviceId}`);
+  await reloadAppData();
 }
 
 export function ApiLogin(credentials) {
-  console.log("API POST /login:", credentials);
+  console.log('API POST /login:', credentials);
 }
 
-export function ApiAddManagerAppointment(appointment) {
-  console.log("API POST /appointments (Manager):", appointment);
-}
-
-export function ApiUpdateAppointment(appointmentId, updatedData) {
-  console.log(`API PUT /appointments/${appointmentId}:`, updatedData);
-}
-
-export function ApiDeleteAppointment(appointmentId) {
-  console.log(`API DELETE /appointments/${appointmentId}`);
-}
-
-//Имитация API для врачей
-export function ApiAddDoctor(doctor) {
-  console.log("API POST /doctors:", doctor);
-}
-
-// TODO переделать для бека
 export function ApiUploadDoctorPhoto(file, previewUrl) {
-  const uploadedPhoto = {
+  return {
     id: `mock-photo-${Date.now()}`,
     name: file.name,
     url: previewUrl,
     mockUploaded: true
   };
-
-  console.log("API POST /doctors/photo:", uploadedPhoto);
-  return uploadedPhoto;
 }
 
-export function ApiUpdateDoctor(doctorId, updatedData) {
-  console.log(`API PUT /doctors/${doctorId}:`, updatedData);
-}
+async function syncDoctorServices(doctorId, serviceTitles) {
+  const desiredIds = serviceTitles
+    .map(title => findServiceByTitle(title))
+    .filter(Boolean)
+    .map(service => service.id);
 
-export function ApiDeleteDoctor(doctorId) {
-  console.log(`API DELETE /doctors/${doctorId}`);
-}
+  const currentDoctor = GetDoctors().find(doctor => String(doctor.id) === String(doctorId));
+  const currentIds = currentDoctor ? currentDoctor.services.map(title => {
+    const service = findServiceByTitle(title);
+    return service ? service.id : null;
+  }).filter(Boolean) : [];
 
-//Имитация API для услуг
-export function ApiAddService(service) {
-  console.log("API POST /services:", service);
-}
-
-export function ApiUpdateService(serviceId, updatedData) {
-  console.log(`API PUT /services/${serviceId}:`, updatedData);
-}
-
-export function ApiDeleteService(serviceId) {
-  console.log(`API DELETE /services/${serviceId}`);
-}
-
-// Имитация API для управления записью (пациент)
-export function ApiCancelAppointment(appointmentId) {
-  console.log(`API POST /appointments/${appointmentId}/cancel`);
-}
-
-export function ApiRescheduleAppointment(appointmentId, newDate) {
-  console.log(`API POST /appointments/${appointmentId}/reschedule:`, { newDate });
-}
-
-const mockTimeSlots = [
-  { time: "09:00", status: "disabled" },
-  { time: "09:30", status: "disabled" },
-  { time: "10:00", status: "available" },
-  { time: "10:30", status: "available" },
-  { time: "11:00", status: "available" },
-  { time: "11:30", status: "available" },
-  { time: "12:00", status: "available" },
-  { time: "12:30", status: "available" },
-  { time: "13:00", status: "available" },
-  { time: "13:30", status: "disabled" },
-  { time: "14:00", status: "selected" },
-  { time: "14:30", status: "available" },
-  { time: "15:00", status: "available" },
-  { time: "15:30", status: "available" },
-  { time: "16:00", status: "available" },
-  { time: "16:30", status: "available" },
-];
-
-const mockDoctors = [
-  { 
-    id: 1, 
-    fullName: "Константин Иванов", 
-    spec: "Стоматолог-ортопед", 
-    experience: 16, 
-    services: ["Протезирование", "Виниры", "Коронки"], 
-    nearest: ["Сегодня 14:00", "Завтра 16:00"]
-  },
-  { 
-    id: 2, 
-    fullName: "Анна Смирнова", 
-    spec: "Стоматолог-терапевт", 
-    experience: 8, 
-    services: ["Лечение кариеса", "Эндодонтия", "Отбеливание"], 
-    nearest: ["Завтра 10:00", "Четверг 12:30"]
-  },
-  { 
-    id: 3, 
-    fullName: "Сергей Дорохов", 
-    spec: "Стоматолог-хирург", 
-    experience: 12, 
-    services: ["Удаление зубов", "Имплантация", "Пластика десны"], 
-    nearest: ["Сегодня 18:00", "Пятница 11:00"]
+  for (const serviceId of currentIds) {
+    if (!desiredIds.includes(serviceId)) {
+      await apiRequest('DELETE', `${apiBase}/doctors/${doctorId}/services/${serviceId}`);
+    }
   }
-];
 
-const mockServices = [
-  {
-    id: 1,
-    title: "Первичная консультация",
-    subtitle: "Осмотр, детальная диагностика и составление индивидуального плана лечения",
-    duration: 45,
-    price: 15000 
-  },
-  {
-    id: 2,
-    title: "Лечение кариеса",
-    subtitle: "Удаление пораженных тканей, установка светоотверждаемой пломбы и полировка",
-    duration: 60,
-    price: 5500 
-  },
-  {
-    id: 3,
-    title: "Профессиональная гигиена",
-    subtitle: "Ультразвуковая чистка, Air Flow, полировка пастой и фторирование",
-    duration: 60,
-    price: 4000 
-  },
-  {
-    id: 4,
-    title: "Сложное удаление зуба",
-    subtitle: "Безболезненное удаление ретинированных зубов (в т.ч. зубов мудрости)",
-    duration: 90,
-    price: 8000 
+  for (const serviceId of desiredIds) {
+    if (!currentIds.includes(serviceId)) {
+      await apiRequest('POST', `${apiBase}/doctors/${doctorId}/services`, {
+        service_id: serviceId,
+      });
+    }
   }
-];
+}
 
-const mockAppointments = [
-  {
-    id: 1,
-    num: 123,
-    status: "Подтверждена",
-    patientName: "Алексей Михайлов",
+function buildDoctorPayload(doctor) {
+  return {
+    full_name: doctor.fullName || doctor.full_name || '',
+    specialization: doctor.spec || doctor.specialization || '',
+    experience: Number(doctor.experience || 0),
+    photo_url: doctor.photo?.url || doctor.photo_url || doctor.photoUrl || '',
+  };
+}
+
+function buildServicePayload(service) {
+  return {
+    title: service.title || '',
+    subtitle: service.subtitle || '',
+    duration: Number(service.duration || 0),
+    price: Number(service.price || 0),
+  };
+}
+
+function buildAppointmentPayload(appointment, current = null) {
+  const service = resolveService(appointment.service, current ? current.service : null);
+  const doctor = resolveDoctor(appointment.doctor, current ? current.doctor : null);
+  const date = resolveAppointmentDate(appointment, current);
+
+  return {
+    status: appointment.status || (current ? current.status : 'Ожидает'),
+    patient_first_name: appointment.patientName || appointment.patientFirstName || appointment.patient_first_name || (current ? current.patientName : ''),
+    patient_phone_number: normalizePhone(appointment.patientPhoneNumber || appointment.patientNumber || appointment.patient_phone_number || (current ? current.patientPhoneNumber : '')),
+    date,
+    service_id: service ? service.id : 0,
+    doctor_id: doctor ? doctor.id : 0,
+  };
+}
+
+function resolveService(value, fallback = null) {
+  if (value && typeof value === 'object') {
+    if (value.id) {
+      return { id: Number(value.id), title: value.title || '' };
+    }
+
+    if (value.title) {
+      return findServiceByTitle(value.title);
+    }
+  }
+
+  if (typeof value === 'string' && value.trim() !== '') {
+    if (/^\d+$/.test(value.trim())) {
+      const service = services.find(item => String(item.id) === String(value.trim()));
+      if (service) return service;
+    }
+
+    const service = findServiceByTitle(value.trim());
+    if (service) return service;
+  }
+
+  return fallback && fallback.id ? fallback : null;
+}
+
+function resolveDoctor(value, fallback = null) {
+  if (value && typeof value === 'object') {
+    if (value.id) {
+      return { id: Number(value.id), fullName: value.fullName || '' };
+    }
+
+    if (value.fullName) {
+      return findDoctorByFullName(value.fullName);
+    }
+  }
+
+  if (typeof value === 'string' && value.trim() !== '') {
+    if (/^\d+$/.test(value.trim())) {
+      const doctor = doctors.find(item => String(item.id) === String(value.trim()));
+      if (doctor) return doctor;
+    }
+
+    const doctor = findDoctorByFullName(value.trim());
+    if (doctor) return doctor;
+  }
+
+  return fallback && fallback.id ? fallback : null;
+}
+
+function resolveAppointmentDate(appointment, current = null) {
+  if (appointment.date && String(appointment.date).includes('T')) {
+    return String(appointment.date);
+  }
+
+  if (appointment.date && appointment.time) {
+    return combineDateAndTime(String(appointment.date), String(appointment.time));
+  }
+
+  if (appointment.date && !appointment.time) {
+    return String(appointment.date);
+  }
+
+  if (current && current.date) {
+    return String(current.date);
+  }
+
+  return '';
+}
+
+function combineDateAndTime(dateValue, timeValue) {
+  const date = normalizeDatePart(dateValue);
+  const time = normalizeTimePart(timeValue);
+  const localDate = new Date(`${date}T${time}:00`);
+  const offsetMinutes = -localDate.getTimezoneOffset();
+  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const absoluteOffset = Math.abs(offsetMinutes);
+  const offsetHours = String(Math.floor(absoluteOffset / 60)).padStart(2, '0');
+  const offsetMinutesPart = String(absoluteOffset % 60).padStart(2, '0');
+
+  return `${date}T${time}:00${sign}${offsetHours}:${offsetMinutesPart}`;
+}
+
+function normalizeDatePart(value) {
+  if (!value) return '';
+
+  const raw = String(value).trim();
+  if (raw.includes('T')) {
+    return raw.slice(0, 10);
+  }
+
+  return raw.slice(0, 10);
+}
+
+function normalizeTimePart(value) {
+  if (!value) return '';
+
+  const raw = String(value).trim();
+  return raw.slice(0, 5);
+}
+
+function normalizePhone(value) {
+  return String(value || '').replace(/\D/g, '');
+}
+
+function formatCurrentDatePart() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function findServiceByTitle(title) {
+  return services.find(service => service.title === title) || null;
+}
+
+function findDoctorByFullName(fullName) {
+  return doctors.find(doctor => doctor.fullName === fullName) || null;
+}
+
+function mapServices(items) {
+  return items.map(item => ({
+    id: item.service_id,
+    title: item.title,
+    subtitle: item.subtitle,
+    duration: item.duration,
+    price: item.price,
+  }));
+}
+
+function mapDoctors(items) {
+  return Promise.all(items.map(async item => {
+    const doctor = {
+      id: item.doctor_id,
+      fullName: item.full_name,
+      spec: item.specialization,
+      experience: item.experience,
+      photo: item.photo_url ? { url: item.photo_url } : null,
+      services: [],
+      nearest: [],
+    };
+
+    const response = await apiRequest('GET', `${apiBase}/doctors/${doctor.id}/services`);
+    doctor.services = (response.services || []).map(service => service.title);
+    doctor.nearest = buildNearest(doctor.id);
+
+    return doctor;
+  }));
+}
+
+function mapAppointments(items) {
+  return items.map(mapAppointment);
+}
+
+function mapAppointment(item) {
+  return {
+    id: item.id,
+    num: item.num,
+    status: item.status,
+    patientName: item.patientName,
+    patientPhoneNumber: item.patientPhoneNumber,
     service: {
-      id: 3,
-      title: "Профессиональная гигиена",
+      id: item.service.id,
+      title: item.service.title,
     },
     doctor: {
-      id: 2,
-      fullName: "Анна Смирнова",
+      id: item.doctor.id,
+      fullName: item.doctor.fullName,
     },
-    date: "2026-05-15T14:00:00+03:00",
-    duration: 60,
-  },
-  {
-    id: 2,
-    num: 124,
-    status: "Ожидает",
-    patientName: "Елена Смирнова",
-    service: {
-      id: 1,
-      title: "Первичная консультация",
-    },
-    doctor: {
-      id: 1,
-      fullName: "Константин Иванов",
-    },
-    date: "2026-05-16T10:00:00+03:00",
-    duration: 45,
-  },
-  {
-    id: 3,
-    num: 126,
-    status: "Отменена",
-    patientName: "Дмитрий Волков",
-    service: {
-      id: 4,
-      title: "Сложное удаление зуба",
-    },
-    doctor: {
-      id: 3,
-      fullName: "Сергей Дорохов",
-    },
-    date: "2026-05-14T18:00:00+03:00",
-    duration: 90,
-  }
-];
+    date: item.date,
+    duration: item.duration,
+  };
+}
 
-const mockCalendar = [
-  {
-    date: "2026-04-27",
-    status: "disabled",
-    text: "27",
-  },
-  {
-    date: "2026-04-28",
-    status: "disabled",
-    text: "28",
-  },
-  {
-    date: "2026-04-29",
-    status: "disabled",
-    text: "29",
-  },
-  {
-    date: "2026-04-30",
-    status: "disabled",
-    text: "30",
-  },
-  {
-    date: "2026-05-01",
-    status: "disabled",
-    text: "1",
-  },
-  {
-    date: "2026-05-02",
-    status: "disabled",
-    text: "2",
-  },
-  {
-    date: "2026-05-03",
-    status: "disabled",
-    text: "3",
-  },
-  {
-    date: "2026-05-04",
-    status: "disabled",
-    text: "4",
-  },
-  {
-    date: "2026-05-05",
-    status: "disabled",
-    text: "5",
-  },
-  {
-    date: "2026-05-06",
-    status: "disabled",
-    text: "6",
-  },
-  {
-    date: "2026-05-07",
-    status: "disabled",
-    text: "7",
-  },
-  {
-    date: "2026-05-08",
-    status: "disabled",
-    text: "8",
-  },
-  {
-    date: "2026-05-09",
-    status: "disabled",
-    text: "9",
-  },
-  {
-    date: "2026-05-10",
-    status: "disabled",
-    text: "10",
-  },
-  {
-    date: "2026-05-11",
-    status: "disabled",
-    text: "11",
-  },
-  {
-    date: "2026-05-12",
-    status: "disabled",
-    text: "12",
-  },
-  {
-    date: "2026-05-13",
-    status: "disabled",
-    text: "13",
-  },
-  {
-    date: "2026-05-14",
-    status: "disabled",
-    text: "14",
-  },
-  {
-    date: "2026-05-15",
-    status: "disabled",
-    text: "15",
-  },
-  {
-    date: "2026-05-16",
-    status: "disabled",
-    text: "16",
-  },
-  {
-    date: "2026-05-17",
-    status: "disabled",
-    text: "17",
-  },
-  {
-    date: "2026-05-18",
-    status: "disabled",
-    text: "18",
-  },
-  {
-    date: "2026-05-19",
-    status: "disabled",
-    text: "19",
-  },
-  {
-    date: "2026-05-20",
-    status: "selected",
-    text: "20",
-  },
-  {
-    date: "2026-05-21",
-    status: "available",
-    text: "21",
-  },
-  {
-    date: "2026-05-22",
-    status: "available",
-    text: "22",
-  },
-  {
-    date: "2026-05-23",
-    status: "available",
-    text: "23",
-  },
-  {
-    date: "2026-05-24",
-    status: "available",
-    text: "24",
-  },
-  {
-    date: "2026-05-25",
-    status: "available",
-    text: "25",
-  },
-  {
-    date: "2026-05-26",
-    status: "available",
-    text: "26",
-  },
-  {
-    date: "2026-05-27",
-    status: "available",
-    text: "27",
-  },
-  {
-    date: "2026-05-28",
-    status: "available",
-    text: "28",
-  },
-  {
-    date: "2026-05-29 ",
-    status: "available",
-    text: "29",
-  },
-  {
-    date: "2026-05-30",
-    status: "available",
-    text: "30",
-  },
-  {
-    date: "2026-05-31",
-    status: "available",
-    text: "31",
-  },
-];
+function buildNearest(doctorId) {
+  const now = new Date();
+
+  return appointments
+    .filter(appointment => String(appointment.doctor.id) === String(doctorId))
+    .filter(appointment => appointment.status !== 'Отменена')
+    .filter(appointment => new Date(appointment.date) >= now)
+    .sort((left, right) => new Date(left.date) - new Date(right.date))
+    .slice(0, 2)
+    .map(appointment => formatNearestDate(appointment.date));
+}
+
+function formatNearestDate(dateValue) {
+  const date = new Date(dateValue);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const diff = Math.round((target - today) / 86400000);
+  const time = date.toLocaleTimeString('ru-RU', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  if (diff === 0) {
+    return `Сегодня ${time}`;
+  }
+
+  if (diff === 1) {
+    return `Завтра ${time}`;
+  }
+
+  return `${date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' })} ${time}`;
+}
+
+function mapCalendarDays(days) {
+  return days.map(day => ({
+    date: day.date,
+    text: day.text,
+    status: day.status,
+  }));
+}
+
+function mapTimeSlots(slots) {
+  return slots.map(slot => ({
+    time: slot.time,
+    status: slot.status,
+  }));
+}
+
+async function apiRequest(method, url, body = null) {
+  const options = {
+    method,
+    headers: {},
+  };
+
+  if (body !== null) {
+    options.headers['Content-Type'] = 'application/json';
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `request failed with status ${response.status}`);
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    return null;
+  }
+
+  return response.json();
+}

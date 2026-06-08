@@ -78,6 +78,8 @@ func main() {
 	e.GET("api/appointments", appointmentHandler.GetAll)
 	e.POST("api/appointments", appointmentHandler.Create)
 	e.PUT("api/appointments/:id", appointmentHandler.Update)
+	e.POST("api/appointments/:id/cancel", appointmentHandler.Cancel)
+	e.POST("api/appointments/:id/reschedule", appointmentHandler.Reschedule)
 	e.DELETE("api/appointments/:id", appointmentHandler.Delete)
 
 	// статический контент

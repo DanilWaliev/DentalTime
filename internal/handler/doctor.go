@@ -24,7 +24,6 @@ func NewDoctorHandler(doctorService *service.DoctorService, serviceService *serv
 }
 
 func (h *DoctorHandler) GetByID(c *echo.Context) error {
-	// получение и парсинг id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
@@ -43,7 +42,6 @@ func (h *DoctorHandler) GetByID(c *echo.Context) error {
 func (h *DoctorHandler) GetAll(c *echo.Context) error {
 	ctx := c.Request().Context()
 
-	// получаем query параметры
 	specialization := c.QueryParam("specialization")
 	if specialization != "" {
 		doctors, err := h.doctorService.GetBySpecialization(ctx, specialization)
@@ -54,7 +52,6 @@ func (h *DoctorHandler) GetAll(c *echo.Context) error {
 		return c.JSON(http.StatusOK, dto.DoctorsResponseFromDomain(doctors))
 	}
 
-	// вернуть всех врачей
 	doctors, err := h.doctorService.GetAll(ctx)
 	if err != nil {
 		return mapDoctorServiceError(err)
@@ -73,7 +70,7 @@ func (h *DoctorHandler) GetServices(c *echo.Context) error {
 
 	services, err := h.serviceService.GetByDoctorID(ctx, id)
 	if err != nil {
-		mapServiceServiceError(err)
+		return mapServiceServiceError(err)
 	}
 
 	return c.JSON(http.StatusOK, dto.ServicesResponseFromDomain(services))
@@ -114,7 +111,6 @@ func (h *DoctorHandler) GetSlots(c *echo.Context) error {
 func (h *DoctorHandler) Update(c *echo.Context) error {
 	ctx := c.Request().Context()
 
-	// получение данных для обновления врача
 	udr := new(dto.UpdateDoctorRequest)
 	if err := c.Bind(udr); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor data")
@@ -128,7 +124,6 @@ func (h *DoctorHandler) Update(c *echo.Context) error {
 	doctor := udr.ToDomain()
 	doctor.ID = id
 
-	// обновление данные врача
 	updatedDoctor, err := h.doctorService.Update(ctx, doctor)
 	if err != nil {
 		return mapDoctorServiceError(err)
@@ -155,13 +150,11 @@ func (h *DoctorHandler) Delete(c *echo.Context) error {
 func (h *DoctorHandler) Create(c *echo.Context) error {
 	ctx := c.Request().Context()
 
-	// получение данных для создания врача
 	cdr := new(dto.CreateDoctorRequest)
 	if err := c.Bind(cdr); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor data")
 	}
 
-	// создание врача
 	createdDoctor, err := h.doctorService.Create(ctx, cdr.ToDomain())
 	if err != nil {
 		return mapDoctorServiceError(err)
@@ -182,9 +175,8 @@ func (h *DoctorHandler) AddService(c *echo.Context) error {
 	if err := c.Bind(asr); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid add service id")
 	}
-	serviceID := asr.ServiceID
 
-	if err := h.doctorService.AddService(ctx, doctorID, serviceID); err != nil {
+	if err := h.doctorService.AddService(ctx, doctorID, asr.ServiceID); err != nil {
 		return mapDoctorServiceError(err)
 	}
 
@@ -199,12 +191,12 @@ func (h *DoctorHandler) DeleteService(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor id")
 	}
 
-	serviceId, err := strconv.Atoi(c.Param("serviceId"))
+	serviceID, err := strconv.Atoi(c.Param("serviceId"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid service id")
 	}
 
-	if err := h.doctorService.DeleteService(ctx, doctorID, serviceId); err != nil {
+	if err := h.doctorService.DeleteService(ctx, doctorID, serviceID); err != nil {
 		return mapDoctorServiceError(err)
 	}
 
