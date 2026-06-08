@@ -203,6 +203,53 @@ func (r *ServiceRepo) GetByTitle(ctx context.Context, title string) (*domain.Ser
 	return &service, nil
 }
 
+func (r *ServiceRepo) GetByDoctorID(ctx context.Context, doctorID int) ([]*domain.Service, error) {
+	const query = `
+	SELECT 
+		services.service_id,
+		services.title,
+		services.subtitle,
+		services.duration,
+		services.price
+	FROM services
+	JOIN doctors_services ON services.service_id = doctors_services.service_id
+	WHERE doctors_services.doctor_id = $1
+	`
+
+	rows, err := r.db.QueryContext(ctx, query, doctorID)
+	if err != nil {
+		return nil, fmt.Errorf("get services by doctor id: %w", err)
+	}
+
+	defer rows.Close()
+
+	var services []*domain.Service
+
+	for rows.Next() {
+		var row ServiceRow
+
+		err := rows.Scan(
+			&row.service_id,
+			&row.title,
+			&row.subtitle,
+			&row.duration,
+			&row.price,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scan services: %w", err)
+		}
+
+		service := row.ToDomain()
+		services = append(services, &service)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate services: %w", err)
+	}
+
+	return services, nil
+}
+
 func (r *ServiceRepo) Update(ctx context.Context, serviceToUpdate domain.Service) (*domain.Service, error) {
 	const query = `
 	UPDATE services

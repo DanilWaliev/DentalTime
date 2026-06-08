@@ -12,12 +12,14 @@ import (
 )
 
 type DoctorHandler struct {
-	doctorService *service.DoctorService
+	doctorService  *service.DoctorService
+	serviceService *service.ServiceService
 }
 
-func NewDoctorHandler(doctorService *service.DoctorService) *DoctorHandler {
+func NewDoctorHandler(doctorService *service.DoctorService, serviceService *service.ServiceService) *DoctorHandler {
 	return &DoctorHandler{
-		doctorService: doctorService,
+		doctorService:  doctorService,
+		serviceService: serviceService,
 	}
 }
 
@@ -59,6 +61,22 @@ func (h *DoctorHandler) GetAll(c *echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, dto.DoctorsResponseFromDomain(doctors))
+}
+
+func (h *DoctorHandler) GetServices(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
+	}
+
+	services, err := h.serviceService.GetByDoctorID(ctx, id)
+	if err != nil {
+		mapServiceServiceError(err)
+	}
+
+	return c.JSON(http.StatusOK, dto.ServicesResponseFromDomain(services))
 }
 
 func (h *DoctorHandler) Update(c *echo.Context) error {

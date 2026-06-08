@@ -120,6 +120,51 @@ func (r *DoctorRepo) GetBySpecialization(ctx context.Context, spec string) ([]*d
 	return doctors, nil
 }
 
+func (r *DoctorRepo) GetByServiceID(ctx context.Context, serviceID int) ([]*domain.Doctor, error) {
+	const query = `
+	SELECT 
+		doctors.doctor_id,
+		doctors.full_name,
+		doctors.spec,
+		doctors.experience,
+		doctors.photo_url
+	FROM doctors
+	JOIN doctors_services ON doctors.doctor_id = doctors_services.doctor_id
+	WHERE doctors_services.service_id = $1`
+
+	rows, err := r.db.QueryContext(ctx, query, serviceID)
+	if err != nil {
+		return nil, fmt.Errorf("get doctor by service id: %w", err)
+	}
+	defer rows.Close()
+
+	var doctors []*domain.Doctor
+
+	for rows.Next() {
+		var row DoctorRow
+
+		err := rows.Scan(
+			&row.doctor_id,
+			&row.full_name,
+			&row.spec,
+			&row.experience,
+			&row.photo_url,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scan doctors: %w", err)
+		}
+
+		doctor := row.ToDomain()
+		doctors = append(doctors, &doctor)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate doctors: %w", err)
+	}
+
+	return doctors, nil
+}
+
 func (r *DoctorRepo) GetAll(ctx context.Context) ([]*domain.Doctor, error) {
 	const query = `
 	SELECT

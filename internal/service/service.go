@@ -20,6 +20,7 @@ type ServiceRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Service, error)
 	GetByID(ctx context.Context, id int) (*domain.Service, error)
 	GetByTitle(ctx context.Context, title string) (*domain.Service, error)
+	GetByDoctorID(ctx context.Context, doctorID int) ([]*domain.Service, error)
 	Create(ctx context.Context, service domain.Service) (*domain.Service, error)
 	Update(ctx context.Context, service domain.Service) (*domain.Service, error)
 	Delete(ctx context.Context, id int) error
@@ -54,6 +55,14 @@ func (s *ServiceService) GetByTitle(ctx context.Context, title string) (*domain.
 	}
 
 	return s.serviceRepo.GetByTitle(ctx, title)
+}
+
+func (s *ServiceService) GetByDoctorID(ctx context.Context, doctorID int) ([]*domain.Service, error) {
+	if doctorID <= 0 {
+		return nil, ErrInvalidDoctorID
+	}
+
+	return s.serviceRepo.GetByDoctorID(ctx, doctorID)
 }
 
 func (s *ServiceService) Create(ctx context.Context, service domain.Service) (*domain.Service, error) {

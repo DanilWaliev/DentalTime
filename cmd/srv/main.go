@@ -42,8 +42,8 @@ func main() {
 	doctorService := service.NewDoctorService(doctorRepo)
 	serviceService := service.NewServiceService(serviceRepo)
 
-	doctorHandler := handler.NewDoctorHandler(doctorService)
-	serviceHandler := handler.NewServiceHandler(*serviceService)
+	doctorHandler := handler.NewDoctorHandler(doctorService, serviceService)
+	serviceHandler := handler.NewServiceHandler(serviceService, doctorService)
 
 	// логгер
 	myLogger := logger.NewLogger()

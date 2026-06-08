@@ -19,6 +19,7 @@ type DoctorRepository interface {
 	GetAll(ctx context.Context) ([]*domain.Doctor, error)
 	GetByID(ctx context.Context, id int) (*domain.Doctor, error)
 	GetBySpecialization(ctx context.Context, spec string) ([]*domain.Doctor, error)
+	GetByServiceID(ctx context.Context, serviceID int) ([]*domain.Doctor, error)
 	Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error)
 	Update(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error)
 	Delete(ctx context.Context, id int) error
@@ -53,6 +54,14 @@ func (s *DoctorService) GetBySpecialization(ctx context.Context, spec string) ([
 	}
 
 	return s.doctorRepo.GetBySpecialization(ctx, spec)
+}
+
+func (s *DoctorService) GetByServiceID(ctx context.Context, serviceID int) ([]*domain.Doctor, error) {
+	if serviceID <= 0 {
+		return nil, ErrInvalidServiceID
+	}
+
+	return s.doctorRepo.GetByServiceID(ctx, serviceID)
 }
 
 func (s *DoctorService) Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error) {
