@@ -38,12 +38,15 @@ func main() {
 	// прокидывание зависимостей
 	doctorRepo := postgresql.NewDoctorRepo(db)
 	serviceRepo := postgresql.NewServiceRepo(db)
+	appointmentRepo := postgresql.NewAppointmentRepo(db)
 
 	doctorService := service.NewDoctorService(doctorRepo)
 	serviceService := service.NewServiceService(serviceRepo)
+	appointmentService := service.NewAppointmentService(appointmentRepo)
 
 	doctorHandler := handler.NewDoctorHandler(doctorService, serviceService)
 	serviceHandler := handler.NewServiceHandler(serviceService, doctorService)
+	appointmentHandler := handler.NewAppointmentHandler(appointmentService)
 
 	// логгер
 	myLogger := logger.NewLogger()
@@ -68,6 +71,12 @@ func main() {
 	e.POST("api/services", serviceHandler.Create)
 	e.PUT("api/services/:id", serviceHandler.Update)
 	e.DELETE("api/services/:id", serviceHandler.Delete)
+
+	e.GET("api/appointments/:id", appointmentHandler.GetByID)
+	e.GET("api/appointments", appointmentHandler.GetAll)
+	e.POST("api/appointments", appointmentHandler.Create)
+	e.PUT("api/appointments/:id", appointmentHandler.Update)
+	e.DELETE("api/appointments/:id", appointmentHandler.Delete)
 
 	// статический контент
 	e.Static("/static", "web")
