@@ -4,6 +4,7 @@ import (
 	"context"
 	"dental-time/internal/domain"
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -13,6 +14,7 @@ var (
 	ErrInvalidDoctorData           = errors.New("invalid doctor data")
 	ErrInvalidDoctorID             = errors.New("invalid doctor id")
 	ErrInvalidDoctorSpecialization = errors.New("invalid doctor specialization")
+	ErrServiceAlreadyAssigned      = errors.New("service is already assigned")
 )
 
 type DoctorRepository interface {
@@ -23,6 +25,10 @@ type DoctorRepository interface {
 	Create(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error)
 	Update(ctx context.Context, doctor domain.Doctor) (*domain.Doctor, error)
 	Delete(ctx context.Context, id int) error
+	AddService(ctx context.Context, doctorID, serviceID int) error
+	DeleteService(ctx context.Context, doctorID, serviceID int) error
+	ExistsByID(ctx context.Context, id int) (bool, error)
+	ServiceExists(ctx context.Context, doctorID, serviceID int) (bool, error)
 }
 
 type DoctorService struct {
@@ -89,4 +95,43 @@ func (s *DoctorService) Delete(ctx context.Context, id int) error {
 		return ErrInvalidDoctorID
 	}
 	return s.doctorRepo.Delete(ctx, id)
+}
+
+func (s *DoctorService) AddService(ctx context.Context, doctorID, serviceID int) error {
+	if doctorID <= 0 {
+		return ErrInvalidDoctorID
+	} else if serviceID <= 0 {
+		return ErrInvalidServiceID
+	}
+
+	// проверка на существование врача
+	doctorExists, err := s.doctorRepo.ExistsByID(ctx, doctorID)
+	if err != nil {
+		return fmt.Errorf("check doctor exists: %w", err)
+	}
+	if !doctorExists {
+		return ErrInvalidDoctorID
+	}
+
+	// проверка на существование связи
+	exists, err := s.doctorRepo.ServiceExists(ctx, doctorID, serviceID)
+	if err != nil {
+		return fmt.Errorf("check service for doctor: %w", err)
+	}
+
+	if exists {
+		return ErrServiceAlreadyAssigned
+	}
+
+	return s.doctorRepo.AddService(ctx, doctorID, serviceID)
+}
+
+func (s *DoctorService) DeleteService(ctx context.Context, doctorID, serviceID int) error {
+	if doctorID <= 0 {
+		return ErrInvalidDoctorID
+	} else if serviceID <= 0 {
+		return ErrInvalidServiceID
+	}
+
+	return s.doctorRepo.DeleteService(ctx, doctorID, serviceID)
 }

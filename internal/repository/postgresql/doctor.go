@@ -295,3 +295,75 @@ func (r *DoctorRepo) Delete(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (r *DoctorRepo) AddService(ctx context.Context, doctorID, serviceID int) error {
+	const query = `
+	INSERT INTO doctors_services(
+		doctor_id, service_id)
+	VALUES ($1, $2)`
+
+	_, err := r.db.ExecContext(ctx, query, doctorID, serviceID)
+	if err != nil {
+		return fmt.Errorf("add service to doctor: %w", err)
+	}
+
+	return nil
+}
+
+func (r *DoctorRepo) DeleteService(ctx context.Context, doctorID, serviceID int) error {
+	const query = `
+	DELETE FROM doctors_services
+	WHERE doctor_id = $1 AND service_id = $2`
+
+	res, err := r.db.ExecContext(ctx, query, doctorID, serviceID)
+	if err != nil {
+		return fmt.Errorf("delete service for doctor: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("delete service for doctor rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return service.ErrDoctorNotFound
+	}
+
+	return nil
+}
+
+func (r *DoctorRepo) ExistsByID(ctx context.Context, id int) (bool, error) {
+	const query = `
+	SELECT EXISTS(
+		SELECT 1
+		FROM doctors
+		WHERE doctor_id = $1
+	);`
+
+	var exists bool
+
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("check doctor exists by id: %w", err)
+	}
+
+	return exists, nil
+}
+
+func (r *DoctorRepo) ServiceExists(ctx context.Context, doctorID, serviceID int) (bool, error) {
+	const query = `
+	SELECT EXISTS(
+		SELECT 1
+		FROM doctors_services
+		WHERE doctor_id = $1 AND service_id = $2
+	);`
+
+	var exists bool
+
+	err := r.db.QueryRowContext(ctx, query, doctorID, serviceID).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("check doctor service exists: %w", err)
+	}
+
+	return exists, nil
+}

@@ -24,6 +24,7 @@ type ServiceRepository interface {
 	Create(ctx context.Context, service domain.Service) (*domain.Service, error)
 	Update(ctx context.Context, service domain.Service) (*domain.Service, error)
 	Delete(ctx context.Context, id int) error
+	ExistsByID(ctx context.Context, id int) (bool, error)
 }
 
 type ServiceService struct {

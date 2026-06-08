@@ -138,6 +138,47 @@ func (h *DoctorHandler) Create(c *echo.Context) error {
 	return c.JSON(http.StatusCreated, dto.DoctorResponseFromDomain(createdDoctor))
 }
 
+func (h *DoctorHandler) AddService(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	doctorID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor id")
+	}
+
+	asr := new(dto.AddServiceRequest)
+	if err := c.Bind(asr); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid add service id")
+	}
+	serviceID := asr.ServiceID
+
+	if err := h.doctorService.AddService(ctx, doctorID, serviceID); err != nil {
+		return mapDoctorServiceError(err)
+	}
+
+	return c.NoContent(http.StatusCreated)
+}
+
+func (h *DoctorHandler) DeleteService(c *echo.Context) error {
+	ctx := c.Request().Context()
+
+	doctorID, err := strconv.Atoi(c.Param("doctorId"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid doctor id")
+	}
+
+	serviceId, err := strconv.Atoi(c.Param("serviceId"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid service id")
+	}
+
+	if err := h.doctorService.DeleteService(ctx, doctorID, serviceId); err != nil {
+		return mapDoctorServiceError(err)
+	}
+
+	return c.NoContent(http.StatusNoContent)
+}
+
 func mapDoctorServiceError(err error) error {
 	switch {
 	case errors.Is(err, service.ErrDoctorNotFound):
@@ -150,6 +191,8 @@ func mapDoctorServiceError(err error) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	case errors.Is(err, service.ErrInvalidDoctorSpecialization):
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	case errors.Is(err, service.ErrServiceAlreadyAssigned):
+		return echo.NewHTTPError(http.StatusConflict, err.Error())
 	default:
 		return fmt.Errorf("doctor service error: %w", err)
 	}

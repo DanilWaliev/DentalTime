@@ -55,12 +55,16 @@ func main() {
 
 	e.GET("api/doctors/:id", doctorHandler.GetByID)
 	e.GET("api/doctors", doctorHandler.GetAll)
+	e.GET("api/doctors/:id/services", doctorHandler.GetServices)
 	e.POST("api/doctors", doctorHandler.Create)
 	e.PUT("api/doctors/:id", doctorHandler.Update)
 	e.DELETE("api/doctors/:id", doctorHandler.Delete)
+	e.DELETE("api/doctors/:doctorId/services/:serviceId", doctorHandler.DeleteService)
+	e.POST("api/doctors/:id/services", doctorHandler.AddService)
 
 	e.GET("api/services/:id", serviceHandler.GetByID)
 	e.GET("api/services", serviceHandler.GetAll)
+	e.GET("api/services/:id/doctors", serviceHandler.GetDoctors)
 	e.POST("api/services", serviceHandler.Create)
 	e.PUT("api/services/:id", serviceHandler.Update)
 	e.DELETE("api/services/:id", serviceHandler.Delete)

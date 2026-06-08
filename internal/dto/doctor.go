@@ -16,6 +16,10 @@ type UpdateDoctorRequest struct {
 	PhotoURL       string `json:"photo_url"`
 }
 
+type AddServiceRequest struct {
+	ServiceID int `json:"service_id"`
+}
+
 type DoctorResponse struct {
 	ID             int    `json:"doctor_id"`
 	FullName       string `json:"full_name"`

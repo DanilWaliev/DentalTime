@@ -285,3 +285,21 @@ func (r *ServiceRepo) Update(ctx context.Context, serviceToUpdate domain.Service
 
 	return &updatedService, nil
 }
+
+func (r *ServiceRepo) ExistsByID(ctx context.Context, id int) (bool, error) {
+	const query = `
+	SELECT EXISTS(
+		SELECT 1
+		FROM services
+		WHERE service_id = $1
+	);`
+
+	var exists bool
+
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("check service exists by id: %w", err)
+	}
+
+	return exists, nil
+}
