@@ -120,7 +120,6 @@ export function GetPhoneAndName(title, onConfirm, onCancel = null) {
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
 
-        // Сбрасываем предыдущие ошибки
         nameInput.style.borderColor = '';
         phoneInput.style.borderColor = '';
 
@@ -131,7 +130,6 @@ export function GetPhoneAndName(title, onConfirm, onCancel = null) {
             hasError = true;
         }
         
-        // Проверка: номер должен содержать минимум 11 цифр
         const digitsOnly = phone.replace(/\D/g, ''); 
         if (digitsOnly.length < 11) {
             phoneInput.style.borderColor = 'var(--color-error, #ff4d4d)';
@@ -147,9 +145,20 @@ export function GetPhoneAndName(title, onConfirm, onCancel = null) {
     dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(onCancel); });
 }
 
-export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
+export function showAddAppointmentModal(title, onConfirm, appointment = null, doctors = [], services = [], onCancel = null, showStatus = false) {
     const dialog = document.createElement('dialog');
     dialog.className = 'app-modal modal-form';
+
+    const appointmentData = appointment || {
+        patientName: '',
+        patientPhoneNumber: '',
+        service: null,
+        doctor: null,
+        date: '',
+        status: 'Ожидает'
+    };
+    let selectedService = findServiceForModal(services, appointmentData.service);
+    let selectedDoctor = findDoctorForModal(doctors, appointmentData.doctor);
 
     dialog.innerHTML = `
         <div class="modal-inner">
@@ -157,30 +166,81 @@ export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">ФИО Пациента</label>
-                    <input type="text" class="form-input" id="new-patient-name" placeholder="Иванов Иван">
+                    <input type="text" class="form-input" id="new-patient-name" value="${appointmentData.patientName || ''}" placeholder="Иванов Иван">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Номер телефона</label>
+                    <input type="tel" class="form-input" id="new-patient-phone" value="${appointmentData.patientPhoneNumber || ''}" placeholder="+7 (999) 000-00-00">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Услуга</label>
-                    <input type="text" class="form-input" id="new-service-title" placeholder="Лечение кариеса">
+                    <div class="doctor-service-selected" id="appointment-service-selected"></div>
+                    <div class="doctor-service-list" id="appointment-service-list"></div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Врач</label>
-                    <input type="text" class="form-input" id="new-doctor-name" placeholder="Смирнова А. В.">
+                    <div class="doctor-service-selected" id="appointment-doctor-selected"></div>
+                    <div class="doctor-service-list" id="appointment-doctor-list"></div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Дата и время</label>
-                    <input type="datetime-local" class="form-input" id="new-appointment-date">
+                    <input type="datetime-local" class="form-input" id="new-appointment-date" value="${formatDateTimeForModal(appointmentData.date)}">
                 </div>
+                ${showStatus ? `
+                <div class="form-group">
+                    <label class="form-label" for="edit-appointment-status">Статус</label>
+                    <select class="form-input" id="edit-appointment-status">
+                        <option value="Ожидает">Ожидает</option>
+                        <option value="Подтверждена">Подтверждена</option>
+                        <option value="Отменена">Отменена</option>
+                    </select>
+                </div>
+                ` : ''}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline btn-sm" data-action="cancel">Отмена</button>
-                <button class="btn btn-primary btn-sm" data-action="submit">Создать запись</button>
+                <button class="btn btn-primary btn-sm" data-action="submit">${appointment ? 'Сохранить' : 'Создать запись'}</button>
             </div>
         </div>
     `;
 
     document.body.appendChild(dialog);
     dialog.showModal();
+
+    const selectedServiceElement = dialog.querySelector('#appointment-service-selected');
+    const servicesListElement = dialog.querySelector('#appointment-service-list');
+    const selectedDoctorElement = dialog.querySelector('#appointment-doctor-selected');
+    const doctorsListElement = dialog.querySelector('#appointment-doctor-list');
+    const statusSelect = dialog.querySelector('#edit-appointment-status');
+
+    if (statusSelect) {
+        statusSelect.value = appointmentData.status || 'Ожидает';
+    }
+
+    const renderChoices = () => {
+        const availableServices = getServicesForModal(services, selectedDoctor);
+        const availableDoctors = getDoctorsForModal(doctors, selectedService);
+
+        selectedServiceElement.innerHTML = selectedService ? `
+            <button type="button" class="badge badge-primary doctor-service-badge" data-action="clear-appointment-service">${selectedService.title} ×</button>
+        ` : '';
+
+        servicesListElement.innerHTML = availableServices.map(service => {
+            const disabled = selectedService && String(selectedService.id) === String(service.id) ? 'disabled' : '';
+            return `<button type="button" class="btn btn-outline btn-sm doctor-service-option" data-action="select-appointment-service" data-id="${service.id}" ${disabled}>${service.title}</button>`;
+        }).join('');
+
+        selectedDoctorElement.innerHTML = selectedDoctor ? `
+            <button type="button" class="badge badge-primary doctor-service-badge" data-action="clear-appointment-doctor">${selectedDoctor.fullName} ×</button>
+        ` : '';
+
+        doctorsListElement.innerHTML = availableDoctors.map(doctor => {
+            const disabled = selectedDoctor && String(selectedDoctor.id) === String(doctor.id) ? 'disabled' : '';
+            return `<button type="button" class="btn btn-outline btn-sm doctor-service-option" data-action="select-appointment-doctor" data-id="${doctor.id}" ${disabled}>${doctor.fullName}</button>`;
+        }).join('');
+    };
+
+    renderChoices();
 
     const closeModal = (callback) => {
         dialog.close();
@@ -189,13 +249,44 @@ export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
     };
 
     dialog.querySelector('[data-action="cancel"]').addEventListener('click', () => closeModal(onCancel));
+    dialog.addEventListener('click', (event) => {
+        const serviceButton = event.target.closest('[data-action="select-appointment-service"]');
+        const doctorButton = event.target.closest('[data-action="select-appointment-doctor"]');
+        const clearServiceButton = event.target.closest('[data-action="clear-appointment-service"]');
+        const clearDoctorButton = event.target.closest('[data-action="clear-appointment-doctor"]');
+
+        if (serviceButton) {
+            selectedService = services.find(service => String(service.id) === String(serviceButton.dataset.id)) || null;
+            if (selectedDoctor && selectedService && !doctorHasServiceForModal(selectedDoctor, selectedService)) {
+                selectedDoctor = null;
+            }
+            renderChoices();
+        }
+
+        if (doctorButton) {
+            selectedDoctor = doctors.find(doctor => String(doctor.id) === String(doctorButton.dataset.id)) || null;
+            if (selectedDoctor && selectedService && !doctorHasServiceForModal(selectedDoctor, selectedService)) {
+                selectedService = null;
+            }
+            renderChoices();
+        }
+
+        if (clearServiceButton) {
+            selectedService = null;
+            renderChoices();
+        }
+
+        if (clearDoctorButton) {
+            selectedDoctor = null;
+            renderChoices();
+        }
+    });
     dialog.querySelector('[data-action="submit"]').addEventListener('click', () => {
         const patientName = dialog.querySelector('#new-patient-name');
-        const serviceTitle = dialog.querySelector('#new-service-title');
-        const doctorName = dialog.querySelector('#new-doctor-name');
+        const patientPhone = dialog.querySelector('#new-patient-phone');
         const appointmentDate = dialog.querySelector('#new-appointment-date');
 
-        const fields = [patientName, serviceTitle, doctorName, appointmentDate];
+        const fields = [patientName, patientPhone, appointmentDate];
         let hasError = false;
 
         fields.forEach(field => {
@@ -206,14 +297,35 @@ export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
             }
         });
 
+        const patientPhoneDigits = patientPhone.value.replace(/\D/g, '');
+        if (patientPhoneDigits.length < 11) {
+            patientPhone.style.borderColor = 'var(--color-error, #ff4d4d)';
+            hasError = true;
+        }
+
+        selectedServiceElement.style.borderColor = '';
+        selectedDoctorElement.style.borderColor = '';
+
+        if (!selectedService) {
+            selectedServiceElement.style.borderColor = 'var(--color-error, #ff4d4d)';
+            hasError = true;
+        }
+
+        if (!selectedDoctor) {
+            selectedDoctorElement.style.borderColor = 'var(--color-error, #ff4d4d)';
+            hasError = true;
+        }
+
         if (hasError) return;
         
         if (onConfirm) {
             onConfirm({
-                patientName: patientName.value,
-                service: { title: serviceTitle.value },
-                doctor: { fullName: doctorName.value },
-                date: appointmentDate.value
+                patientName: patientName.value.trim(),
+                patientNumber: patientPhone.value.trim(),
+                service: selectedService,
+                doctor: selectedDoctor,
+                date: appointmentDate.value,
+                status: statusSelect ? statusSelect.value : appointmentData.status
             });
         }
         closeModal();
@@ -222,11 +334,65 @@ export function showAddAppointmentModal(title, onConfirm, onCancel = null) {
     dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(onCancel); });
 }
 
-function splitList(value) {
-    return value.split(',').map(item => item.trim()).filter(Boolean);
+function findServiceForModal(services, service) {
+    if (!service) return null;
+
+    if (service.id) {
+        return services.find(item => String(item.id) === String(service.id)) || service;
+    }
+
+    if (service.title) {
+        return services.find(item => item.title === service.title) || service;
+    }
+
+    return null;
 }
 
-export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null) {
+function findDoctorForModal(doctors, doctor) {
+    if (!doctor) return null;
+
+    if (doctor.id) {
+        return doctors.find(item => String(item.id) === String(doctor.id)) || doctor;
+    }
+
+    if (doctor.fullName) {
+        return doctors.find(item => item.fullName === doctor.fullName) || doctor;
+    }
+
+    return null;
+}
+
+function getServicesForModal(services, doctor) {
+    if (!doctor) return services;
+
+    return services.filter(service => doctorHasServiceForModal(doctor, service));
+}
+
+function getDoctorsForModal(doctors, service) {
+    if (!service) return doctors;
+
+    return doctors.filter(doctor => doctorHasServiceForModal(doctor, service));
+}
+
+function doctorHasServiceForModal(doctor, service) {
+    if (!doctor || !service) return false;
+
+    return (doctor.services || []).includes(service.title);
+}
+
+function formatDateTimeForModal(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) {
+        return String(dateString).slice(0, 16);
+    }
+
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return localDate.toISOString().slice(0, 16);
+}
+
+export function showDoctorModal(title, onConfirm, doctor = null, services = [], onCancel = null) {
     const dialog = document.createElement('dialog');
     dialog.className = 'app-modal modal-form';
 
@@ -241,6 +407,7 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
     const photoPreview = doctorData.photo?.url || '';
     let selectedPhotoFile = null;
     let selectedPhotoPreviewUrl = doctorData.photo?.url || null;
+    let selectedServices = [...doctorData.services];
 
     dialog.innerHTML = `
         <div class="modal-inner">
@@ -269,8 +436,9 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
                     <input type="number" class="form-input" id="doctor-experience" value="${doctorData.experience}" min="0" placeholder="5">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Оказываемые услуги (через запятую)</label>
-                    <input type="text" class="form-input" id="doctor-services" value="${doctorData.services.join(', ')}" placeholder="Лечение кариеса, Чистка">
+                    <label class="form-label">Оказываемые услуги</label>
+                    <div class="doctor-service-selected" id="doctor-service-selected"></div>
+                    <div class="doctor-service-list" id="doctor-service-list"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -285,6 +453,21 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
 
     const photoInput = dialog.querySelector('#doctor-photo');
     const photoPreviewElement = dialog.querySelector('#doctor-photo-preview');
+    const selectedServicesElement = dialog.querySelector('#doctor-service-selected');
+    const servicesListElement = dialog.querySelector('#doctor-service-list');
+
+    const renderServices = () => {
+        selectedServicesElement.innerHTML = selectedServices.map(service => `
+            <button type="button" class="badge badge-primary doctor-service-badge" data-action="remove-service" data-service="${service}">${service} ×</button>
+        `).join('');
+
+        servicesListElement.innerHTML = services.map(service => {
+            const disabled = selectedServices.includes(service.title) ? 'disabled' : '';
+            return `<button type="button" class="btn btn-outline btn-sm doctor-service-option" data-action="add-service" data-service="${service.title}" ${disabled}>${service.title}</button>`;
+        }).join('');
+    };
+
+    renderServices();
 
     photoInput.addEventListener('change', () => {
         const file = photoInput.files[0];
@@ -307,12 +490,29 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
     };
 
     dialog.querySelector('[data-action="cancel"]').addEventListener('click', () => closeModal(onCancel));
+    dialog.addEventListener('click', (event) => {
+        const addButton = event.target.closest('[data-action="add-service"]');
+        const removeButton = event.target.closest('[data-action="remove-service"]');
+
+        if (addButton) {
+            const serviceTitle = addButton.dataset.service;
+            if (serviceTitle && !selectedServices.includes(serviceTitle)) {
+                selectedServices.push(serviceTitle);
+                renderServices();
+            }
+        }
+
+        if (removeButton) {
+            const serviceTitle = removeButton.dataset.service;
+            selectedServices = selectedServices.filter(service => service !== serviceTitle);
+            renderServices();
+        }
+    });
     dialog.querySelector('[data-action="submit"]').addEventListener('click', () => {
         const fullNameInput = dialog.querySelector('#doctor-full-name');
         const specInput = dialog.querySelector('#doctor-spec');
         const experienceInput = dialog.querySelector('#doctor-experience');
-        const servicesInput = dialog.querySelector('#doctor-services');
-        const fields = [fullNameInput, specInput, experienceInput, servicesInput];
+        const fields = [fullNameInput, specInput, experienceInput];
         let hasError = false;
 
         fields.forEach(field => {
@@ -323,6 +523,12 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
             }
         });
 
+        selectedServicesElement.style.borderColor = '';
+        if (selectedServices.length === 0) {
+            selectedServicesElement.style.borderColor = 'var(--color-error, #ff4d4d)';
+            hasError = true;
+        }
+
         if (hasError) return;
 
         if (onConfirm) {
@@ -330,7 +536,7 @@ export function showDoctorModal(title, onConfirm, doctor = null, onCancel = null
                 fullName: fullNameInput.value.trim(),
                 spec: specInput.value.trim(),
                 experience: Number(experienceInput.value),
-                services: splitList(servicesInput.value),
+                services: selectedServices,
                 nearest: doctorData.nearest || [],
                 photo: doctorData.photo || null,
                 photoFile: selectedPhotoFile,

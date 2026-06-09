@@ -16,7 +16,9 @@ async function init() {
   statusMessage = createStatusMessage();
 
   await loadAppData();
-  renderCurrentAppointment(GetAppointments()[0]);
+  if (statusCard) {
+    statusCard.classList.add('is-hidden');
+  }
 
   const searchButton = document.querySelector('.status-search-box .btn');
   if (searchButton) {
@@ -160,7 +162,13 @@ function showRescheduleDialog(appointment, onConfirm) {
 }
 
 function renderCurrentAppointment(appointment) {
-  if (!appointment || !statusCard) return;
+  if (!statusCard) return;
+
+  if (!appointment) {
+    currentAppointment = null;
+    statusCard.classList.add('is-hidden');
+    return;
+  }
 
   currentAppointment = appointment;
   statusCard.classList.remove('is-hidden');

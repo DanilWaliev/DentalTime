@@ -28,8 +28,12 @@ export function renderDoctors(doctors, doctorsContainer) {
 }
 
 function generateDoctorCard(doctor) {
+  const photoContent = doctor.photo?.url
+    ? `<img class="doctor-photo-image" src="${doctor.photo.url}" alt="${doctor.fullName}">`
+    : 'Фото';
+
   return `   <div class="doctor-card-top">
-                 <div class="doctor-photo">Фото</div>
+                 <div class="doctor-photo">${photoContent}</div>
                  <div class="doctor-info-basic">
                      <div class="doctor-name">${doctor.fullName}</div>
                      <div class="doctor-specialty">${doctor.spec}</div>
@@ -279,9 +283,13 @@ export function renderAppointmentServices(services, container) {
 }
 
 function generateAppointmentDoctorsCard(doctor) {
+  const photoContent = doctor.photo?.url
+    ? `<img class="doctor-photo-image" src="${doctor.photo.url}" alt="${doctor.fullName}">`
+    : 'Фото';
+
   return `
       <div class="doctor-card-top">
-          <div class="doctor-photo">Фото</div>
+          <div class="doctor-photo">${photoContent}</div>
           <div class="doctor-info-basic">
               <div class="doctor-name">${doctor.fullName}</div>
               <div class="doctor-specialty">${doctor.spec}</div>
@@ -394,12 +402,17 @@ function generateSchedule(app) {
     `;
 }
 
-export function renderSchedule(appointments, container) {
+export function renderSchedule(appointments, container, doctors = []) {
   if (!container) return;
 
   // Очистка существующих событий, но оставляем метки времени и линии сетки
   const existingEvents = container.querySelectorAll('.schedule-event');
   existingEvents.forEach(el => el.remove());
+
+  const doctorList = doctors.length > 0 ? doctors : [];
+  container.style.gridTemplateColumns = doctorList.length > 0
+    ? `60px repeat(${doctorList.length}, minmax(250px, 1fr))`
+    : '60px';
 
   appointments.forEach(app => {
     const date = new Date(app.date);
@@ -409,8 +422,8 @@ export function renderSchedule(appointments, container) {
     // Сетка начинается с 10:00 (первая строка), каждая строчка по 15 минут (4 строчки в час)
     const rowStart = (hours - 10) * 4 + (minutes / 15) + 1;
     const rowSpan = app.duration / 15;
-    // Сопоставление ID доктора к ID столбца
-    const column = app.doctor.id + 1;
+    const doctorIndex = doctorList.findIndex(doctor => String(doctor.id) === String(app.doctor.id));
+    const column = doctorIndex >= 0 ? doctorIndex + 2 : 2;
 
     const eventElement = document.createElement('div');
     eventElement.className = "card schedule-event";

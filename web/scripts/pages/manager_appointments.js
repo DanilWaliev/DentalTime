@@ -1,7 +1,7 @@
 import { initBurgerMenu } from '../core.js';
-import { GetAppointments, ApiAddManagerAppointment, ApiUpdateAppointment, ApiDeleteAppointment, loadAppData } from './../data/data.js';
+import { GetAppointments, GetDoctors, GetServices, ApiAddManagerAppointment, ApiUpdateAppointment, ApiDeleteAppointment, loadAppData } from './../data/data.js';
 import { bindAction, renderAppointments } from './../components/cards.js';
-import { GetPhoneAndName, showAddAppointmentModal, showConfirm, showInfo } from '../components/modal.js';
+import { showAddAppointmentModal, showConfirm, showInfo } from '../components/modal.js';
 
 let appointmentsContainer = null;
 
@@ -29,8 +29,11 @@ function renderAppointmentsList() {
 function handleAddAppointment() {
   showAddAppointmentModal('Добавление новой записи', (newAppointment) => {
     const isComplete = newAppointment.patientName &&
+      newAppointment.service.id &&
       newAppointment.service.title &&
+      newAppointment.doctor.id &&
       newAppointment.doctor.fullName &&
+      newAppointment.patientNumber &&
       newAppointment.date;
 
     if (!isComplete) {
@@ -38,20 +41,18 @@ function handleAddAppointment() {
       return;
     }
 
-    GetPhoneAndName('Оставьте контакты для связи', (userData) => {
-      void (async () => {
-        await ApiAddManagerAppointment({
-          patientName: newAppointment.patientName,
-          patientNumber: userData.phone,
-          service: newAppointment.service,
-          doctor: newAppointment.doctor,
-          date: newAppointment.date,
-        });
-        renderAppointmentsList();
-        showSuccess('Запись добавлена.');
-      })();
-    });
-  });
+    void (async () => {
+      await ApiAddManagerAppointment({
+        patientName: newAppointment.patientName,
+        patientNumber: newAppointment.patientNumber,
+        service: newAppointment.service,
+        doctor: newAppointment.doctor,
+        date: newAppointment.date,
+      });
+      renderAppointmentsList();
+      showSuccess('Запись добавлена.');
+    })().catch(() => showInfo('Ошибка', 'Не удалось добавить запись.'));
+  }, null, GetDoctors(), GetServices());
 }
 
 function handleEditAppointment(appointmentId) {
@@ -60,28 +61,20 @@ function handleEditAppointment(appointmentId) {
 
   showAddAppointmentModal('Изменение записи', (updatedData) => {
     void (async () => {
-      const statusSelect = document.getElementById('edit-appointment-status');
       const updatedAppointment = {
         patientName: updatedData.patientName,
-        service: {
-          ...appointment.service,
-          title: updatedData.service.title
-        },
-        doctor: {
-          ...appointment.doctor,
-          fullName: updatedData.doctor.fullName
-        },
+        patientNumber: updatedData.patientNumber,
+        service: updatedData.service,
+        doctor: updatedData.doctor,
         date: updatedData.date,
-        status: statusSelect ? statusSelect.value : appointment.status
+        status: updatedData.status
       };
 
       await ApiUpdateAppointment(appointmentId, updatedAppointment);
       renderAppointmentsList();
       showSuccess('Запись обновлена.');
-    })();
-  });
-
-  fillAppointmentModal(appointment);
+    })().catch(() => showInfo('Ошибка', 'Не удалось обновить запись.'));
+  }, appointment, GetDoctors(), GetServices(), null, true);
 }
 
 function handleDeleteAppointment(appointmentId) {
@@ -96,7 +89,7 @@ function handleDeleteAppointment(appointmentId) {
         await ApiDeleteAppointment(appointmentId);
         renderAppointmentsList();
         showSuccess('Запись удалена.');
-      })();
+      })().catch(() => showInfo('Ошибка', 'Не удалось удалить запись.'));
     }
   );
 }
@@ -113,53 +106,11 @@ function handleConfirmAppointment(appointmentId) {
     await ApiUpdateAppointment(appointmentId, updatedData);
     renderAppointmentsList();
     showSuccess('Запись подтверждена.');
-  })();
+  })().catch(() => showInfo('Ошибка', 'Не удалось подтвердить запись.'));
 }
 
 function findAppointment(appointmentId) {
   return GetAppointments().find(appointment => String(appointment.id) === String(appointmentId));
-}
-
-function fillAppointmentModal(appointment) {
-  const dialog = document.querySelector('.app-modal.modal-form');
-  if (!dialog) return;
-
-  const patientNameInput = dialog.querySelector('#new-patient-name');
-  const serviceTitleInput = dialog.querySelector('#new-service-title');
-  const doctorNameInput = dialog.querySelector('#new-doctor-name');
-  const appointmentDateInput = dialog.querySelector('#new-appointment-date');
-  const submitButton = dialog.querySelector('[data-action="submit"]');
-  const modalBody = dialog.querySelector('.modal-body');
-
-  patientNameInput.value = appointment.patientName;
-  serviceTitleInput.value = appointment.service.title;
-  doctorNameInput.value = appointment.doctor.fullName;
-  appointmentDateInput.value = formatDateTimeInputValue(appointment.date);
-
-  if (modalBody) {
-    modalBody.insertAdjacentHTML('beforeend', `
-            <div class="form-group">
-                <label class="form-label" for="edit-appointment-status">Статус</label>
-                <select class="form-input" id="edit-appointment-status">
-                    <option value="Ожидает">Ожидает</option>
-                    <option value="Подтверждена">Подтверждена</option>
-                    <option value="Отменена">Отменена</option>
-                </select>
-            </div>
-        `);
-
-    dialog.querySelector('#edit-appointment-status').value = appointment.status;
-  }
-
-  if (submitButton) {
-    submitButton.textContent = 'Сохранить';
-  }
-}
-
-function formatDateTimeInputValue(dateString) {
-  const date = new Date(dateString);
-  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-  return localDate.toISOString().slice(0, 16);
 }
 
 function showSuccess(message) {

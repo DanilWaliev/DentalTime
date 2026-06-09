@@ -4,6 +4,7 @@ export function renderAppointmentCalendar(days, container) {
   if (!container) return;
 
   container.innerHTML = '';
+  updateCalendarMonth(container, days);
 
   days.forEach(day => {
     let calendarButton = document.createElement('button');
@@ -77,4 +78,18 @@ export function selectTimeSlot(slotData, container) {
   if (newSelected && !newSelected.classList.contains('disabled')) {
     newSelected.classList.add('active');
   }
+}
+
+function updateCalendarMonth(container, days) {
+  const monthElement = container.closest('.calendar-widget')?.querySelector('.calendar-month');
+  if (!monthElement || days.length === 0) return;
+
+  const currentDay = days.find(day => day.status === 'selected') || days.find(day => day.status === 'available') || days[0];
+  const firstDay = new Date(currentDay.date);
+  if (Number.isNaN(firstDay.getTime())) return;
+
+  monthElement.textContent = firstDay.toLocaleDateString('ru-RU', {
+    month: 'long',
+    year: 'numeric',
+  });
 }

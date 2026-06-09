@@ -1,5 +1,5 @@
 import { initBurgerMenu } from '../core.js';
-import { GetDoctors, GetManagers, ApiUpdateDoctor, ApiDeleteDoctor, ApiAddDoctor, ApiAddManager, ApiDeleteManager, loadAppData, loadManagers } from './../data/data.js';
+import { GetDoctors, GetServices, GetManagers, ApiUpdateDoctor, ApiDeleteDoctor, ApiAddDoctor, ApiAddManager, ApiDeleteManager, loadAppData, loadManagers } from './../data/data.js';
 import { renderManagerDoctors, bindAction } from './../components/cards.js';
 import { showConfirm, showDoctorModal, showInfo } from '../components/modal.js';
 
@@ -56,7 +56,7 @@ function handleEditDoctor(doctorId) {
       renderDoctorsList();
       showSuccess('Данные врача сохранены.');
     })();
-  }, doctor);
+  }, doctor, GetServices());
 }
 
 function handleDeleteDoctor(doctorId) {
@@ -84,7 +84,7 @@ function handleAddDoctor() {
       renderDoctorsList();
       showSuccess('Врач добавлен.');
     })();
-  });
+  }, null, GetServices());
 }
 
 function handleAddManager() {

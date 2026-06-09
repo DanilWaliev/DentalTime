@@ -74,9 +74,8 @@ func (r *AppointmentRepo) GetAll(ctx context.Context) ([]*domain.Appointment, er
 		a.doctor_id,
 		d.full_name
 	FROM appointments a
-	JOIN doctors_services ds ON a.doctor_id = ds.doctor_id AND a.service_id = ds.service_id
-	JOIN services s ON ds.service_id = s.service_id
-	JOIN doctors d ON ds.doctor_id = d.doctor_id
+	JOIN services s ON a.service_id = s.service_id
+	JOIN doctors d ON a.doctor_id = d.doctor_id
 	ORDER BY a.date;`
 
 	rows, err := r.db.QueryContext(ctx, query)
@@ -133,9 +132,8 @@ func (r *AppointmentRepo) GetByID(ctx context.Context, id int) (*domain.Appointm
 		a.doctor_id,
 		d.full_name
 	FROM appointments a
-	JOIN doctors_services ds ON a.doctor_id = ds.doctor_id AND a.service_id = ds.service_id
-	JOIN services s ON ds.service_id = s.service_id
-	JOIN doctors d ON ds.doctor_id = d.doctor_id
+	JOIN services s ON a.service_id = s.service_id
+	JOIN doctors d ON a.doctor_id = d.doctor_id
 	WHERE a.appointment_id = $1;`
 
 	var row AppointmentRow
@@ -180,9 +178,8 @@ func (r *AppointmentRepo) GetByNumber(ctx context.Context, number int) (*domain.
 		a.doctor_id,
 		d.full_name
 	FROM appointments a
-	JOIN doctors_services ds ON a.doctor_id = ds.doctor_id AND a.service_id = ds.service_id
-	JOIN services s ON ds.service_id = s.service_id
-	JOIN doctors d ON ds.doctor_id = d.doctor_id
+	JOIN services s ON a.service_id = s.service_id
+	JOIN doctors d ON a.doctor_id = d.doctor_id
 	WHERE a.number = $1;`
 
 	var row AppointmentRow
@@ -227,9 +224,8 @@ func (r *AppointmentRepo) GetByDoctorID(ctx context.Context, doctorID int) ([]*d
 		a.doctor_id,
 		d.full_name
 	FROM appointments a
-	JOIN doctors_services ds ON a.doctor_id = ds.doctor_id AND a.service_id = ds.service_id
-	JOIN services s ON ds.service_id = s.service_id
-	JOIN doctors d ON ds.doctor_id = d.doctor_id
+	JOIN services s ON a.service_id = s.service_id
+	JOIN doctors d ON a.doctor_id = d.doctor_id
 	WHERE a.doctor_id = $1
 	ORDER BY a.date;`
 

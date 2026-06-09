@@ -30,51 +30,19 @@
     </header>
 
     <main class="row page-container">
-        <!-- центрирование контента -->
         <div class="offset-3 col-6 status-container">
             
             <h1 class="page-title">Узнать статус записи</h1>
-
-            <!-- блок поиска записи -->
             <div class="status-search-box">
                 <input type="text" class="form-input search-input" placeholder="Введите номер записи (например: 123)">
                 <button class="btn btn-primary btn-md">Проверить</button>
             </div>
-
-            <!-- карточка найденной записи -->
-            <div class="card status-card" id="status-card">
-                <div class="status-header">
-                    <span class="status-id">Запись №123</span>
-                    <span class="badge badge-primary">Подтверждена</span>
-                </div>
-                
-                <div class="status-body">
-                    <div class="status-row">
-                        <span class="status-label">Услуга</span>
-                        <span class="status-value">Профессиональная гигиена</span>
-                    </div>
-                    <div class="status-row">
-                        <span class="status-label">Врач</span>
-                        <span class="status-value">Анна Смирнова</span>
-                    </div>
-                    <div class="status-row">
-                        <span class="status-label">Дата и время</span>
-                        <span class="status-value">15 мая 2026, 14:00</span>
-                    </div>
-                    <div class="status-row">
-                        <span class="status-label">Длительность</span>
-                        <span class="status-value">60 мин</span>
-                    </div>
-                </div>
-
-                <div class="status-actions">
-                    <button class="btn btn-secondary btn-md">Перенести</button>
-                    <button class="btn btn-outline btn-md">Отменить</button>
-                </div>
-            </div>
+            <div class="card status-card is-hidden" id="status-card"></div>
 
         </div>
     </main>
 <script type="module" src="./../scripts/pages/status.js"></script>
 </body>
 </html>
+
+
